@@ -1,10 +1,14 @@
 win_unc
 =======
 
-**WORK IN PROGRESS**
+**WORK IN PROGRESS** |TravisBadge|_.
+
 
 Python library for handling UNC mounting on Windows.
 
+
+.. |TravisBadge| image:: https://secure.travis-ci.org/CovenantEyes/py_win_unc.png?branch=master
+.. _TravisBadge: http://travis-ci.org/CovenantEyes/py_win_unc
 
 
 Unit Testing
