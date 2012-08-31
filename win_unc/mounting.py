@@ -43,7 +43,7 @@ def mount_unc(unc_path, drive_letter, username=None, password=None, logger=no_lo
         drive=drive_letter))
 
     try:
-        # First try without any credentials
+        # First try without any credentials.
         run_mounting_command(unc_path, drive_letter)
     except ShellCommandError:
         # The first attempt failed. If credentials were provided, try them. Otherwise re-raise the

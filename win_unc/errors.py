@@ -1,4 +1,9 @@
-class UncMountingError(object):
+"""
+Contains exception classes that can be raised by this library.
+"""
+
+
+class UncMountingError(Exception):
     pass
 
 
@@ -30,3 +35,20 @@ class NoDrivesAvailableError(UncMountingError):
         Returns a description of the error.
         """
         return 'The system has no drive letters available.'
+
+
+class ShellCommandError(UncMountingError):
+    def __init__(self, command=None, error_code=None):
+        self.command = command
+        self.error_code = error_code
+
+    def __str__(self):
+        if self.command and self.error_code:
+            return 'The command `{command}` exited with error code {code}.'.format(
+                command=self.command, code=self.error_code)
+        elif self.command:
+            return 'The command `{command}` exited with an error.'.format(command=self.command)
+        elif self.error_code:
+            return 'Command exited with error code {code}.'.format(code=self.error_code)
+        else:
+            return 'Command exited with an error.'
