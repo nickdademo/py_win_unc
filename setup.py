@@ -1,12 +1,10 @@
-#python
-
 from distutils.core import setup
 
 from win_unc import __version__
 
 setup(
     name="win_unc",
-    packages=["win_unc"],
+    packages=['win_unc', 'win_unc.internal'],
     version=__version__,
     description="UNC network drive handling and mounting for Windows",
     author="Elliot Cameron",
