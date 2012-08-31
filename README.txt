@@ -1,7 +1,7 @@
 win_unc
 =======
 
-**WORK IN PROGRESS** |TravisBadge|_.
+**WORK IN PROGRESS**  -  |TravisBadge|_
 
 
 Python library for handling UNC mounting on Windows.
