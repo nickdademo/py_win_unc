@@ -8,30 +8,33 @@ from win_unc.internal.loggers import no_logging
 
 
 
-def get_mounting_command(unc_path, drive_letter, username=None, password=None):
+def get_mounting_command(unc_path, drive_letter, username=None, password=None, persistent=False):
     """
     Returns the Windows command to be used to mount `unc_path` to `drive_letter`. `username` and/or
     `password` are used as credentials if they are supplied.
     """
-    return 'NET USE {drive}: {path}{password}{user} /PERSISTENT:NO'.format(
+    return 'NET USE {drive}: {path}{password}{user} /PERSISTENT:{persistent}'.format(
         drive=drive_letter,
         path=unc_path,
         password=' ' + password if password else '',
-        user=' /USER:' + username if username else '')
+        user=' /USER:' + username if username else '',
+        persistent='YES' if persistent else 'NO')
 
 
-def run_mounting_command(unc_path, drive_letter, username=None, password=None, logger=no_logging):
+def run_mounting_command(unc_path, drive_letter, username=None, password=None,
+                         persistent=False, logger=no_logging):
     """
     Constructs and executes the Windows mounting command to mount `unc_path` to `drive_letter`.
     `username` and/or `password` are used as credentials if they are supplied. If there is an error
     a `ShellCommandError` is raised.
     """
     masked_password = '*****' if password else None
-    logger(get_mounting_command(unc_path, drive_letter, username, masked_password))
-    run(get_mounting_command(unc_path, drive_letter, username, password))
+    logger(get_mounting_command(unc_path, drive_letter, username, masked_password, persistent))
+    run(get_mounting_command(unc_path, drive_letter, username, password, persistent))
 
 
-def mount_unc(unc_path, drive_letter, username=None, password=None, logger=no_logging):
+def mount_unc(unc_path, drive_letter, username=None, password=None,
+              persistent=False, logger=no_logging):
     """
     Mounts the `unc_path` at `drive_letter` using `username` and/or `password` as credentials (if
     supplied). It first tries to mount the drive without credentials. If that fails (and
@@ -44,12 +47,12 @@ def mount_unc(unc_path, drive_letter, username=None, password=None, logger=no_lo
 
     try:
         # First try without any credentials.
-        run_mounting_command(unc_path, drive_letter)
+        run_mounting_command(unc_path, drive_letter, persistent)
     except ShellCommandError:
         # The first attempt failed. If credentials were provided, try them. Otherwise re-raise the
         # error.
         if username or password:
-            run_mounting_command(unc_path, drive_letter, username, password)
+            run_mounting_command(unc_path, drive_letter, username, password, persistent)
         else:
             raise
 
@@ -61,3 +64,4 @@ def unmount_unc(drive_letter, logger=no_logging):
     """
     logger('Unmounting the {drive}: network drive.'.format(drive=drive_letter))
     run('NET USE {drive}: /DELETE /YES'.format(drive=drive_letter))
+
