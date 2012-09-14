@@ -1,6 +1,6 @@
 from unittest import main, TestCase
 
-from win_unc.internal.net_use_table import get_net_use_table_from_string
+from win_unc.internal.net_use_table import parse_net_use_table
 
 
 EMPTY_TABLE = '''
@@ -34,12 +34,12 @@ class TestGetMountedUncPaths(TestCase):
         self.assertEqual(len(a), len(b))
 
     def test_empty_table(self):
-        table = get_net_use_table_from_string(EMPTY_TABLE)
+        table = parse_net_use_table(EMPTY_TABLE)
         self.assertEqual(table.get_mounted_paths(), [])
         self.assertEqual(table.get_mounted_drives(), [])
 
     def test_valid_table(self):
-        table = get_net_use_table_from_string(VALID_TABLE)
+        table = parse_net_use_table(VALID_TABLE)
 
         mounted_paths = ['\\\\',
                          '\\\\localhost',
