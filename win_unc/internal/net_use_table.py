@@ -67,6 +67,15 @@ class NetUseTable(object):
     def get_mounted_drives(self):
         return self.get_column('local')
 
+    def get_matching_rows(self, search_dict):
+        """
+        Returns a list of rows that match a `search_dict`.
+        `search_dict` is a dictionary with a subset of the keys in a row.
+        """
+        #for key, value in search_dict.iteritems():
+        #   if key not in self.rows or lower(self.rows[key]) != lower(value)
+
+
 
 EMPTY_TABLE_INDICATOR = 'There are no entries in the list.'
 LAST_TABLE_LINE = 'The command completed successfully.'

@@ -7,7 +7,7 @@ class MountedUncDirectory(object):
     A class encapsulating a UNC path to a directory and the task of mounting it.
     """
 
-    def __init__(self, unc_path, username=None, password=None, persistent=False):
+    def __init__(self, unc_path, drive_letter, username=None, password=None, persistent=False):
         """
         Returns a `UncDirectory` class. `unc_path` is a UNC path to a directory (not a file).
         `username` is the optional username to use when mounting the UNC path. `password` is the
