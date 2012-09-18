@@ -3,9 +3,10 @@ Contains classes for dealing with UNC paths on Windows.
 """
 
 
-from win_unc.internal.net_use_table import parse_net_use_table
-from win_unc.internal.shell import run, ShellCommandError
 from win_unc.internal.loggers import no_logging
+from win_unc.internal.net_use_table import parse_net_use_table
+from win_unc.internal.sanitize import sanitize_for_shell, sanitize_logon, sanitize_path
+from win_unc.internal.shell import run, ShellCommandError
 
 
 class UncDirectoryMount(object):
@@ -54,10 +55,10 @@ class UncDirectoryMount(object):
         `password` are used as credentials if they are supplied.
         """
         return 'NET USE {drive}: "{path}" "{password}" /USER:"{user}" /PERSISTENT:{persistent}'.format(
-            drive=self.drive_letter,
-            path=self.unc_path,
-            password=password if password else '',
-            user=username if username else '',
+            drive=sanitize_for_shell(self.drive_letter),
+            path=sanitize_path(self.unc_path),
+            password=sanitize_for_shell(password) if password else '',
+            user=sanitize_logon(username) if username else '',
             persistent='YES' if self.persistent else 'NO')
 
     def _run_mounting_command(self, username=None, password=None):
@@ -66,7 +67,7 @@ class UncDirectoryMount(object):
         `username` and/or `password` are used as credentials if they are supplied. If there is an error
         a `ShellCommandError` is raised.
         """
-        masked_password = '*****' if password else None
+        masked_password = '-----' if password else None
         self.logger(self._get_mounting_command(username, masked_password))
         run(self.get_mounting_command(username, password))
 
