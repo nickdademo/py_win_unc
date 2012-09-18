@@ -1,6 +1,6 @@
 from unittest import main, TestCase
 
-from win_unc.internal.net_use_table import parse_net_use_table
+from win_unc.internal.net_use_table import NetUseTable, parse_net_use_table
 
 
 EMPTY_TABLE = '''
@@ -25,7 +25,11 @@ The command completed successfully.
 '''
 
 
-class TestGetMountedUncPaths(TestCase):
+class TestParsingNetUseTable(TestCase):
+    """
+    Tests correct parsing of the output from `NET USE`.
+    """
+
     def assertEqualSets(self, a, b):
         """
         Asserts that containers `a` and `b` are equal disregarding ordering.
@@ -49,6 +53,32 @@ class TestGetMountedUncPaths(TestCase):
 
         mounted_drives = ['A:', 'B:', 'C:', 'D:']
         self.assertEqualSets(table.get_mounted_drives(), mounted_drives)
+
+
+class TestNetUseTable(TestCase):
+    """
+    Tests methods of the `NetUseTable` class.
+    """
+
+    def test_get_mounted_paths(self):
+        table = NetUseTable()
+        self.assertEqualSets(table.get_mounted_paths(), [])
+
+        table.add_row({'local': 'local1', 'remote': 'remote1', 'status': 'status1'})
+        self.assertEqualSets(table.get_mounted_paths(), ['remote1'])
+        
+        table.add_row({'local': 'local2', 'remote': 'remote2', 'status': 'status2'})
+        self.assertEqualSets(table.get_mounted_paths(), ['remote1', 'remote2'])
+
+    def test_get_mounted_drives(self):
+        table = NetUseTable()
+        self.assertEqual(table.get_mounted_drives(), [])
+
+        table.add_row({'local': 'local1', 'remote': 'remote1', 'status': 'status1'})
+        self.assertEqual(table.get_mounted_paths(), ['local1'])
+        
+        table.add_row({'local': 'local2', 'remote': 'remote2', 'status': 'status2'})
+        self.assertEqual(table.get_mounted_paths(), ['local1', 'local2'])
 
 
 if __name__ == '__main__':
