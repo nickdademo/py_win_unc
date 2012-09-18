@@ -72,8 +72,16 @@ class NetUseTable(object):
         Returns a list of rows that match a `search_dict`.
         `search_dict` is a dictionary with a subset of the keys in a row.
         """
-        #for key, value in search_dict.iteritems():
-        #   if key not in self.rows or lower(self.rows[key]) != lower(value)
+        result = []
+        for key, value in search_dict.iteritems():
+            matching = True
+            for row in self.rows:
+                if key in not self.rows or lower(self.rows[key]) != lower(value):
+                    mathing = False
+                    break
+
+            if matching:
+                result += self.rows[key]
 
 
 
