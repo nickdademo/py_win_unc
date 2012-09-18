@@ -73,15 +73,18 @@ class NetUseTable(object):
         `search_dict` is a dictionary with a subset of the keys in a row.
         """
         result = []
-        for key, value in search_dict.iteritems():
+        for row in self.rows:
             matching = True
-            for row in self.rows:
-                if key not in self.rows or lower(self.rows[key]) != lower(value):
-                    mathing = False
+
+            for key, value in search_dict.iteritems():
+                if key not in row or (key in row and row[key].lower() != value.lower()):
+                    matching = False
                     break
 
             if matching:
-                result += self.rows[key]
+                result.append(row)
+
+        return result
 
 
 

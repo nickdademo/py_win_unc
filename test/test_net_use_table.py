@@ -55,6 +55,10 @@ class TestParsingNetUseTable(TestCase):
         self.assertEqualSets(table.get_mounted_drives(), mounted_drives)
 
 
+def make_row(local='local', remote='remote', status='status'):
+    return {'local': local, 'remote': remote, 'status': status}
+
+
 class TestNetUseTable(TestCase):
     """
     Tests methods of the `NetUseTable` class.
@@ -64,21 +68,44 @@ class TestNetUseTable(TestCase):
         table = NetUseTable()
         self.assertEqual(table.get_mounted_paths(), [])
 
-        table.add_row({'local': 'local1', 'remote': 'remote1', 'status': 'status1'})
+        table.add_row(make_row(remote='remote1'))
         self.assertEqual(table.get_mounted_paths(), ['remote1'])
         
-        table.add_row({'local': 'local2', 'remote': 'remote2', 'status': 'status2'})
+        table.add_row(make_row(remote='remote2'))
         self.assertEqual(table.get_mounted_paths(), ['remote1', 'remote2'])
 
     def test_get_mounted_drives(self):
         table = NetUseTable()
         self.assertEqual(table.get_mounted_drives(), [])
 
-        table.add_row({'local': 'local1', 'remote': 'remote1', 'status': 'status1'})
+        table.add_row(make_row(local='local1'))
         self.assertEqual(table.get_mounted_drives(), ['local1'])
         
-        table.add_row({'local': 'local2', 'remote': 'remote2', 'status': 'status2'})
+        table.add_row(make_row(local='local2'))
         self.assertEqual(table.get_mounted_drives(), ['local1', 'local2'])
+
+    def test_get_matching_rows(self):
+        table = NetUseTable()
+        
+        self.assertEqual(table.get_matching_rows({}), [])
+        self.assertEqual(table.get_matching_rows({'local': 'local'}), [])
+        
+        row1 = make_row(local='local1', remote='remote1')
+        row2 = make_row(local='local2', remote='remote2')
+        row3 = make_row(local='local3', remote='remote2')
+        table.add_row(row1)
+        table.add_row(row2)
+        table.add_row(row3)
+
+        self.assertEqual(table.get_matching_rows({'bad': 'bad'}), [])
+        self.assertEqual(table.get_matching_rows({}), [row1, row2, row3])
+        self.assertEqual(table.get_matching_rows({'local': 'local3'}), [row3])
+        self.assertEqual(table.get_matching_rows({'remote': 'remote2'}), [row2, row3])
+        self.assertEqual(table.get_matching_rows({'status': 'status'}), [row1, row2, row3])
+
+        self.assertEqual(table.get_matching_rows({'remote': 'remote2', 'status': 'status'}),
+                         [row2, row3])
+        self.assertEqual(table.get_matching_rows({'status': 'status', 'bad': 'bad'}), [])
 
 
 if __name__ == '__main__':
