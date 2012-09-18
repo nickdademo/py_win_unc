@@ -76,7 +76,7 @@ class NetUseTable(object):
         for key, value in search_dict.iteritems():
             matching = True
             for row in self.rows:
-                if key in not self.rows or lower(self.rows[key]) != lower(value):
+                if key not in self.rows or lower(self.rows[key]) != lower(value):
                     mathing = False
                     break
 

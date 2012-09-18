@@ -62,23 +62,23 @@ class TestNetUseTable(TestCase):
 
     def test_get_mounted_paths(self):
         table = NetUseTable()
-        self.assertEqualSets(table.get_mounted_paths(), [])
+        self.assertEqual(table.get_mounted_paths(), [])
 
         table.add_row({'local': 'local1', 'remote': 'remote1', 'status': 'status1'})
-        self.assertEqualSets(table.get_mounted_paths(), ['remote1'])
+        self.assertEqual(table.get_mounted_paths(), ['remote1'])
         
         table.add_row({'local': 'local2', 'remote': 'remote2', 'status': 'status2'})
-        self.assertEqualSets(table.get_mounted_paths(), ['remote1', 'remote2'])
+        self.assertEqual(table.get_mounted_paths(), ['remote1', 'remote2'])
 
     def test_get_mounted_drives(self):
         table = NetUseTable()
         self.assertEqual(table.get_mounted_drives(), [])
 
         table.add_row({'local': 'local1', 'remote': 'remote1', 'status': 'status1'})
-        self.assertEqual(table.get_mounted_paths(), ['local1'])
+        self.assertEqual(table.get_mounted_drives(), ['local1'])
         
         table.add_row({'local': 'local2', 'remote': 'remote2', 'status': 'status2'})
-        self.assertEqual(table.get_mounted_paths(), ['local1', 'local2'])
+        self.assertEqual(table.get_mounted_drives(), ['local1', 'local2'])
 
 
 if __name__ == '__main__':
