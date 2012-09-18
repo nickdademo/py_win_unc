@@ -7,19 +7,20 @@ EMPTY_TABLE = '''
 There are no entries in the list.
 '''
 
-VALID_TABLE = '''
+VALID_TABLE = r'''
 New connections will be remembered.
 
 
 Status       Local     Remote                    Network
 
 -------------------------------------------------------------------------------
-OK           A:        \\\\some.remote.path\\with-a-long-path
-                                                Microsoft Windows Network
-Disconnected B:        \\\\localhost               Microsoft Windows Network
-OK           C:        \\\\localhost\\has    spaces Microsoft Windows Network
-Unavailable  D:        \\\\
+OK           A:        \\some.remote.path\with-a-long-path
+                                                 Microsoft Windows Network
+Disconnected B:        \\localhost               Microsoft Windows Network
+OK           C:        \\localhost\has    spaces Microsoft Windows Network
+Unavailable  D:        \\
             Microsoft Windows Network
+OK                     \\localhost\IPC$          Microsoft Windows Network
 The command completed successfully.
 
 '''
@@ -47,11 +48,12 @@ class TestParsingNetUseTable(TestCase):
 
         mounted_paths = ['\\\\',
                          '\\\\localhost',
+                         '\\\\localhost\\IPC$',
                          '\\\\localhost\\has    spaces',
                          '\\\\some.remote.path\\with-a-long-path']
         self.assertEqualSets(table.get_mounted_paths(), mounted_paths)
 
-        mounted_drives = ['A:', 'B:', 'C:', 'D:']
+        mounted_drives = ['A:', 'B:', 'C:', 'D:', '']
         self.assertEqualSets(table.get_mounted_drives(), mounted_drives)
 
 

@@ -46,17 +46,18 @@ class UncDirectoryMount(object):
 
     def is_mounted(self):
         net_use_table = self._get_current_net_use_table()
+        matching_row = net_use_table.get_matching_rows('local': self.drive_letter + ':', 'remote': self.unc_path)
 
     def _get_mounting_command(self, username=None, password=None):
         """
         Returns the Windows command to be used to mount `unc_path` to `drive_letter`. `username` and/or
         `password` are used as credentials if they are supplied.
         """
-        return 'NET USE {drive}: {path}{password}{user} /PERSISTENT:{persistent}'.format(
+        return 'NET USE {drive}: "{path}" "{password}" /USER:"{user}" /PERSISTENT:{persistent}'.format(
             drive=self.drive_letter,
             path=self.unc_path,
-            password=' ' + password if password else '',
-            user=' /USER:' + username if username else '',
+            password=password if password else '',
+            user=username if username else '',
             persistent='YES' if self.persistent else 'NO')
 
     def _run_mounting_command(self, username=None, password=None):
