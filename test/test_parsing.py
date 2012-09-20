@@ -1,4 +1,4 @@
-from unittest import main, TestCase
+from unittest import TestCase
 
 from win_unc.internal import parsing
 
@@ -9,47 +9,47 @@ is_alpha = lambda x: x.isalpha()
 
 
 class ListTransformerTestCase(TestCase):
-    def assertEqualList(self, first, second):
+    def assertEqualLists(self, first, second):
         self.assertEqual(list(first), list(second))
 
 
 class TestDropWhile(ListTransformerTestCase):
     def test_drop_nothing(self):
-        self.assertEqualList(parsing.drop_while(never, ''), '')
-        self.assertEqualList(parsing.drop_while(never, 'a'), 'a')
-        self.assertEqualList(parsing.drop_while(never, 'abc'), 'abc')
+        self.assertEqualLists(parsing.drop_while(never, ''), '')
+        self.assertEqualLists(parsing.drop_while(never, 'a'), 'a')
+        self.assertEqualLists(parsing.drop_while(never, 'abc'), 'abc')
 
     def test_drop_everything(self):
-        self.assertEqualList(parsing.drop_while(always, ''), '')
-        self.assertEqualList(parsing.drop_while(always, 'a'), '')
-        self.assertEqualList(parsing.drop_while(always, 'abc'), '')
+        self.assertEqualLists(parsing.drop_while(always, ''), '')
+        self.assertEqualLists(parsing.drop_while(always, 'a'), '')
+        self.assertEqualLists(parsing.drop_while(always, 'abc'), '')
 
     def test_drop_with_predicate(self):
         not_alpha = lambda x: not x.isalpha()
-        self.assertEqualList(parsing.drop_while(not_alpha, ''), '')
-        self.assertEqualList(parsing.drop_while(not_alpha, 'abc'), 'abc')
-        self.assertEqualList(parsing.drop_while(not_alpha, '123abc456'), 'abc456')
-        self.assertEqualList(parsing.drop_while(not_alpha, '   abc   '), 'abc   ')
-        self.assertEqualList(parsing.drop_while(not_alpha, '   '), '')
+        self.assertEqualLists(parsing.drop_while(not_alpha, ''), '')
+        self.assertEqualLists(parsing.drop_while(not_alpha, 'abc'), 'abc')
+        self.assertEqualLists(parsing.drop_while(not_alpha, '123abc456'), 'abc456')
+        self.assertEqualLists(parsing.drop_while(not_alpha, '   abc   '), 'abc   ')
+        self.assertEqualLists(parsing.drop_while(not_alpha, '   '), '')
 
 
 class TestTakeWhile(ListTransformerTestCase):
     def test_take_nothing(self):
-        self.assertEqualList(parsing.take_while(never, ''), '')
-        self.assertEqualList(parsing.take_while(never, 'a'), '')
-        self.assertEqualList(parsing.take_while(never, 'abc'), '')
+        self.assertEqualLists(parsing.take_while(never, ''), '')
+        self.assertEqualLists(parsing.take_while(never, 'a'), '')
+        self.assertEqualLists(parsing.take_while(never, 'abc'), '')
 
     def test_take_everything(self):
-        self.assertEqualList(parsing.take_while(always, ''), '')
-        self.assertEqualList(parsing.take_while(always, 'a'), 'a')
-        self.assertEqualList(parsing.take_while(always, 'abc'), 'abc')
+        self.assertEqualLists(parsing.take_while(always, ''), '')
+        self.assertEqualLists(parsing.take_while(always, 'a'), 'a')
+        self.assertEqualLists(parsing.take_while(always, 'abc'), 'abc')
 
     def test_take_with_predicate(self):
-        self.assertEqualList(parsing.take_while(is_alpha, ''), '')
-        self.assertEqualList(parsing.take_while(is_alpha, 'abc'), 'abc')
-        self.assertEqualList(parsing.take_while(is_alpha, '123abc456'), '')
-        self.assertEqualList(parsing.take_while(is_alpha, '   abc   '), '')
-        self.assertEqualList(parsing.take_while(is_alpha, '   '), '')
+        self.assertEqualLists(parsing.take_while(is_alpha, ''), '')
+        self.assertEqualLists(parsing.take_while(is_alpha, 'abc'), 'abc')
+        self.assertEqualLists(parsing.take_while(is_alpha, '123abc456'), '')
+        self.assertEqualLists(parsing.take_while(is_alpha, '   abc   '), '')
+        self.assertEqualLists(parsing.take_while(is_alpha, '   '), '')
 
 
 class TestFirst(TestCase):
@@ -95,7 +95,3 @@ class TestHigherOrderNot(TestCase):
 
         self.assertEqual(parsing.not_(true_)(), False)
         self.assertEqual(parsing.not_(id_)(True), False)
-
-
-if __name__ == '__main__':
-    main()

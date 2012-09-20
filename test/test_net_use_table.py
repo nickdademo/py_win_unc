@@ -1,4 +1,4 @@
-from unittest import main, TestCase
+from unittest import TestCase
 
 from win_unc.internal.net_use_table import NetUseTable, parse_net_use_table
 
@@ -108,7 +108,3 @@ class TestNetUseTable(TestCase):
         self.assertEqual(table.get_matching_rows({'remote': 'remote2', 'status': 'status'}),
                          [row2, row3])
         self.assertEqual(table.get_matching_rows({'status': 'status', 'bad': 'bad'}), [])
-
-
-if __name__ == '__main__':
-    main()
