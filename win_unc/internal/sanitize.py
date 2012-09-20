@@ -3,11 +3,11 @@ Functions for sanitizing Windows-specific fields.
 """
 
 
-def sanitize_path(path):
+def sanitize_for_shell(string):
     """
-    Removes characters from `path` that cannot be part of a valid Windows path.
+    Return `string` with double quotes escaped for use in a shell command.
     """
-    return path.translate(None, r'<>"/|?*' + map(chr, range(0, 31)))
+    return string.replace('"', r'\"')
 
 
 def sanitize_logon(name):
@@ -18,8 +18,8 @@ def sanitize_logon(name):
     return name.translate(None, r'"/[]:;|=,+*?<>' + '\0')
 
 
-def sanitize_for_shell(password):
+def sanitize_path(path):
     """
-    Return `password` with double quotes escaped for use in a shell command.
+    Removes characters from `path` that cannot be part of a valid Windows path.
     """
-    return password.replace('"', r'\"')
+    return path.translate(None, r'<>"/|?*' + ''.join(map(chr, range(0, 31))))
