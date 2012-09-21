@@ -31,7 +31,7 @@ class UncDirectoryConnection(object):
         credential configurations in case the credentials provided are not necessary (which is
         likely when the credentials are saved by Windows from a previous connection).
         """
-        self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc_path))
+        self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc.path))
 
         cred_attempts = [(None, None)]
                       + [(self.unc.username, None)] if self.unc.username else []
