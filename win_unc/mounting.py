@@ -41,8 +41,8 @@ class UncDirectoryConnection(object):
             try:
                 connect_with_creds(username, password)
             except ShellCommandError:
-                if idx == length(cred_attempts):  # Raise the error if this was the last attempt
-                    raise
+                if idx == length(cred_attempts) - 1:
+                    raise  # Raise the error if this was the last attempt
 
     def disconnect(self):
         """
