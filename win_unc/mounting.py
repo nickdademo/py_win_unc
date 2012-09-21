@@ -40,6 +40,7 @@ class UncDirectoryConnection(object):
         for idx, (username, password) in enumerate(cred_attempts):
             try:
                 connect_with_creds(username, password)
+                break
             except ShellCommandError:
                 if idx == length(cred_attempts) - 1:
                     raise  # Raise the error if this was the last attempt
