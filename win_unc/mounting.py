@@ -8,6 +8,17 @@ from win_unc.internal.sanitize import sanitize_for_shell, sanitize_logon, saniti
 from win_unc.internal.shell import run, ShellCommandError
 
 
+def catch(func, *args, **kwargs):
+    """
+    Executes `func` with `args` and `kwargs` as arguments. If `func` throws an error, this function
+    returns the error, otherwise it returns `None`.
+    """
+    try:
+        func(*args, **kwargs)
+    except error:
+        return error
+
+
 class UncDirectory(object):
     def __init__(self, path, username=None, password=None):
         self.path = path
@@ -32,18 +43,13 @@ class UncDirectoryConnection(object):
         likely when the credentials are saved by Windows from a previous connection).
         """
         self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc.path))
-
-        cred_attempts = [(None, None)]
-                      + [(self.unc.username, None)] if self.unc.username else []
-                      + [(self.unc.username, self.unc.password)] if self.unc.password else []
-
-        for idx, (username, password) in enumerate(cred_attempts):
-            try:
-                self.connect_with_creds(username, password)
-                break
-            except ShellCommandError:
-                if idx == length(cred_attempts) - 1:
-                    raise  # Raise the error if this was the last attempt
+        error = catch(self.connect_with_creds)
+        if error and username:
+            error = catch(self.connect_with_creds, username)
+        if error and username and password:
+            error = catch(self.connect_with_creds, username, password)
+        if error:
+            raise error
 
     def disconnect(self):
         """
