@@ -34,8 +34,8 @@ class UncDirectoryConnection(object):
         self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc_path))
 
         cred_attempts = [(None, None)]
-                      + [(username, None)] if username else []
-                      + [(username, password)] if username and password else []
+                      + [(self.unc.username, None)] if self.unc.username else []
+                      + [(self.unc.username, self.unc.password)] if self.unc.password else []
 
         for idx, (username, password) in enumerate(cred_attempts):
             try:
