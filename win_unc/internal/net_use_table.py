@@ -61,13 +61,13 @@ class NetUseTable(object):
         """
         return [row[column] for row in self.rows]
 
-    def get_mounted_paths(self):
+    def get_connected_paths(self):
         return self.get_column('remote')
 
-    def get_mounted_drives(self):
-        return self.get_column('local')
+    def get_connected_devices(self):
+        return [device for device in self.get_column('local') if device]
 
-    def get_matching_rows(self, search_dict):
+    def get_matching_rows(self, local=None, remote=None, status=None):
         """
         Returns a list of rows that match a `search_dict`.
         `search_dict` is a dictionary with a subset of the keys in a row.
@@ -75,11 +75,9 @@ class NetUseTable(object):
         result = []
         for row in self.rows:
             matching = True
-
-            for key, value in search_dict.iteritems():
-                if key not in row or (key in row and row[key].lower() != value.lower()):
-                    matching = False
-                    break
+            matching &= local.lower() == row['local'].lower() if local else True
+            matching &= remote.lower() == row['remote'].lower() if remote else True
+            matching &= status.lower() == row['status'].lower() if status else True
 
             if matching:
                 result.append(row)
