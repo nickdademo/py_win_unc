@@ -8,6 +8,17 @@ from win_unc.internal.sanitize import sanitize_for_shell, sanitize_logon, saniti
 from win_unc.internal.shell import run, ShellCommandError
 
 
+def catch(func, *args, **kwargs):
+    """
+    Executes `func` with `args` and `kwargs` as arguments. If `func` throws an error, this function
+    returns the error, otherwise it returns `None`.
+    """
+    try:
+        func(*args, **kwargs)
+    except error:
+        return error
+
+
 class UncDirectory(object):
     def __init__(self, path, username=None, password=None):
         self.path = path
@@ -31,14 +42,14 @@ class UncDirectoryConnection(object):
         credential configurations in case the credentials provided are not necessary (which is
         likely when the credentials are saved by Windows from a previous connection).
         """
-        self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc_path))
-        err = self.connect_with_creds(None, None)
-        if err and username:
-            err = self.connect_with_creds(username, None)
-        if err and username and password:
-            err = self.connect_with_creds(username, password)
-        if err:
-            raise err
+        self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc.path))
+        error = catch(self.connect_with_creds)
+        if error and username:
+            error = catch(self.connect_with_creds, username)
+        if error and username and password:
+            error = catch(self.connect_with_creds, username, password)
+        if error:
+            raise error
 
     def disconnect(self):
         """
@@ -70,12 +81,9 @@ class UncDirectoryConnection(object):
         `username` and/or `password` are used as credentials if they are supplied. If there is an error
         a `ShellCommandError` is raised.
         """
-        try:
-            command = self.get_connection_command(username, password)
-            logger(self.get_connection_command(username, '-----') if password else command)
-            run(command)
-        except ShellCommandError as err:
-            return err
+        command = self.get_connection_command(username, password)
+        logger(self.get_connection_command(username, '-----') if password else command)
+        run(command)
 
     def _get_current_net_use_table(self):
         stdout, _ = run('NET USE')
