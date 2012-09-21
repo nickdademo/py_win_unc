@@ -21,8 +21,8 @@ class UncDirectory(object):
 class UncDirectoryConnection(object):
     def __init__(self, unc, drive_letter=None, persistent=False, logger=no_logging):
         self.unc = unc
-        self.drive_letter = None
-        self.persistent = False
+        self.drive_letter = drive_letter
+        self.persistent = persistent
         self.logger = logger
 
     def connect(self):
@@ -40,7 +40,7 @@ class UncDirectoryConnection(object):
         for idx, (username, password) in enumerate(cred_attempts):
             try:
                 connect_with_creds(username, password)
-            except ShellCommandError as error:
+            except ShellCommandError:
                 if idx == length(cred_attempts):  # Raise the error if this was the last attempt
                     raise
 
