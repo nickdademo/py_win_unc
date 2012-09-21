@@ -32,18 +32,13 @@ class UncDirectoryConnection(object):
         likely when the credentials are saved by Windows from a previous connection).
         """
         self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc_path))
-
-        cred_attempts = [(None, None)]
-                      + [(username, None)] if username else []
-                      + [(username, password)] if username and password else []
-
-        for idx, (username, password) in enumerate(cred_attempts):
-            try:
-                self.connect_with_creds(username, password)
-                break
-            except ShellCommandError:
-                if idx == length(cred_attempts) - 1:
-                    raise  # Raise the error if this was the last attempt
+        err = self.connect_with_creds(None, None)
+        if err and username:
+            err = self.connect_with_creds(username, None)
+        if err and username and password:
+            err = self.connect_with_creds(username, password)
+        if err:
+            raise err
 
     def disconnect(self):
         """
@@ -75,9 +70,12 @@ class UncDirectoryConnection(object):
         `username` and/or `password` are used as credentials if they are supplied. If there is an error
         a `ShellCommandError` is raised.
         """
-        command = self.get_connection_command(username, password)
-        logger(self.get_connection_command(username, '-----') if password else command)
-        run(command)
+        try:
+            command = self.get_connection_command(username, password)
+            logger(self.get_connection_command(username, '-----') if password else command)
+            run(command)
+        except ShellCommandError as err:
+            return err
 
     def _get_current_net_use_table(self):
         stdout, _ = run('NET USE')
