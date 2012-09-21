@@ -75,8 +75,8 @@ class NetUseTable(object):
         result = []
         for row in self.rows:
             matching = True
-            matching &= local.lower() == row['local'].lower() if local else True
-            matching &= remote.lower() == row['remote'].lower() if remote else True
+            matching &= drive_letters_equal(local, row['local']) if local else True
+            matching &= remote_paths_equal(remote, row['remote']) if remote else True
             matching &= status.lower() == row['status'].lower() if status else True
 
             if matching:
@@ -98,6 +98,19 @@ MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS = {
     'Remote': 'remote',
     'Status': 'status',
 }
+
+
+def drive_letters_equal(left, right):
+    return left.rstrip(':').lower() == right.rstrip(':').lower()
+
+
+def normalize_remote_path(path):
+    path = path.lower()
+    return path[-5:] if path.endswith(r'\ipc$') else path
+
+
+def remote_paths_equal(left, right):
+    return normalize_remote_path(left) == normalize_remote_path(right)
 
 
 def rekey_dict(d, key_map):
