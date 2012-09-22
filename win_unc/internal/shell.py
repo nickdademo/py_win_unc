@@ -2,9 +2,9 @@
 Contains functions for interacting with the shell easily.
 """
 
-
 import subprocess
 
+from win_unc.errors import ShellCommandError
 from win_unc.internal.loggers import no_logging
 
 
