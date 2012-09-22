@@ -4,6 +4,8 @@ from win_unc.internal.net_use_table import NetUseTable, parse_net_use_table
 
 
 EMPTY_TABLE = '''
+New connections will be remembered.
+
 There are no entries in the list.
 '''
 
