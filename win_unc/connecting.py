@@ -26,7 +26,6 @@ class UncDirectory(object):
         return not self.__eq__(other)
 
 
-
 class UncDirectoryConnection(object):
     def __init__(self, unc, drive_letter=None, persistent=False, logger=no_logging):
         self.unc = unc
