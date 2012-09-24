@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from win_unc.connecting import UncDirectory
+from win_unc.unc_directory import UncDirectory
 
 
 class TestUncDirectory(TestCase):
