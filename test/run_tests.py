@@ -2,7 +2,7 @@ import platform
 from unittest import main
 
 from test_net_use_table import *
-from test_parsing import *
+from test_sanitize import *
 from test_utils import *
 from test_unc_directory import *
 
