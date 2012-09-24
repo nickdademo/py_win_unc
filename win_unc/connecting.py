@@ -4,7 +4,7 @@ Contains classes for dealing with UNC paths on Windows.
 
 from win_unc.internal.loggers import no_logging
 from win_unc.internal.net_use_table import parse_net_use_table
-from win_unc.internal.sanitize import sanitize_for_shell, sanitize_logon, sanitize_path
+from win_unc.internal import sanitize
 from win_unc.internal.shell import run, ShellCommandError
 from win_unc.internal.utils import catch
 
@@ -74,10 +74,10 @@ class UncDirectoryConnection(object):
         `username` and/or `password` are used as credentials if they are supplied.
         """
         return 'NET USE "{drive}" "{path}" "{password}" /USER:"{user}" /PERSISTENT:{persistent}'.format(
-            drive=sanitize_path(self.drive_letter.rstrip(':')) + ':' if self.drive_letter else '',
-            path=sanitize_path(self.unc.path.rstrip('\\')),
-            password=sanitize_for_shell(password) if password else '',
-            user=sanitize_logon(username) if username else '',
+            drive=sanitize.sanitize_file_name(self.drive_letter) + ':' if self.drive_letter else '',
+            path=sanitize.sanitize_path(self.unc.path.rstrip('\\')),
+            password=sanitize.sanitize_for_shell(password) if password else '',
+            user=sanitize.sanitize_logon(username) if username else '',
             persistent='YES' if drive_letter and persistent else 'NO')
 
     def connect_with_creds(self, username=None, password=None):
