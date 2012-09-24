@@ -100,17 +100,17 @@ MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS = {
 }
 
 
-def drive_letters_equal(left, right):
-    return left.rstrip(':').lower() == right.rstrip(':').lower()
+def drive_letters_equal(a, b):
+    return a.rstrip(':').lower() == b.rstrip(':').lower()
 
 
 def normalize_remote_path(path):
     path = path.lower()
-    return path[-5:] if path.endswith(r'\ipc$') else path
+    return path[:-5] if path.endswith(r'\ipc$') else path.strip('\\')
 
 
-def remote_paths_equal(left, right):
-    return normalize_remote_path(left) == normalize_remote_path(right)
+def remote_paths_equal(a, b):
+    return normalize_remote_path(a) == normalize_remote_path(b)
 
 
 def rekey_dict(d, key_map):
