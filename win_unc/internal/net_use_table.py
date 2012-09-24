@@ -6,7 +6,7 @@ Windows. This table describes what the mounted UNC paths.
 
 from copy import deepcopy
 
-from win_unc.internal.parsing import drop_while, take_while, first, rfirst, not_
+from win_unc.internal.utils import drop_while, take_while, first, rfirst, not_
 from win_unc.internal.shell import run
 
 
