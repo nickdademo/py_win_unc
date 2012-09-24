@@ -33,12 +33,11 @@ class TestParsingNetUseTable(TestCase):
     Tests correct parsing of the output from `NET USE`.
     """
 
-    def assertEqualSets(self, a, b):
+    def assertEqualAsSets(self, a, b):
         """
         Asserts that containers `a` and `b` are equal disregarding ordering.
         """
-        self.assertEqual(set(a), set(b))
-        self.assertEqual(len(a), len(b))
+        self.assertSetEqual(set(a), set(b))
 
     def test_empty_table(self):
         table = parse_net_use_table(EMPTY_TABLE)
@@ -53,10 +52,10 @@ class TestParsingNetUseTable(TestCase):
                          '\\\\localhost\\IPC$',
                          '\\\\localhost\\has    spaces',
                          '\\\\some.remote.path\\with-a-long-path']
-        self.assertEqualSets(table.get_connected_paths(), mounted_paths)
+        self.assertEqualAsSets(table.get_connected_paths(), mounted_paths)
 
         mounted_drives = ['A:', 'B:', 'C:', 'D:']
-        self.assertEqualSets(table.get_connected_devices(), mounted_drives)
+        self.assertEqualAsSets(table.get_connected_devices(), mounted_drives)
 
 
 class TestNetUseTable(TestCase):

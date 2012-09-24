@@ -27,3 +27,14 @@ def first(predicate, iterable):
 
 def rfirst(predicate, iterable):
     return first(predicate, reversed(list(iterable)))
+
+
+def catch(func, *args, **kwargs):
+    """
+    Executes `func` with `args` and `kwargs` as arguments. If `func` throws an error, this function
+    returns the error, otherwise it returns `None`.
+    """
+    try:
+        func(*args, **kwargs)
+    except Exception as error:
+        return error

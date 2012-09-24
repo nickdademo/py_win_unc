@@ -6,6 +6,7 @@ from win_unc.internal.loggers import no_logging
 from win_unc.internal.net_use_table import parse_net_use_table
 from win_unc.internal.sanitize import sanitize_for_shell, sanitize_logon, sanitize_path
 from win_unc.internal.shell import run, ShellCommandError
+from win_unc.internal.utils import catch
 
 
 class UncDirectory(object):
@@ -103,16 +104,6 @@ class UncDirectoryMount(UncDirectoryConnection):
     def is_mounted(self):
         return self.is_connected()
 
-
-def catch(func, *args, **kwargs):
-    """
-    Executes `func` with `args` and `kwargs` as arguments. If `func` throws an error, this function
-    returns the error, otherwise it returns `None`.
-    """
-    try:
-        func(*args, **kwargs)
-    except error:
-        return error
 
 def get_current_net_use_table(self):
     stdout, _ = run('NET USE')
