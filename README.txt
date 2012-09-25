@@ -30,4 +30,3 @@ This package is released under the
 `MIT License`_. (See LICENSE.txt.)
 
 .. _MIT License: http://www.opensource.org/licenses/mit-license.php
-

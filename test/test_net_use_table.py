@@ -69,7 +69,7 @@ class TestNetUseTable(TestCase):
 
         table.add_row({'local': 'local', 'remote': 'remote1', 'status': 'status'})
         self.assertEqual(table.get_connected_paths(), ['remote1'])
-        
+
         table.add_row({'local': 'local', 'remote': 'remote2', 'status': 'status'})
         self.assertEqual(table.get_connected_paths(), ['remote1', 'remote2'])
 
@@ -79,48 +79,72 @@ class TestNetUseTable(TestCase):
 
         table.add_row({'local': 'local1', 'remote': 'remote', 'status': 'status'})
         self.assertEqual(table.get_connected_devices(), ['local1'])
-        
+
         table.add_row({'local': 'local2', 'remote': 'remote', 'status': 'status'})
         self.assertEqual(table.get_connected_devices(), ['local1', 'local2'])
 
-    def test_get_matching_rows_basic(self):
+    def test_get_matching_rows_selecting(self):
         table = NetUseTable()
-        
+
         self.assertEqual(table.get_matching_rows(), [])
         self.assertEqual(table.get_matching_rows(local='local'), [])
 
-        row1 = {'local': 'local1', 'remote': 'remote1', 'status': 'status'}
-        row2 = {'local': 'local2', 'remote': 'remote2', 'status': 'status'}
-        row3 = {'local': 'local3', 'remote': 'remote2', 'status': 'status'}
+        row1 = {'local': 'local1', 'remote': 'remote2', 'status': 'status1'}
+        row2 = {'local': 'local1', 'remote': 'remote1', 'status': 'status2'}
+        row3 = {'local': 'local2', 'remote': 'remote1', 'status': 'status1'}
         table.add_row(row1)
         table.add_row(row2)
         table.add_row(row3)
 
         self.assertEqual(table.get_matching_rows(), [row1, row2, row3])
-        self.assertEqual(table.get_matching_rows(local='local3'), [row3])
-        self.assertEqual(table.get_matching_rows(remote='remote2'), [row2, row3])
-        self.assertEqual(table.get_matching_rows(status='status'), [row1, row2, row3])
+        self.assertEqual(table.get_matching_rows(local='local0'), [])
+        self.assertEqual(table.get_matching_rows(remote='remote0'), [])
+        self.assertEqual(table.get_matching_rows(status='status0'), [])
+        self.assertEqual(table.get_matching_rows(local='local1'), [row1, row2])
+        self.assertEqual(table.get_matching_rows(remote='remote1'), [row2, row3])
+        self.assertEqual(table.get_matching_rows(status='status1'), [row1, row3])
 
-        self.assertEqual(table.get_matching_rows(remote='remote2', status='status'), [row2, row3])
+        self.assertEqual(table.get_matching_rows(local='local2', remote='remote2'), [])
+        self.assertEqual(table.get_matching_rows(local='local1', remote='remote1'), [row2])
+        self.assertEqual(table.get_matching_rows(local='local1', status='status1'), [row1])
+        self.assertEqual(table.get_matching_rows(remote='remote1', status='status1'), [row3])
+
+        self.assertEqual(table.get_matching_rows(local='local1',
+                                                 remote='remote2',
+                                                 status='status1'),
+                         [row1])
 
     def test_get_matching_rows_local_comparisons(self):
         table = NetUseTable()
 
-        row1 = {'local': 'A:', 'remote': '', 'status': ''}
-        table.add_row(row1)
+        row = {'local': 'A:', 'remote': '', 'status': ''}
+        table.add_row(row)
 
-        self.assertEqual(table.get_matching_rows(local='a'), [row1])
-        self.assertEqual(table.get_matching_rows(local='A'), [row1])
-        self.assertEqual(table.get_matching_rows(local='a:'), [row1])
-        self.assertEqual(table.get_matching_rows(local='A:'), [row1])
+        self.assertEqual(table.get_matching_rows(local='a'), [row])
+        self.assertEqual(table.get_matching_rows(local='A'), [row])
+        self.assertEqual(table.get_matching_rows(local='a:'), [row])
+        self.assertEqual(table.get_matching_rows(local='A:'), [row])
+        self.assertEqual(table.get_matching_rows(local='b:'), [])
 
     def test_get_matching_rows_remote_comparisons(self):
         table = NetUseTable()
 
-        row1 = {'local': '', 'remote': r'\\remote\a\IPC$', 'status': ''}
-        table.add_row(row1)
+        row = {'local': '', 'remote': r'\\remote\a\IPC$', 'status': ''}
+        table.add_row(row)
 
-        self.assertEqual(table.get_matching_rows(remote=r'\\remote\a'), [row1])
-        self.assertEqual(table.get_matching_rows(remote=r'\\Remote\A'), [row1])
-        self.assertEqual(table.get_matching_rows(remote=r'\\remote\a\IPC$'), [row1])
-        self.assertEqual(table.get_matching_rows(remote=r'\\remote\a\ipc$'), [row1])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote\a'), [row])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote\a\\'), [row])
+        self.assertEqual(table.get_matching_rows(remote=r'\\Remote\A'), [row])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote\a\IPC$'), [row])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote\a\ipc$'), [row])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote\b'), [])
+
+    def test_get_matching_rows_status_comparisons(self):
+        table = NetUseTable()
+
+        row = {'local': '', 'remote': '', 'status': 'ABC'}
+        table.add_row(row)
+
+        self.assertEqual(table.get_matching_rows(status=r'ABC'), [row])
+        self.assertEqual(table.get_matching_rows(status=r'abc'), [row])
+        self.assertEqual(table.get_matching_rows(status=r'cba'), [])
