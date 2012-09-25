@@ -16,8 +16,11 @@ Unit Testing
 
 To run the unit tests, do the following::
 
-    $ cd tests/
-    $ python run_tests.py
+    $ python test/run_tests.py
+
+For all the tests to run, you must perform them on a Windows machine:
+
+    > python test\run_tests.py
 
 
 License
