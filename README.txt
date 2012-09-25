@@ -18,7 +18,7 @@ To run the unit tests, do the following::
 
     $ python test/run_tests.py
 
-For all the tests to run, you must perform them on a Windows machine:
+For all the tests to run, you must perform them on a Windows machine::
 
     > python test\run_tests.py
 
