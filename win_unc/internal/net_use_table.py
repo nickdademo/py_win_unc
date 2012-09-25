@@ -106,7 +106,7 @@ def drive_letters_equal(a, b):
 
 def normalize_remote_path(path):
     path = path.lower()
-    return path[:-5] if path.endswith(r'\ipc$') else path.strip('\\')
+    return path[:-5] if path.endswith(r'\ipc$') else path.rstrip('\\')
 
 
 def remote_paths_equal(a, b):
