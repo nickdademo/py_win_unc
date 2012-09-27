@@ -2,17 +2,28 @@
 Contains classes for dealing with UNC paths on Windows.
 """
 
+from win_unc.disk_drive import get_available_disk_drive
+from win_unc.internal import sanitize as S
 from win_unc.internal.loggers import no_logging
 from win_unc.internal.net_use_table import parse_net_use_table
-from win_unc.internal import sanitize
 from win_unc.internal.shell import run, ShellCommandError
 from win_unc.internal.utils import catch, quote
 
 
 class UncDirectoryConnection(object):
-    def __init__(self, unc, drive_letter=None, persistent=False, logger=no_logging):
+    def __init__(self, unc, disk_drive=None, persistent=False, logger=no_logging):
+        """
+        `unc` is a `UncDirectory` that describes the UNC path and necessary credentials (if
+              needed).
+        `disk_drive` is a drive letter between 'D' and 'Z'. This is where the UNC path will be
+                       mounted when `mount()` is called. If `disk_drive` is `None`, then one of
+                       the available drive letters on the system will be selected or
+                       `NoDrivesAvailableError` will be raised.
+        `persistent` must be `True` if the UNC drive should be mounted such that it is persists
+                     across logins of the current Windows user.
+        """
         self.unc = unc
-        self.drive_letter = drive_letter.rstrip(':') if drive_letter else None
+        self.disk_drive = disk_drive
         self.persistent = persistent
         self.logger = logger
 
@@ -33,16 +44,16 @@ class UncDirectoryConnection(object):
 
     def disconnect(self):
         """
-        Unmounts the UNC path mounted at `drive_letter`. If the command fails, this will raise a
+        Unmounts the UNC path mounted at `disk_drive`. If the command fails, this will raise a
         `ShellCommandError`.
         """
-        identifier = self.drive_letter + ':' if self.drive_letter else self.unc.path
+        identifier = self.disk_drive or S.sanitize_path(self.unc.get_normalized_path())
         self.logger('Disconnecting the network UNC path "{path}".'.format(path=self.unc.path))
-        run('NET USE {id} /DELETE /YES'.format(id=identifier), self.logger)
+        run('NET USE "{id}" /DELETE /YES'.format(id=identifier), self.logger)
 
     def is_connected(self):
         net_use_table = get_current_net_use_table()
-        matching_rows = net_use_table.get_matching_rows(local=self.drive_letter, remote=self.unc.path)
+        matching_rows = net_use_table.get_matching_rows(local=self.disk_drive, remote=self.unc.path)
         if matching_rows:
             return matching_rows[0]['status'] == 'OK'
         else:
@@ -53,17 +64,16 @@ class UncDirectoryConnection(object):
         Returns the Windows command to be used to connect this UNC directory.
         `username` and/or `password` are used as credentials if they are supplied.
         """
-        device_str = (' ' + quote(sanitize.sanitize_file_name(self.drive_letter) + ':')
-                      if self.drive_letter else '')
-        password_str = ' ' + quote(sanitize.sanitize_for_shell(password)) if password else ''
-        user_str = ' /USER:"{0}"'.format(sanitize.sanitize_logon(username)) if username else ''
+        device_str = (' ' + quote(self.disk_drive) if self.disk_drive else '')
+        password_str = ' ' + quote(S.sanitize_for_shell(password)) if password else ''
+        user_str = ' /USER:"{0}"'.format(S.sanitize_logon(username)) if username else ''
 
         return 'NET USE{device} "{path}"{password}{user} /PERSISTENT:{persistent}'.format(
             device=device_str,
-            path=sanitize.sanitize_path(self.unc.path.rstrip('\\')),
+            path=S.sanitize_path(self.unc.get_normalized_path()),
             password=password_str,
             user=user_str,
-            persistent='YES' if self.drive_letter and persistent else 'NO')
+            persistent='YES' if self.disk_drive and persistent else 'NO')
 
     def connect_with_creds(self, username=None, password=None):
         """
@@ -75,10 +85,28 @@ class UncDirectoryConnection(object):
         self.logger(self.get_connection_command(username, '-----') if password else command)
         run(command)
 
+    def __str__(self):
+        return str(self.unc)
+
+    def __repr__(self):
+        return '<{cls}: {str}>'.format(cls=self.__clas__.__name__, str=str(self))
+
 
 class UncDirectoryMount(UncDirectoryConnection):
-    def __init__(self, unc, drive_letter, persistent=False, logger=no_logging):
-        super(self, UncDirectoryMount).__init__(unc, drive_letter, persistent, logger)
+    def __init__(self, unc, disk_drive=None, persistent=False, logger=no_logging):
+        """
+        Creates a `UncDirectoryConnection` with a target mount point (drive letter).
+        `unc` is a `UncDirectory` that describes the UNC path and necessary credentials (if
+              needed).
+        `disk_drive` is a drive letter between 'D' and 'Z'. This is where the UNC path will be
+                       mounted when `mount()` is called. If `disk_drive` is `None`, then one of
+                       the available drive letters on the system will be selected or
+                       `NoDrivesAvailableError` will be raised.
+        `persistent` must be `True` if the UNC drive should be mounted such that it is persists
+                     across logins of the current Windows user.
+        """
+        disk_drive = disk_drive if disk_drive else get_available_disk_drive()
+        super(self, UncDirectoryMount).__init__(unc, disk_drive, persistent, logger)
 
     def mount(self):
         self.connect()
