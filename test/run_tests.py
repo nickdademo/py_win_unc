@@ -10,7 +10,7 @@ from test_unc_directory import *
 
 if platform.system() == 'Windows':
     print 'Including Windows-specific tests'
-    from test_connecting import *
+    from win_test_connecting import *
 else:
     print 'WARNING: Excluding Windows-specific tests because host is not Windows'
 
