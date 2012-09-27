@@ -1,6 +1,7 @@
 import platform
 from unittest import main
 
+from test_disk_drive import *
 from test_net_use_table import *
 from test_sanitize import *
 from test_utils import *
