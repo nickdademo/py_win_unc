@@ -1,8 +1,13 @@
 class UncDirectory(object):
     def __init__(self, path, username=None, password=None):
-        self.path = path
-        self.username = username
-        self.password = password
+        if hasattr(path, 'path') and hasattr(path, 'username') and hasattr(path, 'password'):
+            self.path = path.path
+            self.username = path.username
+            self.password = path.password
+        else:
+            self.path = path
+            self.username = username
+            self.password = password
 
     def __eq__(self, other):
         try:
