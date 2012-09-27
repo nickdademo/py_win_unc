@@ -55,7 +55,7 @@ class UncDirectoryConnection(object):
         net_use_table = get_current_net_use_table()
         matching_rows = net_use_table.get_matching_rows(local=self.disk_drive, remote=self.unc.path)
         if matching_rows:
-            return matching_rows[0]['status'] == 'OK'
+            return matching_rows[0]['status'].lower() in ['ok', 'disconnected']
         else:
             return False
 
