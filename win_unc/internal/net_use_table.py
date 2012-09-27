@@ -3,11 +3,11 @@ Contains functions and classes for parsing and storing the results of a `net use
 Windows. This table describes what the mounted UNC paths.
 """
 
-
 from copy import deepcopy
 
+from win_unc.disk_drive import DiskDrive
 from win_unc.internal.utils import drop_while, take_while, first, rfirst, not_
-from win_unc.internal.shell import run
+from win_unc.unc_directory import UncDirectory
 
 
 class NetUseColumn(object):
@@ -75,8 +75,8 @@ class NetUseTable(object):
         result = []
         for row in self.rows:
             matching = True
-            matching &= drive_letters_equal(local, row['local']) if local else True
-            matching &= remote_paths_equal(remote, row['remote']) if remote else True
+            matching &= DiskDrive(local) == DiskDrive(row['local']) if local else True
+            matching &= UncDirectory(remote) == UncDirectory(row['remote']) if remote else True
             matching &= status.lower() == row['status'].lower() if status else True
 
             if matching:
@@ -102,15 +102,6 @@ MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS = {
 
 def drive_letters_equal(a, b):
     return a.rstrip(':').lower() == b.rstrip(':').lower()
-
-
-def normalize_remote_path(path):
-    path = path.lower()
-    return path[:-5] if path.endswith(r'\ipc$') else path.rstrip('\\')
-
-
-def remote_paths_equal(a, b):
-    return normalize_remote_path(a) == normalize_remote_path(b)
 
 
 def rekey_dict(d, key_map):

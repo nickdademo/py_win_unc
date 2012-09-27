@@ -6,11 +6,19 @@ class UncDirectory(object):
 
     def __eq__(self, other):
         try:
-            return (self.path.lower() == other.path.lower()
+            return (self.get_normalized_path() == other.get_normalized_path()
                     and self.username == other.username
                     and self.password == other.password)
         except AttributeError:
             return False
+
+    def get_normalized_path(self):
+        """
+        Returns the normalized path for this `UncDirectory`. Differing UNC paths that all point to
+        the same network location will have the same normalized path.
+        """
+        path = self.path.lower()
+        return path[:-5] if path.endswith(r'\ipc$') else path.rstrip('\\')
 
     def __str__(self):
         return '{username}{password}{at}{path}'.format(
