@@ -14,7 +14,7 @@ Python library for handling UNC mounting on Windows.
 Dependencies
 ------------
 
-To install dependencies, do this
+To install dependencies, do this::
 
     $ pip install -r requirements.txt
 
