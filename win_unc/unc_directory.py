@@ -1,6 +1,6 @@
 from stringlike import StringLike
 
-from win_unc.internal.utils import quote, dequote
+from win_unc.internal.utils import quote
 
 
 class UncDirectory(StringLike):
