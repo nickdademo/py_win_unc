@@ -12,12 +12,11 @@ class UncDirectory(StringLike):
             self.path = path
             self.creds = UncCredentials(username, password)
 
-    def __eq__(self, other):
-        if hasattr(other, 'get_normalized_path') and hasattr(other, 'creds'):
-            return (self.get_normalized_path() == other.get_normalized_path()
-                    and self.creds == other.creds)
-        elif hasattr(other, '__str__'):
-            return self == get_unc_directory_from_string(str(other))
+    def get_username(self):
+        return self.creds.username
+
+    def get_password(self):
+        return self.creds.password
 
     def get_normalized_path(self):
         """
@@ -26,6 +25,13 @@ class UncDirectory(StringLike):
         """
         path = self.path.lower()
         return path[:-5] if path.endswith(r'\ipc$') else path.rstrip('\\')
+
+    def __eq__(self, other):
+        if hasattr(other, 'get_normalized_path') and hasattr(other, 'creds'):
+            return (self.get_normalized_path() == other.get_normalized_path()
+                    and self.creds == other.creds)
+        elif hasattr(other, '__str__'):
+            return self == get_unc_directory_from_string(str(other))
 
     def __str__(self):
         creds = self.creds.get_auth_string()

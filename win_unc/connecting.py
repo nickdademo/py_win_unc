@@ -27,6 +27,12 @@ class UncDirectoryConnection(object):
         self.persistent = persistent
         self.logger = logger
 
+    def get_username(self):
+        return self.unc.get_username()
+
+    def get_password(self):
+        return self.unc.get_password()
+
     def connect(self):
         """
         Connects the UNC directory. This will make at most three connection attempts with different
@@ -34,11 +40,15 @@ class UncDirectoryConnection(object):
         likely when the credentials are saved by Windows from a previous connection).
         """
         self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc.path))
+
+        username = self.get_username()
+        password = self.get_password()
+
         error = catch(self.connect_with_creds)
-        if error and self.unc.username:
-            error = catch(self.connect_with_creds, self.unc.username)
-        if error and self.unc.username and self.unc.password:
-            error = catch(self.connect_with_creds, self.unc.username, self.unc.password)
+        if error and username:
+            error = catch(self.connect_with_creds, username)
+        if error and username and password:
+            error = catch(self.connect_with_creds, username, password)
         if error:
             raise error
 
@@ -52,8 +62,8 @@ class UncDirectoryConnection(object):
         run('NET USE "{id}" /DELETE /YES'.format(id=identifier), self.logger)
 
     def is_connected(self):
-        net_use_table = get_current_net_use_table()
-        matching_rows = net_use_table.get_matching_rows(local=self.disk_drive, remote=self.unc.path)
+        net_use = get_current_net_use_table()
+        matching_rows = net_use.get_matching_rows(local=self.disk_drive, remote=self.unc.path)
         if matching_rows:
             status = matching_rows[0]['status']
             return status.lower() in ['ok', 'disconnected']
@@ -65,8 +75,8 @@ class UncDirectoryConnection(object):
         Returns the Windows command to be used to connect this UNC directory.
         `username` and/or `password` are used as credentials if they are supplied.
         """
-        device_str = (' ' + quote(self.disk_drive) if self.disk_drive else '')
-        password_str = ' ' + quote(S.sanitize_for_shell(password)) if password else ''
+        device_str = ' "{0}"'.format(self.disk_drive) if self.disk_drive else ''
+        password_str = ' "{0}"'.format(S.sanitize_for_shell(password)) if password else ''
         user_str = ' /USER:"{0}"'.format(S.sanitize_logon(username)) if username else ''
 
         return 'NET USE{device} "{path}"{password}{user} /PERSISTENT:{persistent}'.format(
