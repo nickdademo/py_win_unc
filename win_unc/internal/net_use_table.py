@@ -100,10 +100,6 @@ MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS = {
 }
 
 
-def drive_letters_equal(a, b):
-    return a.rstrip(':').lower() == b.rstrip(':').lower()
-
-
 def rekey_dict(d, key_map):
     """
     Renames the keys in `d` based on `key_map`.
