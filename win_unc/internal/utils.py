@@ -28,10 +28,6 @@ def rfirst(predicate, iterable):
     return first(predicate, reversed(list(iterable)))
 
 
-def quote(string, char='"'):
-    return char + string + char
-
-
 def catch(func, *args, **kwargs):
     """
     Executes `func` with `args` and `kwargs` as arguments. If `func` throws an error, this function

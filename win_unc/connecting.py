@@ -7,7 +7,7 @@ from win_unc.internal import sanitize as S
 from win_unc.internal.loggers import no_logging
 from win_unc.internal.net_use_table import parse_net_use_table
 from win_unc.internal.shell import run, ShellCommandError
-from win_unc.internal.utils import catch, quote
+from win_unc.internal.utils import catch
 
 
 class UncDirectoryConnection(object):

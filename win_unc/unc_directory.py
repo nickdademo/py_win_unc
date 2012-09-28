@@ -1,7 +1,5 @@
 from stringlike import StringLike
 
-from win_unc.internal.utils import quote
-
 
 class UncDirectory(StringLike):
     def __init__(self, path, username=None, password=None):

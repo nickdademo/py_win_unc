@@ -97,15 +97,6 @@ class TestHigherOrderNot(TestCase):
         self.assertEqual(utils.not_(id_)(True), False)
 
 
-class TestQuote(TestCase):
-    def test_quote(self):
-        self.assertEqual(utils.quote('', ''), '')
-        self.assertEqual(utils.quote('', '|'), '||')
-        self.assertEqual(utils.quote('abc', '|'), '|abc|')
-        self.assertEqual(utils.quote('ABC', '|'), '|ABC|')
-        self.assertEqual(utils.quote('abc'), '"abc"')
-
-
 def raiseSomething(exception):
     raise exception()
 
