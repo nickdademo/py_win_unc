@@ -3,7 +3,7 @@ import string
 
 from stringlike import StringLike
 
-from win_unc.errors import NoDrivesAvailableError
+from win_unc.errors import NoDrivesAvailableError, InvalidDiskDriveError
 
 
 class DiskDrive(StringLike):
@@ -17,7 +17,13 @@ class DiskDrive(StringLike):
               `DiskDrive` with the same path.
         """
         letter = drive.drive_letter if hasattr(drive, 'drive_letter') else drive
-        self.drive_letter = letter.upper().rstrip(':\\') + ':'
+        letter = letter.upper().rstrip(':\\')
+
+        if not is_valid_drive_letter(letter):
+            raise InvalidDiskDriveError(drive)
+        else:
+            self.drive_letter = letter + ':'
+
 
     def __str__(self):
         """
@@ -41,3 +47,7 @@ def get_available_disk_drive():
             return DiskDrive(letter)
     else:
         raise NoDrivesAvailableError()
+
+
+def is_valid_drive_letter(string):
+    return len(string) == 1 and string[0].isalpha()

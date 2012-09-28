@@ -3,41 +3,46 @@ Contains exception classes that can be raised by this library.
 """
 
 
-class UncMountingError(Exception):
+class WinUncError(Exception):
     pass
 
 
-class UncMountFailedError(UncMountingError):
+class InvalidUsernameError(WinUncError):
     """
-    Error for the case when the `UncDirectory` is not able to be mounted.
+    Error for the case when the library user supplies an invalid username for UNC credentials.
     """
-    def __init__(self, unc_path, drive_letter):
-        """
-        Returns a `MountingError` object. `unc_path` is the UNC path that could not be mounted.
-        `drive_letter` is the Windows drive letter that was attempting to be mapped.
-        """
-        self.unc_path = unc_path
-        self.drive_letter = drive_letter
+
+    def __init__(self, username):
+        self.username = username
 
     def __str__(self):
-        return 'Failed to mount UNC directory at "{path}" to the {drive}: drive.'.format(
-            path=self.unc_path,
-            drive=self.drive_letter)
+        return 'The username "{0}" is invalid.'.format(self.username)
 
 
-class NoDrivesAvailableError(UncMountingError):
+class InvalidDiskDriveError(WinUncError):
+    """
+    Error for the case when the library user supplies and invalid drive letter when creating a
+    `DiskDrive`.
+    """
+
+    def __init__(self, drive):
+        self.drive = drive
+
+    def __str__(self):
+        return 'The disk drive "{0}" is invalid. Valid drives are A through Z (e.g. "C:").'.format(
+            self.drive)
+
+
+class NoDrivesAvailableError(WinUncError):
     """
     Error for the case when Windows has no drive letters available to be mapped.
     """
 
     def __str__(self):
-        """
-        Returns a description of the error.
-        """
         return 'The system has no drive letters available.'
 
 
-class ShellCommandError(UncMountingError):
+class ShellCommandError(WinUncError):
     def __init__(self, command=None, error_code=None):
         self.command = command
         self.error_code = error_code

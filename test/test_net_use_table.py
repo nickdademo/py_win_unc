@@ -67,21 +67,21 @@ class TestNetUseTable(TestCase):
         table = NetUseTable()
         self.assertEqual(table.get_connected_paths(), [])
 
-        table.add_row({'local': 'local', 'remote': 'remote1', 'status': 'status'})
-        self.assertEqual(table.get_connected_paths(), ['remote1'])
+        table.add_row({'local': 'A', 'remote': r'\\remote1', 'status': 'status'})
+        self.assertEqual(table.get_connected_paths(), [r'\\remote1'])
 
-        table.add_row({'local': 'local', 'remote': 'remote2', 'status': 'status'})
-        self.assertEqual(table.get_connected_paths(), ['remote1', 'remote2'])
+        table.add_row({'local': 'A', 'remote': r'\\remote2', 'status': 'status'})
+        self.assertEqual(table.get_connected_paths(), [r'\\remote1', r'\\remote2'])
 
     def test_get_connected_devices(self):
         table = NetUseTable()
         self.assertEqual(table.get_connected_devices(), [])
 
-        table.add_row({'local': 'local1', 'remote': 'remote', 'status': 'status'})
-        self.assertEqual(table.get_connected_devices(), ['local1'])
+        table.add_row({'local': 'A', 'remote': r'\\remote', 'status': 'status'})
+        self.assertEqual(table.get_connected_devices(), ['A'])
 
-        table.add_row({'local': 'local2', 'remote': 'remote', 'status': 'status'})
-        self.assertEqual(table.get_connected_devices(), ['local1', 'local2'])
+        table.add_row({'local': 'B', 'remote': r'\\remote', 'status': 'status'})
+        self.assertEqual(table.get_connected_devices(), ['A', 'B'])
 
     def test_get_matching_rows_selecting(self):
         table = NetUseTable()
@@ -89,28 +89,28 @@ class TestNetUseTable(TestCase):
         self.assertEqual(table.get_matching_rows(), [])
         self.assertEqual(table.get_matching_rows(local='local'), [])
 
-        row1 = {'local': 'local1', 'remote': 'remote2', 'status': 'status1'}
-        row2 = {'local': 'local1', 'remote': 'remote1', 'status': 'status2'}
-        row3 = {'local': 'local2', 'remote': 'remote1', 'status': 'status1'}
+        row1 = {'local': 'A', 'remote': r'\\remote2', 'status': 'status1'}
+        row2 = {'local': 'A', 'remote': r'\\remote1', 'status': 'status2'}
+        row3 = {'local': 'B', 'remote': r'\\remote1', 'status': 'status1'}
         table.add_row(row1)
         table.add_row(row2)
         table.add_row(row3)
 
         self.assertEqual(table.get_matching_rows(), [row1, row2, row3])
-        self.assertEqual(table.get_matching_rows(local='local0'), [])
-        self.assertEqual(table.get_matching_rows(remote='remote0'), [])
+        self.assertEqual(table.get_matching_rows(local='Z'), [])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote0'), [])
         self.assertEqual(table.get_matching_rows(status='status0'), [])
-        self.assertEqual(table.get_matching_rows(local='local1'), [row1, row2])
-        self.assertEqual(table.get_matching_rows(remote='remote1'), [row2, row3])
+        self.assertEqual(table.get_matching_rows(local='A'), [row1, row2])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote1'), [row2, row3])
         self.assertEqual(table.get_matching_rows(status='status1'), [row1, row3])
 
-        self.assertEqual(table.get_matching_rows(local='local2', remote='remote2'), [])
-        self.assertEqual(table.get_matching_rows(local='local1', remote='remote1'), [row2])
-        self.assertEqual(table.get_matching_rows(local='local1', status='status1'), [row1])
-        self.assertEqual(table.get_matching_rows(remote='remote1', status='status1'), [row3])
+        self.assertEqual(table.get_matching_rows(local='B', remote=r'\\remote2'), [])
+        self.assertEqual(table.get_matching_rows(local='A', remote=r'\\remote1'), [row2])
+        self.assertEqual(table.get_matching_rows(local='A', status='status1'), [row1])
+        self.assertEqual(table.get_matching_rows(remote=r'\\remote1', status='status1'), [row3])
 
-        self.assertEqual(table.get_matching_rows(local='local1',
-                                                 remote='remote2',
+        self.assertEqual(table.get_matching_rows(local='A',
+                                                 remote=r'\\remote2',
                                                  status='status1'),
                          [row1])
 
