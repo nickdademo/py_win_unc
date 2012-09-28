@@ -3,9 +3,9 @@ from stringlike import StringLike
 
 class UncDirectory(StringLike):
     def __init__(self, path, username=None, password=None):
-        if hasattr(path, 'path') and hasattr(path, 'username') and hasattr(path, 'password'):
+        if hasattr(path, 'path') and hasattr(path, 'creds'):
             self.path = path.path
-            self.creds = UncCredentials(path.username, path.password)
+            self.creds = path.creds
         else:
             self.path = path
             self.creds = UncCredentials(username, password)

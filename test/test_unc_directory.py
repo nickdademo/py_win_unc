@@ -23,6 +23,27 @@ class TestUncDirectory(TestCase):
         self.assertNotEqual(UncDirectory(r'\\path'), None)
         self.assertNotEqual(UncDirectory(r'\\path'), 'somestring')
 
+    def test_cloning(self):
+        unc = UncDirectory(UncDirectory(r'\\path'))
+        self.assertEqual(unc.get_path(), r'\\path')
+        self.assertIsNone(UncDirectory(unc).get_username())
+        self.assertIsNone(UncDirectory(unc).get_password())
+
+        unc = UncDirectory(UncDirectory(r'\\path', 'username'))
+        self.assertEqual(unc.get_path(), r'\\path')
+        self.assertEqual(unc.get_username(), 'username')
+        self.assertIsNone(unc.get_password())
+
+        unc = UncDirectory(UncDirectory(r'\\path', None, 'password'))
+        self.assertEqual(unc.get_path(), r'\\path')
+        self.assertIsNone(unc.get_username())
+        self.assertEqual(unc.get_password(), 'password')
+
+        unc = UncDirectory(UncDirectory(r'\\path', 'username', 'password'))
+        self.assertEqual(unc.get_path(), r'\\path')
+        self.assertEqual(unc.get_username(), 'username')
+        self.assertEqual(unc.get_password(), 'password')
+
     def test_get_normalized_path(self):
         self.assertEqual(UncDirectory(r'\\abc').get_normalized_path(), r'\\abc')
         self.assertEqual(UncDirectory(r'\\ABC').get_normalized_path(), r'\\abc')
