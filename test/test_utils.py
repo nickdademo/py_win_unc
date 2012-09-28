@@ -106,19 +106,6 @@ class TestQuote(TestCase):
         self.assertEqual(utils.quote('abc'), '"abc"')
 
 
-class TestDequote(TestCase):
-    def test_dequote(self):
-        self.assertEqual(utils.dequote('', ''), '')
-        self.assertEqual(utils.dequote('', '|'), '')
-        self.assertEqual(utils.dequote('||', '|'), '')
-        self.assertEqual(utils.dequote('|abc|', '|'), 'abc')
-        self.assertEqual(utils.dequote('abc', '|'), 'abc')
-        self.assertEqual(utils.dequote('|abc', '|'), '|abc')
-        self.assertEqual(utils.dequote('abc|', '|'), 'abc|')
-        self.assertEqual(utils.dequote('|ABC|', '|'), 'ABC')
-        self.assertEqual(utils.dequote('"abc"'), 'abc')
-
-
 def raiseSomething(exception):
     raise exception()
 

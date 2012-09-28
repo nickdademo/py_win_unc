@@ -32,10 +32,6 @@ def quote(string, char='"'):
     return char + string + char
 
 
-def dequote(string, char='"'):
-    return string[1:-1] if string.startswith(char) and string.endswith(char) else string
-
-
 def catch(func, *args, **kwargs):
     """
     Executes `func` with `args` and `kwargs` as arguments. If `func` throws an error, this function
