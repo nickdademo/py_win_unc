@@ -2,7 +2,6 @@
 Contains generic helper funcitons to aid in parsing.
 """
 
-
 import itertools
 
 
@@ -31,6 +30,10 @@ def rfirst(predicate, iterable):
 
 def quote(string, char='"'):
     return char + string + char
+
+
+def dequote(string, char='"'):
+    return string[1:-1] if string.startswith(char) and string.endswith(char) else string
 
 
 def catch(func, *args, **kwargs):

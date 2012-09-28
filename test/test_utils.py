@@ -9,47 +9,47 @@ is_alpha = lambda x: x.isalpha()
 
 
 class ListTransformerTestCase(TestCase):
-    def assertEqualLists(self, first, second):
+    def assertEqualAsLists(self, first, second):
         self.assertEqual(list(first), list(second))
 
 
 class TestDropWhile(ListTransformerTestCase):
     def test_drop_nothing(self):
-        self.assertEqualLists(utils.drop_while(never, ''), '')
-        self.assertEqualLists(utils.drop_while(never, 'a'), 'a')
-        self.assertEqualLists(utils.drop_while(never, 'abc'), 'abc')
+        self.assertEqualAsLists(utils.drop_while(never, ''), '')
+        self.assertEqualAsLists(utils.drop_while(never, 'a'), 'a')
+        self.assertEqualAsLists(utils.drop_while(never, 'abc'), 'abc')
 
     def test_drop_everything(self):
-        self.assertEqualLists(utils.drop_while(always, ''), '')
-        self.assertEqualLists(utils.drop_while(always, 'a'), '')
-        self.assertEqualLists(utils.drop_while(always, 'abc'), '')
+        self.assertEqualAsLists(utils.drop_while(always, ''), '')
+        self.assertEqualAsLists(utils.drop_while(always, 'a'), '')
+        self.assertEqualAsLists(utils.drop_while(always, 'abc'), '')
 
     def test_drop_with_predicate(self):
         not_alpha = lambda x: not x.isalpha()
-        self.assertEqualLists(utils.drop_while(not_alpha, ''), '')
-        self.assertEqualLists(utils.drop_while(not_alpha, 'abc'), 'abc')
-        self.assertEqualLists(utils.drop_while(not_alpha, '123abc456'), 'abc456')
-        self.assertEqualLists(utils.drop_while(not_alpha, '   abc   '), 'abc   ')
-        self.assertEqualLists(utils.drop_while(not_alpha, '   '), '')
+        self.assertEqualAsLists(utils.drop_while(not_alpha, ''), '')
+        self.assertEqualAsLists(utils.drop_while(not_alpha, 'abc'), 'abc')
+        self.assertEqualAsLists(utils.drop_while(not_alpha, '123abc456'), 'abc456')
+        self.assertEqualAsLists(utils.drop_while(not_alpha, '   abc   '), 'abc   ')
+        self.assertEqualAsLists(utils.drop_while(not_alpha, '   '), '')
 
 
 class TestTakeWhile(ListTransformerTestCase):
     def test_take_nothing(self):
-        self.assertEqualLists(utils.take_while(never, ''), '')
-        self.assertEqualLists(utils.take_while(never, 'a'), '')
-        self.assertEqualLists(utils.take_while(never, 'abc'), '')
+        self.assertEqualAsLists(utils.take_while(never, ''), '')
+        self.assertEqualAsLists(utils.take_while(never, 'a'), '')
+        self.assertEqualAsLists(utils.take_while(never, 'abc'), '')
 
     def test_take_everything(self):
-        self.assertEqualLists(utils.take_while(always, ''), '')
-        self.assertEqualLists(utils.take_while(always, 'a'), 'a')
-        self.assertEqualLists(utils.take_while(always, 'abc'), 'abc')
+        self.assertEqualAsLists(utils.take_while(always, ''), '')
+        self.assertEqualAsLists(utils.take_while(always, 'a'), 'a')
+        self.assertEqualAsLists(utils.take_while(always, 'abc'), 'abc')
 
     def test_take_with_predicate(self):
-        self.assertEqualLists(utils.take_while(is_alpha, ''), '')
-        self.assertEqualLists(utils.take_while(is_alpha, 'abc'), 'abc')
-        self.assertEqualLists(utils.take_while(is_alpha, '123abc456'), '')
-        self.assertEqualLists(utils.take_while(is_alpha, '   abc   '), '')
-        self.assertEqualLists(utils.take_while(is_alpha, '   '), '')
+        self.assertEqualAsLists(utils.take_while(is_alpha, ''), '')
+        self.assertEqualAsLists(utils.take_while(is_alpha, 'abc'), 'abc')
+        self.assertEqualAsLists(utils.take_while(is_alpha, '123abc456'), '')
+        self.assertEqualAsLists(utils.take_while(is_alpha, '   abc   '), '')
+        self.assertEqualAsLists(utils.take_while(is_alpha, '   '), '')
 
 
 class TestFirst(TestCase):
@@ -100,10 +100,23 @@ class TestHigherOrderNot(TestCase):
 class TestQuote(TestCase):
     def test_quote(self):
         self.assertEqual(utils.quote('', ''), '')
-        self.assertEqual(utils.quote('', 'x'), 'xx')
-        self.assertEqual(utils.quote('abc', 'x'), 'xabcx')
-        self.assertEqual(utils.quote('ABC', 'x'), 'xABCx')
-        self.assertEqual(utils.quote('ABC'), '"ABC"')
+        self.assertEqual(utils.quote('', '|'), '||')
+        self.assertEqual(utils.quote('abc', '|'), '|abc|')
+        self.assertEqual(utils.quote('ABC', '|'), '|ABC|')
+        self.assertEqual(utils.quote('abc'), '"abc"')
+
+
+class TestDequote(TestCase):
+    def test_dequote(self):
+        self.assertEqual(utils.dequote('', ''), '')
+        self.assertEqual(utils.dequote('', '|'), '')
+        self.assertEqual(utils.dequote('||', '|'), '')
+        self.assertEqual(utils.dequote('|abc|', '|'), 'abc')
+        self.assertEqual(utils.dequote('abc', '|'), 'abc')
+        self.assertEqual(utils.dequote('|abc', '|'), '|abc')
+        self.assertEqual(utils.dequote('abc|', '|'), 'abc|')
+        self.assertEqual(utils.dequote('|ABC|', '|'), 'ABC')
+        self.assertEqual(utils.dequote('"abc"'), 'abc')
 
 
 def raiseSomething(exception):
