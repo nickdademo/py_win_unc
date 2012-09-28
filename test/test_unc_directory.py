@@ -42,8 +42,8 @@ class TestUncDirectory(TestCase):
         self.assertEqual(r'\\path', UncDirectory(r'\\path'))
 
 
-def TestUncCredentials(TestCase):
-    def test_str(self):
+class TestUncCredentials(TestCase):
+    def test_get_auth_string(self):
         self.assertEqual(UncCredentials(None, None).get_auth_string(), '')
         self.assertEqual(UncCredentials('', None).get_auth_string(), '')
         self.assertEqual(UncCredentials(None, '').get_auth_string(), ':')
