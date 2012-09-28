@@ -16,6 +16,9 @@ class UncDirectory(StringLike):
     def get_password(self):
         return self.creds.password
 
+    def get_path(self):
+        return self.path
+
     def get_normalized_path(self):
         """
         Returns the normalized path for this `UncDirectory`. Differing UNC paths that all point to

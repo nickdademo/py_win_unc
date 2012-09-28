@@ -27,6 +27,9 @@ class UncDirectoryConnection(object):
         self.persistent = persistent
         self.logger = logger
 
+    def get_path(self):
+        return self.unc.get_path()
+
     def get_username(self):
         return self.unc.get_username()
 
