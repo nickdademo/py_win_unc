@@ -77,6 +77,19 @@ class TestUncCredentials(TestCase):
         self.assertEqual(UncCredentials('user', ':').get_auth_string(), 'user::')
         self.assertEqual(UncCredentials('user', 'pass').get_auth_string(), 'user:pass')
 
+    def test_eq(self):
+        self.assertEqual(UncCredentials(), UncCredentials())
+        self.assertEqual(UncCredentials('user', None), UncCredentials('user', None))
+        self.assertEqual(UncCredentials(None, 'pass'), UncCredentials(None, 'pass'))
+        self.assertEqual(UncCredentials('user', 'pass'), UncCredentials('user', 'pass'))
+
+    def test_ne(self):
+        self.assertNotEqual(UncCredentials(), UncCredentials('user'))
+        self.assertNotEqual(UncCredentials('user'), UncCredentials('USER'))
+        self.assertNotEqual(UncCredentials(None, 'pass'), UncCredentials(None, 'USER'))
+        self.assertNotEqual(UncCredentials(), 'somestring')
+        self.assertNotEqual(UncCredentials(), 10)
+
 
 class TestUncParsingFunctions(TestCase):
     def test_get_creds_from_string(self):

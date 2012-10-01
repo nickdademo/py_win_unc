@@ -34,6 +34,9 @@ class UncDirectory(StringLike):
         elif hasattr(other, '__str__'):
             return self == get_unc_directory_from_string(str(other))
 
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __str__(self):
         creds = self.creds.get_auth_string()
         return '{creds}{at}{path}'.format(
@@ -50,12 +53,6 @@ class UncCredentials(object):
         self.username = username
         self.password = password
 
-    def __eq__(self, other):
-        if hasattr(other, 'username') and hasattr(other, 'password'):
-            return self.username == other.username and self.password == other.password
-        else:
-            return False
-
     def get_auth_string(self):
         if self.password is not None:
             return '{0}:{1}'.format(self.username or '', self.password)
@@ -64,8 +61,17 @@ class UncCredentials(object):
         else:
             return ''
 
+    def __eq__(self, other):
+        if hasattr(other, 'username') and hasattr(other, 'password'):
+            return self.username == other.username and self.password == other.password
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __repr__(self):
-        return '<{cls}: "{str}">'.format(cls=self.__class__.__name__, str=self.get_auth_string)
+        return '<{cls}: "{str}">'.format(cls=self.__class__.__name__, str=self.get_auth_string())
 
 
 def get_creds_from_string(string):
