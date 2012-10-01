@@ -1,9 +1,12 @@
 from stringlike import StringLike
 
+from win_unc.errors import InvalidUsernameError
+from win_unc.internal.sanitize import sanitize_logon
+
 
 class UncDirectory(StringLike):
     def __init__(self, path, username=None, password=None):
-        if hasattr(path, 'path') and hasattr(path, 'creds'):
+        if username is None and password is None and hasattr(path, 'path') and hasattr(path, 'creds'):
             self.path = path.path
             self.creds = path.creds
         else:
@@ -50,8 +53,15 @@ class UncDirectory(StringLike):
 
 class UncCredentials(object):
     def __init__(self, username=None, password=None):
-        self.username = username
-        self.password = password
+        if password is None and hasattr(username, 'username') and hasattr(username, 'password'):
+            self.username = username.username
+            self.password = username.password
+        else:
+            self.username = username
+            self.password = password
+
+        if self.username and self.username != sanitize_logon(self.username):
+            raise InvalidUsernameError(username)
 
     def get_auth_string(self):
         if self.password is not None:

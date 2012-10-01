@@ -1,25 +1,27 @@
 from unittest import TestCase
 
 from win_unc import unc_directory as U
+from win_unc.errors import InvalidUsernameError
 from win_unc.unc_directory import UncDirectory, UncCredentials
 
 
 class TestUncDirectory(TestCase):
-    def test_eq_and_ne(self):
+    def test_eq(self):
         self.assertEqual(UncDirectory(r'\\path'), UncDirectory(r'\\path'))
         self.assertEqual(UncDirectory(r'\\path'), UncDirectory(r'\\PATH'))
 
-        self.assertEqual(UncDirectory(r'\\path', 'username'), UncDirectory(r'\\path', 'username'))
-        self.assertEqual(UncDirectory(r'\\path', 'username'), UncDirectory(r'\\PATH', 'username'))
-        self.assertNotEqual(UncDirectory(r'\\path', 'username'), UncDirectory(r'\\path', 'USERNAME'))
+        self.assertEqual(UncDirectory(r'\\path', 'user'), UncDirectory(r'\\path', 'user'))
+        self.assertEqual(UncDirectory(r'\\path', 'user'), UncDirectory(r'\\PATH', 'user'))
 
-        self.assertEqual(UncDirectory(r'\\path', 'username', 'password'),
-                         UncDirectory(r'\\path', 'username', 'password'))
-        self.assertEqual(UncDirectory(r'\\path', 'username', 'password'),
-                         UncDirectory(r'\\PATH', 'username', 'password'))
-        self.assertNotEqual(UncDirectory(r'\\path', 'username', 'password'),
-                            UncDirectory(r'\\path', 'username', 'PASSWORD'))
+        self.assertEqual(UncDirectory(r'\\path', 'user', 'pass'),
+                         UncDirectory(r'\\path', 'user', 'pass'))
+        self.assertEqual(UncDirectory(r'\\path', 'user', 'pass'),
+                         UncDirectory(r'\\PATH', 'user', 'pass'))
 
+    def test_ne(self):
+        self.assertNotEqual(UncDirectory(r'\\path', 'user'), UncDirectory(r'\\path', 'USER'))
+        self.assertNotEqual(UncDirectory(r'\\path', 'user', 'pass'),
+                            UncDirectory(r'\\path', 'user', 'PASS'))
         self.assertNotEqual(UncDirectory(r'\\path'), None)
         self.assertNotEqual(UncDirectory(r'\\path'), 'somestring')
 
@@ -29,20 +31,20 @@ class TestUncDirectory(TestCase):
         self.assertIsNone(UncDirectory(unc).get_username())
         self.assertIsNone(UncDirectory(unc).get_password())
 
-        unc = UncDirectory(UncDirectory(r'\\path', 'username'))
+        unc = UncDirectory(UncDirectory(r'\\path', 'user'))
         self.assertEqual(unc.get_path(), r'\\path')
-        self.assertEqual(unc.get_username(), 'username')
+        self.assertEqual(unc.get_username(), 'user')
         self.assertIsNone(unc.get_password())
 
-        unc = UncDirectory(UncDirectory(r'\\path', None, 'password'))
+        unc = UncDirectory(UncDirectory(r'\\path', None, 'pass'))
         self.assertEqual(unc.get_path(), r'\\path')
         self.assertIsNone(unc.get_username())
-        self.assertEqual(unc.get_password(), 'password')
+        self.assertEqual(unc.get_password(), 'pass')
 
-        unc = UncDirectory(UncDirectory(r'\\path', 'username', 'password'))
+        unc = UncDirectory(UncDirectory(r'\\path', 'user', 'pass'))
         self.assertEqual(unc.get_path(), r'\\path')
-        self.assertEqual(unc.get_username(), 'username')
-        self.assertEqual(unc.get_password(), 'password')
+        self.assertEqual(unc.get_username(), 'user')
+        self.assertEqual(unc.get_password(), 'pass')
 
     def test_get_normalized_path(self):
         self.assertEqual(UncDirectory(r'\\abc').get_normalized_path(), r'\\abc')
@@ -64,6 +66,27 @@ class TestUncDirectory(TestCase):
 
 
 class TestUncCredentials(TestCase):
+    def test_cloning(self):
+        creds = UncCredentials(UncCredentials())
+        self.assertIsNone(creds.username)
+        self.assertIsNone(creds.password)
+
+        creds = UncCredentials(UncCredentials('user', None))
+        self.assertEqual(creds.username, 'user')
+        self.assertIsNone(creds.password)
+
+        creds = UncCredentials(UncCredentials(None, 'pass'))
+        self.assertIsNone(creds.username)
+        self.assertEqual(creds.password, 'pass')
+
+        creds = UncCredentials(UncCredentials('user', 'pass'))
+        self.assertEqual(creds.username, 'user')
+        self.assertEqual(creds.password, 'pass')
+
+    def test_invalid(self):
+        self.assertRaises(InvalidUsernameError, lambda: UncCredentials('"user"'))
+        self.assertRaises(InvalidUsernameError, lambda: UncCredentials('>user'))
+
     def test_get_auth_string(self):
         self.assertEqual(UncCredentials(None, None).get_auth_string(), '')
         self.assertEqual(UncCredentials('', None).get_auth_string(), '')
