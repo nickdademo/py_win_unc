@@ -7,7 +7,23 @@ class WinUncError(Exception):
     pass
 
 
-class InvalidUsernameError(WinUncError):
+class UncDirectoryError(WinUncError):
+    pass
+
+
+class InvalidUncPathError(UncDirectoryError):
+    """
+    Error for the case when the library user supplies an invalid UNC path.
+    """
+
+    def __init__(self, path):
+        self.path = path
+
+    def __str__(self):
+        return 'The UNC path "{0}" is invalid.'.format(self.path)
+
+
+class InvalidUsernameError(UncDirectoryError):
     """
     Error for the case when the library user supplies an invalid username for UNC credentials.
     """

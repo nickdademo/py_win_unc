@@ -1,7 +1,8 @@
 from stringlike import StringLike
 
-from win_unc.errors import InvalidUsernameError
-from win_unc.internal.sanitize import sanitize_logon
+from win_unc.errors import UncDirectoryError, InvalidUncPathError, InvalidUsernameError
+from win_unc.internal.sanitize import sanitize_logon, sanitize_unc_path
+from win_unc.internal.utils import take_while
 
 
 class UncDirectory(StringLike):
@@ -12,6 +13,9 @@ class UncDirectory(StringLike):
         else:
             self.path = path
             self.creds = UncCredentials(username, password)
+
+        if not is_valid_unc_path(self.path):
+            raise InvalidUncPathError(self.path)
 
     def get_username(self):
         return self.creds.username
@@ -35,7 +39,10 @@ class UncDirectory(StringLike):
             return (self.get_normalized_path() == other.get_normalized_path()
                     and self.creds == other.creds)
         elif hasattr(other, '__str__'):
-            return self == get_unc_directory_from_string(str(other))
+            try:
+                return self == get_unc_directory_from_string(str(other))
+            except UncDirectoryError:
+                return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -106,3 +113,9 @@ def get_unc_directory_from_string(string):
         creds = get_creds_from_string(creds_part)
 
     return UncDirectory(path, creds.username, creds.password)
+
+
+def is_valid_unc_path(string):
+    return (len(string) > 2
+            and take_while(lambda x: x == '\\', string) == ['\\', '\\']
+            and string == sanitize_unc_path(string))
