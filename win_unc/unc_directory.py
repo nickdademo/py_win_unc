@@ -11,7 +11,7 @@ class UncDirectory(StringLike):
             self.path = path.path
             self.creds = path.creds
         else:
-            self.path = path
+            self.path = path.rstrip('\\')
             self.creds = UncCredentials(username, password)
 
         if not is_valid_unc_path(self.path):
