@@ -84,7 +84,7 @@ class UncDirectoryConnection(object):
 
         return 'NET USE{device} "{path}"{password}{user} /PERSISTENT:{persistent}'.format(
             device=device_str,
-            path=S.sanitize_path(self.unc.get_normalized_path()),
+            path=S.sanitize_unc_path(self.unc.get_path()),
             password=password_str,
             user=user_str,
             persistent='YES' if self.disk_drive and persistent else 'NO')
