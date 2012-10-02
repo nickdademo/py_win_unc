@@ -1,5 +1,5 @@
 from win_unc.internal.utils import take_while
-from win_unc.sanitize import sanitize_logon, sanitize_unc_path
+from win_unc.sanitizors import sanitize_logon, sanitize_unc_path
 
 
 def is_valid_drive_letter(string):
