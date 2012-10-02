@@ -10,7 +10,7 @@ from test_unc_directory import *
 
 if platform.system() == 'Windows':
     print 'Including Windows-specific tests'
-    from win_test_available_drives import *
+    from win_test_disk_drive import *
     from win_test_connecting import *
     from win_test_shell import *
 else:
