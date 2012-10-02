@@ -2,8 +2,8 @@
 Contains classes for dealing with UNC paths on Windows.
 """
 
+from win_unc import sanitize as S
 from win_unc.disk_drive import get_available_disk_drive
-from win_unc.internal import sanitize as S
 from win_unc.internal.loggers import no_logging
 from win_unc.internal.net_use_table import parse_net_use_table
 from win_unc.internal.shell import run, ShellCommandError

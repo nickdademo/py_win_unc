@@ -1,8 +1,8 @@
 from stringlike import StringLike
 
 from win_unc.errors import UncDirectoryError, InvalidUncPathError, InvalidUsernameError
-from win_unc.internal.sanitize import sanitize_logon, sanitize_unc_path
 from win_unc.internal.utils import take_while
+from win_unc.sanitize import sanitize_logon, sanitize_unc_path
 
 
 class UncDirectory(StringLike):
