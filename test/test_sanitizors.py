@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from win_unc import sanitize as lib
+from win_unc import sanitizors as lib
 
 
 class TestSanitize(TestCase):
