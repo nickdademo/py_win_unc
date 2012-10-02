@@ -4,6 +4,7 @@ import string
 from stringlike import StringLike
 
 from win_unc.errors import NoDrivesAvailableError, InvalidDiskDriveError
+from win_unc.validators import is_valid_drive_letter
 
 
 class DiskDrive(StringLike):
@@ -47,7 +48,3 @@ def get_available_disk_drive():
             return DiskDrive(letter)
     else:
         raise NoDrivesAvailableError()
-
-
-def is_valid_drive_letter(string):
-    return len(string) == 1 and string[0].isalpha()
