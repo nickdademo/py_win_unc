@@ -10,7 +10,7 @@ def sanitize_for_shell(string):
     return string.replace('"', r'\"')
 
 
-def sanitize_logon(name):
+def sanitize_username(name):
     """
     Removes characters from `path` that cannot be part of a valid Windows logon name or
     domain\logon name.

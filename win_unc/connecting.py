@@ -80,7 +80,7 @@ class UncDirectoryConnection(object):
         """
         device_str = ' "{0}"'.format(self.disk_drive) if self.disk_drive else ''
         password_str = ' "{0}"'.format(S.sanitize_for_shell(password)) if password else ''
-        user_str = ' /USER:"{0}"'.format(S.sanitize_logon(username)) if username else ''
+        user_str = ' /USER:"{0}"'.format(S.sanitize_username(username)) if username else ''
 
         return 'NET USE{device} "{path}"{password}{user} /PERSISTENT:{persistent}'.format(
             device=device_str,

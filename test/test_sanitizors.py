@@ -3,19 +3,19 @@ from unittest import TestCase
 from win_unc import sanitizors as S
 
 
-class TestSanitize(TestCase):
+class TestSanitizors(TestCase):
     def test_sanitize_for_shell(self):
         self.assertEqual(S.sanitize_for_shell(''), '')
         self.assertEqual(S.sanitize_for_shell('abcABC'), 'abcABC')
         self.assertEqual(S.sanitize_for_shell('"'), r'\"')
         self.assertEqual(S.sanitize_for_shell('abc"""'), r'abc\"\"\"')
 
-    def test_sanitize_for_logon(self):
-        self.assertEqual(S.sanitize_logon(''), '')
-        self.assertEqual(S.sanitize_logon('abcABC'), 'abcABC')
-        self.assertEqual(S.sanitize_logon(r'"/[]:;|=,+*?<>'), '')
-        self.assertEqual(S.sanitize_logon(r'"/[]:;|=,+*?<>'), '')
-        self.assertEqual(S.sanitize_logon('\0'), '')
+    def test_sanitize_username(self):
+        self.assertEqual(S.sanitize_username(''), '')
+        self.assertEqual(S.sanitize_username('abcABC'), 'abcABC')
+        self.assertEqual(S.sanitize_username(r'"/[]:;|=,+*?<>'), '')
+        self.assertEqual(S.sanitize_username(r'"/[]:;|=,+*?<>'), '')
+        self.assertEqual(S.sanitize_username('\0'), '')
 
     def test_sanitize_path(self):
         self.assertEqual(S.sanitize_unc_path(''), '')

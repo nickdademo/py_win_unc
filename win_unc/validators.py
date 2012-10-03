@@ -1,5 +1,5 @@
 from win_unc.internal.utils import take_while
-from win_unc.sanitizors import sanitize_logon, sanitize_unc_path
+from win_unc.sanitizors import sanitize_username, sanitize_unc_path
 
 
 def is_valid_drive_letter(string):
@@ -15,6 +15,6 @@ def is_valid_unc_path(string):
 def is_valid_username(string):
     """
     Returns `True` for valid Windows usernames (logons). A valid username is a non-empty string
-    without certain characters (see `sanitize_logon`).
+    without certain characters (see `sanitize_username`).
     """
-    return string != '' and string != sanitize_logon(string)
+    return string != '' and string != sanitize_username(string)

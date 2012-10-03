@@ -1,7 +1,6 @@
 from stringlike import StringLike
 
 from win_unc.errors import UncDirectoryError, InvalidUncPathError, InvalidUsernameError
-from win_unc.sanitizors import sanitize_logon
 from win_unc.validators import is_valid_unc_path, is_valid_username
 
 
