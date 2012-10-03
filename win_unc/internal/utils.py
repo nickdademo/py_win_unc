@@ -37,3 +37,4 @@ def catch(func, *args, **kwargs):
         func(*args, **kwargs)
     except Exception as error:
         return error
+    return None
