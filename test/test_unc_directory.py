@@ -90,19 +90,17 @@ class TestUncCredentials(TestCase):
         self.assertEqual(creds.password, 'pass')
 
     def test_invalid(self):
-        self.assertRaises(InvalidUsernameError, lambda: UncCredentials('"user"'))
-        self.assertRaises(InvalidUsernameError, lambda: UncCredentials('>user'))
+        self.assertRaises(InvalidUsernameError, UncCredentials, '"user"')
+        self.assertRaises(InvalidUsernameError, UncCredentials, '>user')
 
     def test_get_auth_string(self):
         self.assertEqual(UncCredentials(None, None).get_auth_string(), '')
-        self.assertEqual(UncCredentials('', None).get_auth_string(), '')
         self.assertEqual(UncCredentials(None, '').get_auth_string(), ':')
-        self.assertEqual(UncCredentials('', '').get_auth_string(), ':')
 
         self.assertEqual(UncCredentials('user', None).get_auth_string(), 'user')
         self.assertEqual(UncCredentials('user', '').get_auth_string(), 'user:')
 
-        self.assertEqual(UncCredentials('', 'pass').get_auth_string(), ':pass')
+        self.assertEqual(UncCredentials(None, 'pass').get_auth_string(), ':pass')
         self.assertEqual(UncCredentials('user', ':').get_auth_string(), 'user::')
         self.assertEqual(UncCredentials('user', 'pass').get_auth_string(), 'user:pass')
 

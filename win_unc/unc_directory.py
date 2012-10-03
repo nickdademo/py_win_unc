@@ -10,7 +10,7 @@ class UncDirectory(StringLike):
             self.path = path.path
             self.creds = path.creds
         else:
-            self.path = path.rstrip('\\')
+            self.path = path.strip().rstrip('\\')
             self.creds = UncCredentials(username, password)
 
         if not is_valid_unc_path(self.path):
@@ -63,10 +63,10 @@ class UncCredentials(object):
             self.username = username.username
             self.password = username.password
         else:
-            self.username = username
+            self.username = username.strip()  # Get rid of surrounding white-space.
             self.password = password
 
-        if self.username is not None and is_valid_username(self.username):
+        if self.username is not None and not is_valid_username(self.username):
             raise InvalidUsernameError(self.username)
 
     def get_auth_string(self):
@@ -95,7 +95,7 @@ def get_creds_from_string(string):
 
     if ':' in string:
         username, password = string.split(':', 1)  # Always split on the first `:` in case the
-                                                   # password contains a `:`.
+                                                   # password contains it.
     else:
         username = string
 
@@ -107,7 +107,8 @@ def get_unc_directory_from_string(string):
     path = string
 
     if r'@\\' in string:
-        creds_part, path_part = string.rsplit(r'@\\', 1)
+        creds_part, path_part = string.rsplit(r'@\\', 1)  # Always split on the last `@\\` in case
+                                                          # the password contains it.
         path = r'\\' + path_part
         creds = get_creds_from_string(creds_part)
 

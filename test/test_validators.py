@@ -25,7 +25,25 @@ class TestIsValidUncPath(TestCase):
 
     def test_invalid(self):
         self.assertFalse(V.is_valid_unc_path(''))
+        self.assertFalse(V.is_valid_unc_path('    '))
         self.assertFalse(V.is_valid_unc_path(r'\\'))
+        self.assertFalse(V.is_valid_unc_path(r'  \\a'))
+        self.assertFalse(V.is_valid_unc_path(r'\\a  '))
         self.assertFalse(V.is_valid_unc_path(r'\\\a'))
         self.assertFalse(V.is_valid_unc_path(r'C:\path'))
         self.assertFalse(V.is_valid_unc_path(r'\\<a>'))
+
+
+class TestIsValidUsername(TestCase):
+    def test_valid(self):
+        self.assertTrue(V.is_valid_username('a'))
+        self.assertTrue(V.is_valid_username('abc'))
+        self.assertTrue(V.is_valid_username('ABC def'))
+        self.assertTrue(V.is_valid_username(".-_ '$"))
+
+    def test_invalid(self):
+        self.assertFalse(V.is_valid_username(''))
+        self.assertFalse(V.is_valid_username('"abc"'))
+        self.assertFalse(V.is_valid_username('/abc'))
+        self.assertFalse(V.is_valid_username('  abc'))
+        self.assertFalse(V.is_valid_username('abc  '))
