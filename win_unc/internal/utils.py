@@ -38,3 +38,12 @@ def catch(func, *args, **kwargs):
     except Exception as error:
         return error
     return None
+
+
+def has_attrs(obj, *attrs):
+    has_all = True
+    for attr in attrs:
+        if not hasattr(obj, attr):
+            has_all = False
+            break
+    return has_all

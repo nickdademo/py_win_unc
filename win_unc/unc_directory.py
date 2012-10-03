@@ -2,13 +2,13 @@ from stringlike import StringLike
 
 from win_unc.errors import UncDirectoryError, InvalidUncPathError, InvalidUsernameError
 from win_unc.cleaners import clean_unc_path, clean_username
-from win_unc.internal.qualifiable import Qualifiable
+from win_unc.internal.utils import has_attrs
 from win_unc.validators import is_valid_unc_path, is_valid_username
 
 
 class UncDirectory(StringLike):
     def __init__(self, path, username=None, password=None):
-        if username is None and password is None and hasattr(path, 'path') and hasattr(path, 'creds'):
+        if username is None and password is None and has_attrs(path, 'path', 'creds'):
             self.path = path.path
             self.creds = path.creds
         else:
@@ -36,7 +36,7 @@ class UncDirectory(StringLike):
         return path[:-5] if path.endswith(r'\ipc$') else path.rstrip('\\')
 
     def __eq__(self, other):
-        if hasattr(other, 'get_normalized_path') and hasattr(other, 'creds'):
+        if has_attrs(other, 'get_normalized_path', 'creds'):
             return (self.get_normalized_path() == other.get_normalized_path()
                     and self.creds == other.creds)
         elif hasattr(other, '__str__'):
@@ -59,11 +59,9 @@ class UncDirectory(StringLike):
         return '<{cls}: {str}>'.format(cls=self.__class__.__name__, str=str(self))
 
 
-class UncCredentials(Qualifiable):
-    _QUALIFYING_ATTRS = ['username', 'password']
-
+class UncCredentials(object):
     def __init__(self, username=None, password=None):
-        if password is None and self._qualifies(username):
+        if password is None and has_attrs(username, 'username', 'password'):
             new_username = username.username
             new_password = username.password
         else:
@@ -87,7 +85,7 @@ class UncCredentials(Qualifiable):
             return ''
 
     def __eq__(self, other):
-        if self._qualifies(other):
+        if has_attrs(other, 'username', 'password'):
             return self.username == other.username and self.password == other.password
         else:
             return False
