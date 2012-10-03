@@ -2,8 +2,8 @@ class Qualifiable(object):
     _QUALIFYING_ATTRS = []
 
     @classmethod
-    def _qualifies(self, other):
-        return object_qualifies(other, self._QUALIFYING_ATTRS)
+    def _qualifies(cls, other):
+        return object_qualifies(other, cls._QUALIFYING_ATTRS)
 
 
 def object_qualifies(obj, qualifiers):
