@@ -6,6 +6,7 @@ from test_net_use_table import *
 from test_sanitizors import *
 from test_utils import *
 from test_unc_directory import *
+from test_unc_credentials import *
 from test_validators import *
 
 
