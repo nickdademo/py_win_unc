@@ -1,6 +1,8 @@
 from stringlike import StringLike
 
 from win_unc.errors import UncDirectoryError, InvalidUncPathError, InvalidUsernameError
+from win_unc.cleaners import clean_unc_path, clean_username
+from win_unc.internal.qualifiable import Qualifiable
 from win_unc.validators import is_valid_unc_path, is_valid_username
 
 
@@ -10,7 +12,7 @@ class UncDirectory(StringLike):
             self.path = path.path
             self.creds = path.creds
         else:
-            self.path = path.strip().rstrip('\\')
+            self.path = clean_unc_path(path)
             self.creds = UncCredentials(username, password)
 
         if not is_valid_unc_path(self.path):
@@ -57,17 +59,24 @@ class UncDirectory(StringLike):
         return '<{cls}: {str}>'.format(cls=self.__class__.__name__, str=str(self))
 
 
-class UncCredentials(object):
-    def __init__(self, username=None, password=None):
-        if password is None and hasattr(username, 'username') and hasattr(username, 'password'):
-            self.username = username.username
-            self.password = username.password
-        else:
-            self.username = username.strip()  # Get rid of surrounding white-space.
-            self.password = password
+class UncCredentials(Qualifiable):
+    _QUALIFYING_ATTRS = ['username', 'password']
 
-        if self.username is not None and not is_valid_username(self.username):
-            raise InvalidUsernameError(self.username)
+    def __init__(self, username=None, password=None):
+        if password is None and self._qualifies(username):
+            new_username = username.username
+            new_password = username.password
+        else:
+            new_username = username
+            new_password = password
+
+        cleaned_username = clean_username(new_username) if new_username is not None else None
+
+        if cleaned_username is None or is_valid_username(cleaned_username):
+            self.username = cleaned_username
+            self.password = new_password
+        else:
+            raise InvalidUsernameError(new_username)
 
     def get_auth_string(self):
         if self.password is not None:
@@ -78,7 +87,7 @@ class UncCredentials(object):
             return ''
 
     def __eq__(self, other):
-        if hasattr(other, 'username') and hasattr(other, 'password'):
+        if self._qualifies(other):
             return self.username == other.username and self.password == other.password
         else:
             return False
