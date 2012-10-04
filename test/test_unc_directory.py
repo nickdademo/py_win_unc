@@ -15,22 +15,25 @@ class TestUncDirectory(TestCase):
 
     def test_init_with_cloning(self):
         unc = UncDirectory(UncDirectory(r'\\path'))
-        self.assertEqual(unc.get_path(), r'\\path')
-        self.assertIsNone(UncDirectory(unc).get_username())
-        self.assertIsNone(UncDirectory(unc).get_password())
+        self.assertEqual(unc.path, r'\\path')
+        self.assertIsNone(unc.get_username())
+        self.assertIsNone(unc.get_password())
 
-        unc = UncDirectory(UncDirectory(r'\\path', 'user'))
-        self.assertEqual(unc.get_path(), r'\\path')
+        creds = UncCredentials('user')
+        unc = UncDirectory(UncDirectory(r'\\path', creds))
+        self.assertEqual(unc.path, r'\\path')
         self.assertEqual(unc.get_username(), 'user')
         self.assertIsNone(unc.get_password())
 
-        unc = UncDirectory(UncDirectory(r'\\path', None, 'pass'))
-        self.assertEqual(unc.get_path(), r'\\path')
+        creds = UncCredentials(None, 'pass')
+        unc = UncDirectory(UncDirectory(r'\\path', creds))
+        self.assertEqual(unc.path, r'\\path')
         self.assertIsNone(unc.get_username())
         self.assertEqual(unc.get_password(), 'pass')
 
-        unc = UncDirectory(UncDirectory(r'\\path', 'user', 'pass'))
-        self.assertEqual(unc.get_path(), r'\\path')
+        creds = UncCredentials('user', 'pass')
+        unc = UncDirectory(UncDirectory(r'\\path', creds))
+        self.assertEqual(unc.path, r'\\path')
         self.assertEqual(unc.get_username(), 'user')
         self.assertEqual(unc.get_password(), 'pass')
 
@@ -38,19 +41,23 @@ class TestUncDirectory(TestCase):
         self.assertEqual(UncDirectory(r'\\path'), UncDirectory(r'\\path'))
         self.assertEqual(UncDirectory(r'\\path'), UncDirectory(r'\\PATH'))
 
-        self.assertEqual(UncDirectory(r'\\path', 'user'), UncDirectory(r'\\path', 'user'))
-        self.assertEqual(UncDirectory(r'\\path', 'user'), UncDirectory(r'\\PATH', 'user'))
+        creds = UncCredentials('user')
+        self.assertEqual(UncDirectory(r'\\path', creds), UncDirectory(r'\\path', creds))
+        self.assertEqual(UncDirectory(r'\\path', creds), UncDirectory(r'\\PATH', creds))
 
-        self.assertEqual(UncDirectory(r'\\path', 'user', 'pass'),
-                         UncDirectory(r'\\path', 'user', 'pass'))
-        self.assertEqual(UncDirectory(r'\\path', 'user', 'pass'),
-                         UncDirectory(r'\\PATH', 'user', 'pass'))
+        creds = UncCredentials('user', 'pass')
+        self.assertEqual(UncDirectory(r'\\path', creds), UncDirectory(r'\\path', creds))
+        self.assertEqual(UncDirectory(r'\\path', creds), UncDirectory(r'\\PATH', creds))
 
     def test_ne(self):
-        self.assertNotEqual(UncDirectory(r'\\path', 'user'), UncDirectory(r'\\path', 'USER'))
-        self.assertNotEqual(UncDirectory(r'\\path', 'user', 'pass'),
-                            UncDirectory(r'\\path', 'user', 'PASS'))
-        self.assertIsNotNone(UncDirectory(r'\\path'))
+        creds1 = UncCredentials('user')
+        creds2 = UncCredentials('USER')
+        self.assertNotEqual(UncDirectory(r'\\path', creds1), UncDirectory(r'\\path', creds2))
+
+        creds1 = UncCredentials('user', 'pass')
+        creds2 = UncCredentials('user', 'PASS')
+        self.assertNotEqual(UncDirectory(r'\\path', creds1), UncDirectory(r'\\path', creds2))
+
         self.assertNotEqual(UncDirectory(r'\\path'), 'somestring')
 
     def test_get_normalized_path(self):
@@ -62,14 +69,14 @@ class TestUncDirectory(TestCase):
         self.assertEqual(UncDirectory(r'\\abc\IPC$').get_normalized_path(), r'\\abc')
         self.assertEqual(UncDirectory(r'\\abc\ipc$').get_normalized_path(), r'\\abc')
 
-    def test_str(self):
-        self.assertEqual(str(UncDirectory(r'\\path')), r'\\path')
-        self.assertEqual(str(UncDirectory(r'\\path', 'user')), r'user@\\path')
-        self.assertEqual(str(UncDirectory(r'\\path', 'user', 'pass')), r'user:pass@\\path')
+    def test_get_auth_path(self):
+        self.assertEqual(UncDirectory(r'\\path').get_auth_path(), r'\\path')
 
-    def test_stringlike(self):
-        self.assertEqual(UncDirectory(r'\\path'), r'\\path')
-        self.assertEqual(r'\\path', UncDirectory(r'\\path'))
+        creds = UncCredentials('user')
+        self.assertEqual(UncDirectory(r'\\path', creds).get_auth_path(), r'user@\\path')
+
+        creds = UncCredentials('user', 'pass')
+        self.assertEqual(UncDirectory(r'\\path', creds).get_auth_path(), r'user:pass@\\path')
 
 
 class TestParsing(TestCase):
@@ -77,13 +84,23 @@ class TestParsing(TestCase):
         self.assertEqual(get_unc_directory_from_string(r'\\path'), UncDirectory(r'\\path'))
         self.assertEqual(get_unc_directory_from_string(r'\\path\sub'),
                          UncDirectory(r'\\path\sub'))
+
+        creds = UncCredentials('user')
         self.assertEqual(get_unc_directory_from_string(r'user@\\path'),
-                         UncDirectory(r'\\path', 'user'))
+                         UncDirectory(r'\\path', creds))
+
+        creds = UncCredentials(None, 'pass')
         self.assertEqual(get_unc_directory_from_string(r':pass@\\path'),
-                         UncDirectory(r'\\path', None, 'pass'))
+                         UncDirectory(r'\\path', creds))
+
+        creds = UncCredentials(None, r':@\\')
         self.assertEqual(get_unc_directory_from_string(r'::@\\@\\path'),
-                         UncDirectory(r'\\path', None, r':@\\'))
+                         UncDirectory(r'\\path', creds))
+
+        creds = UncCredentials('user', 'pass')
         self.assertEqual(get_unc_directory_from_string(r'user:pass@\\path'),
-                         UncDirectory(r'\\path', 'user', 'pass'))
+                         UncDirectory(r'\\path', creds))
+
+        creds = UncCredentials('user', r':@\\')
         self.assertEqual(get_unc_directory_from_string(r'user::@\\@\\path'),
-                         UncDirectory(r'\\path', 'user', r':@\\'))
+                         UncDirectory(r'\\path', creds))

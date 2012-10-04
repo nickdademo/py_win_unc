@@ -7,26 +7,24 @@ from win_unc.unc_credentials import UncCredentials, get_creds_from_string
 from win_unc.validators import is_valid_unc_path
 
 
-class UncDirectory(StringLike):
-    def __init__(self, path, username=None, password=None):
-        if username is None and password is None and has_attrs(path, 'path', 'creds'):
-            self.path = path.path
-            self.creds = path.creds
+class UncDirectory(object):
+    def __init__(self, path, creds=None):
+        if creds is None and has_attrs(path, 'path', 'creds'):
+            new_path = path.path
+            new_creds = path.creds
         else:
-            self.path = clean_unc_path(path)
-            self.creds = UncCredentials(username, password)
+            new_path = path
+            new_creds = creds
 
-        if not is_valid_unc_path(self.path):
-            raise InvalidUncPathError(self.path)
+        cleaned_path = clean_unc_path(new_path)
+        if is_valid_unc_path(cleaned_path):
+            self.path = cleaned_path
+            self.creds = new_creds
+        else:
+            raise InvalidUncPathError(new_path)
 
-    def get_username(self):
-        return self.creds.username
-
-    def get_password(self):
-        return self.creds.password
-
-    def get_path(self):
-        return self.path
+        if self.get_username() is None and self.get_password() is None:
+            self.creds = None
 
     def get_normalized_path(self):
         """
@@ -35,6 +33,22 @@ class UncDirectory(StringLike):
         """
         path = self.path.lower()
         return path[:-5] if path.endswith(r'\ipc$') else path.rstrip('\\')
+
+    def get_username(self):
+        return self.creds.username if self.creds else None
+
+    def get_password(self):
+        return self.creds.password if self.creds else None
+
+    def get_auth_string(self):
+        return self.creds.get_auth_string() if self.creds else ''
+
+    def get_auth_path(self):
+        creds = self.get_auth_string()
+        return '{creds}{at}{path}'.format(
+            creds=creds,
+            at='@' if creds else '',
+            path=self.path)
 
     def __eq__(self, other):
         if has_attrs(other, 'get_normalized_path', 'creds'):
@@ -50,18 +64,14 @@ class UncDirectory(StringLike):
         return not self.__eq__(other)
 
     def __str__(self):
-        creds = self.creds.get_auth_string()
-        return '{creds}{at}{path}'.format(
-            creds=creds,
-            at='@' if creds else '',
-            path=self.path)
+        return self.get_auth_path()
 
     def __repr__(self):
-        return '<{cls}: {str}>'.format(cls=self.__class__.__name__, str=str(self))
+        return '<{cls}: {str}>'.format(cls=self.__class__.__name__, str=self.get_auth_path())
 
 
 def get_unc_directory_from_string(string):
-    creds = UncCredentials()
+    creds = None
     path = string
 
     if r'@\\' in string:
@@ -70,4 +80,4 @@ def get_unc_directory_from_string(string):
         path = r'\\' + path_part
         creds = get_creds_from_string(creds_part)
 
-    return UncDirectory(path, creds.username, creds.password)
+    return UncDirectory(path, creds)

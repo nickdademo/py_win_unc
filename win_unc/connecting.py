@@ -27,14 +27,11 @@ class UncDirectoryConnection(object):
         self.persistent = persistent
         self.logger = logger
 
-    def get_path(self):
-        return self.unc.get_path()
-
     def get_username(self):
-        return self.unc.get_username()
+        return self.unc.creds.username if self.unc.creds else None
 
     def get_password(self):
-        return self.unc.get_password()
+        return self.unc.creds.password if self.unc.creds else None
 
     def connect(self):
         """
@@ -84,7 +81,7 @@ class UncDirectoryConnection(object):
 
         return 'NET USE{device} "{path}"{password}{user} /PERSISTENT:{persistent}'.format(
             device=device_str,
-            path=S.sanitize_unc_path(self.unc.get_path()),
+            path=S.sanitize_unc_path(self.unc.path),
             password=password_str,
             user=user_str,
             persistent='YES' if self.disk_drive and persistent else 'NO')
