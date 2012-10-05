@@ -4,4 +4,6 @@
 .project
 .pydevproject
 /build
+/dist
 /htmlcov
+MANIFEST
