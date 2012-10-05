@@ -12,7 +12,6 @@ setup(
     url="https://github.com/CovenantEyes/py_win_unc",
     download_url="https://github.com/CovenantEyes/py_win_unc/tarball/v" + __version__,
     keywords=["directory", "folder", "unc", "local", "remote", "path"],
-    requires=["stringlike"],
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
