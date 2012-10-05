@@ -11,14 +11,6 @@ Python library for handling UNC mounting on Windows.
 .. _TravisBadge: http://travis-ci.org/CovenantEyes/py_win_unc
 
 
-Dependencies
-------------
-
-To install dependencies, do this::
-
-    $ pip install -r requirements.txt
-
-
 Unit Testing
 ------------
 
