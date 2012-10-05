@@ -57,7 +57,8 @@ class UncDirectoryConnection(object):
         Unmounts the UNC path mounted at `disk_drive`. If the command fails, this will raise a
         `ShellCommandError`.
         """
-        identifier = self.disk_drive or S.sanitize_path(self.unc.get_normalized_path())
+        identifier = (self.disk_drive.get_drive() if self.disk_drive
+                      else S.sanitize_path(self.unc.get_normalized_path()))
         self.logger('Disconnecting the network UNC path "{path}".'.format(path=self.unc.path))
         run('NET USE "{id}" /DELETE /YES'.format(id=identifier), self.logger)
 
@@ -66,7 +67,7 @@ class UncDirectoryConnection(object):
         matching_rows = net_use.get_matching_rows(local=self.disk_drive, remote=self.unc.path)
         if matching_rows:
             status = matching_rows[0]['status']
-            return status.lower() in ['ok', 'disconnected']
+            return status in ['ok', 'disconnected']
         else:
             return False
 
@@ -84,7 +85,7 @@ class UncDirectoryConnection(object):
             path=S.sanitize_unc_path(self.unc.path),
             password=password_str,
             user=user_str,
-            persistent='YES' if self.disk_drive and persistent else 'NO')
+            persistent='YES' if self.disk_drive and self.persistent else 'NO')
 
     def connect_with_creds(self, username=None, password=None):
         """
@@ -100,7 +101,7 @@ class UncDirectoryConnection(object):
         return str(self.unc)
 
     def __repr__(self):
-        return '<{cls}: {str}>'.format(cls=self.__clas__.__name__, str=str(self))
+        return '<{cls}: {str}>'.format(cls=self.__class__.__name__, str=str(self))
 
 
 class UncDirectoryMount(UncDirectoryConnection):
@@ -117,7 +118,7 @@ class UncDirectoryMount(UncDirectoryConnection):
                      across logins of the current Windows user.
         """
         disk_drive = disk_drive if disk_drive else get_available_disk_drive()
-        super(self, UncDirectoryMount).__init__(unc, disk_drive, persistent, logger)
+        super(UncDirectoryMount, self).__init__(unc, disk_drive, persistent, logger)
 
     def mount(self):
         self.connect()
