@@ -1,12 +1,11 @@
 from win_unc.errors import InvalidUsernameError
 from win_unc.cleaners import clean_username
-from win_unc.internal.utils import has_attrs
 from win_unc.validators import is_valid_username
 
 
 class UncCredentials(object):
     def __init__(self, username=None, password=None):
-        if password is None and has_attrs(username, 'username', 'password'):
+        if password is None and isinstance(username, UncCredentials):
             new_username = username.username
             new_password = username.password
         else:

@@ -40,13 +40,6 @@ def catch(func, *args, **kwargs):
     return None
 
 
-def has_attrs(obj, *attrs):
-    for attr in attrs:
-        if not hasattr(obj, attr):
-            return False
-    return True
-
-
 def rekey_dict(d, key_map):
     """
     Renames the keys in `d` based on `key_map`.
