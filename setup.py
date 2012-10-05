@@ -2,6 +2,13 @@ from distutils.core import setup
 
 from win_unc import __version__
 
+def get_desc():
+    try:
+        return open('README.rst').read()
+    except IOError:
+        return ''
+
+
 setup(
     name="win_unc",
     packages=['win_unc', 'win_unc.internal'],
@@ -23,5 +30,5 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
-    long_description=open('README.rst').read(),
+    long_description=get_desc(),
 )
