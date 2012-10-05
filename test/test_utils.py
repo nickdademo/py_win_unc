@@ -113,3 +113,8 @@ class TestCatch(TestCase):
 
     def raiseSomething(self, exception):
         raise exception()
+
+
+class TestRekeyDict(TestCase):
+    def test_rekey_dict(self):
+        self.assertEqual(U.rekey_dict({}, {}), {})

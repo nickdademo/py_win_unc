@@ -30,13 +30,16 @@ class UncCredentials(object):
             return ''
 
     def __eq__(self, other):
-        if has_attrs(other, 'username', 'password'):
+        if isinstance(other, self.__class__):
             return self.username == other.username and self.password == other.password
         else:
             return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(str(self))
 
     def __repr__(self):
         return '<{cls}: "{str}">'.format(cls=self.__class__.__name__, str=self.get_auth_string())
