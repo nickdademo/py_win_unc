@@ -83,7 +83,7 @@ class TestNetUseTable(TestCase):
         table = NetUseTable()
         self.assertEqual(table.get_connected_devices(), [])
 
-        row = table.add_row({'local': 'A', 'remote': r'\\remote', 'status': 'status'})
+        table.add_row({'local': 'A', 'remote': r'\\remote', 'status': 'status'})
         self.assertEqual(table.get_connected_devices(), [DiskDrive('A:')])
 
         table.add_row({'local': 'B', 'remote': r'\\remote', 'status': 'status'})

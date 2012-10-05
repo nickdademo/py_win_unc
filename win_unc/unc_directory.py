@@ -1,5 +1,3 @@
-from stringlike import StringLike
-
 from win_unc.errors import UncDirectoryError, InvalidUncPathError
 from win_unc.cleaners import clean_unc_path
 from win_unc.internal.utils import has_attrs
@@ -54,20 +52,20 @@ class UncDirectory(object):
         if isinstance(other, UncDirectory):
             return (self.get_normalized_path() == other.get_normalized_path()
                     and self.creds == other.creds)
-        elif hasattr(other, '__str__'):
-            try:
-                return self == get_unc_directory_from_string(str(other))
-            except UncDirectoryError:
-                return False
+        else:
+            return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(str(self))
 
     def __str__(self):
         return self.get_auth_path()
 
     def __repr__(self):
-        return '<{cls}: {str}>'.format(cls=self.__class__.__name__, str=self.get_auth_path())
+        return '<{cls}: "{str}">'.format(cls=self.__class__.__name__, str=self.get_auth_path())
 
 
 def get_unc_directory_from_string(string):

@@ -1,5 +1,7 @@
 *.pyc
 *.pyo
 .coverage
+.project
+.pydevproject
 /build
 /htmlcov

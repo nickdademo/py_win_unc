@@ -32,6 +32,12 @@ class DiskDrive(object):
             return str(self) == str(other)
         else:
             return False
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(str(self))
 
     def __str__(self):
         return self.get_drive()
