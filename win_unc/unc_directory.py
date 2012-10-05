@@ -9,7 +9,7 @@ from win_unc.validators import is_valid_unc_path
 
 class UncDirectory(object):
     def __init__(self, path, creds=None):
-        if creds is None and has_attrs(path, 'path', 'creds'):
+        if creds is None and isinstance(path, UncDirectory):
             new_path = path.path
             new_creds = path.creds
         else:
@@ -51,7 +51,7 @@ class UncDirectory(object):
             path=self.path)
 
     def __eq__(self, other):
-        if has_attrs(other, 'get_normalized_path', 'creds'):
+        if isinstance(other, UncDirectory):
             return (self.get_normalized_path() == other.get_normalized_path()
                     and self.creds == other.creds)
         elif hasattr(other, '__str__'):

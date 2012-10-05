@@ -6,7 +6,7 @@ Windows. This table describes what the mounted UNC paths.
 from copy import deepcopy
 
 from win_unc.disk_drive import DiskDrive
-from win_unc.internal.utils import drop_while, take_while, first, rfirst, not_
+from win_unc.internal.utils import drop_while, take_while, first, rfirst, not_, rekey_dict, dict_map, subdict_matches, filter_dict
 from win_unc.unc_directory import UncDirectory
 
 
@@ -51,9 +51,11 @@ class NetUseTable(object):
 
     def add_row(self, row):
         """
-        Adds `row` to this table. `row` must be a dictionary whose keys are standard column names.
+        Converts `row` to a standardized row and adds it to the table. The standardized row is returned.
         """
-        self.rows.append(row)
+        standardized_row = standardize_row(row)
+        self.rows.append(standardized_row)
+        return standardized_row
 
     def get_column(self, column):
         """
@@ -72,14 +74,13 @@ class NetUseTable(object):
         Returns a list of rows that match a `search_dict`.
         `search_dict` is a dictionary with a subset of the keys in a row.
         """
+        filter_pred = lambda x: x is not None
+        test_row = filter_dict(filter_pred, {'local': local, 'remote': remote, 'status': status})
+        test_row = construct_row_values(test_row)
+
         result = []
         for row in self.rows:
-            matching = True
-            matching &= DiskDrive(local) == DiskDrive(row['local']) if local else True
-            matching &= UncDirectory(remote) == UncDirectory(row['remote']) if remote else True
-            matching &= status.lower() == row['status'].lower() if status else True
-
-            if matching:
+            if subdict_matches(row, test_row):
                 result.append(row)
 
         return result
@@ -94,25 +95,28 @@ LAST_TABLE_LINE = 'The command completed successfully.'
 # names that should never change. This allows the output of `NET USE` to change without forcing
 # the users of this module to change their code.
 MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS = {
-    'Local': 'local',
+    'Local':  'local',
     'Remote': 'remote',
     'Status': 'status',
 }
 
+COLUMN_CONSTRUCTORS = {
+    'local':  lambda x: DiskDrive(x) if x else None,
+    'remote': lambda x: UncDirectory(x) if x else None,
+    'status': lambda x: str(x).lower() if x else None
+}
 
-def rekey_dict(d, key_map):
-    """
-    Renames the keys in `d` based on `key_map`.
-    `d` is a dictionary whose keys are a superset of the keys in `key_map`.
-    `key_map` is a dictionary whose keys match at least some of the keys in `d` and whose values
-              are the new key names for `d`.
 
-    For example:
-        rekey_dict({'a': 1, 'b': 2}, {'a': 'b', 'b': 'c'}) =
-            {'b': 1, 'c': 2}
-    """
-    return {new_key: d[old_key]
-            for old_key, new_key in key_map.iteritems()}
+def standardize_row(row):
+    return construct_row_values(standardize_row_keys(row))
+
+
+def standardize_row_keys(row):
+    return rekey_dict(row, MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS)
+
+
+def construct_row_values(row):
+    return dict_map(row, COLUMN_CONSTRUCTORS)
 
 
 def is_line_separator(line):
@@ -159,8 +163,7 @@ def parse_singleline_row(line, columns):
            a single row on multiple lines, `line` must be a whole row on a single line.
     `columns` must be a list of `NetUseColumn` objects that correctly parses `string`.
     """
-    raw_dict = {column.name: column.extract(line) for column in columns}
-    return rekey_dict(raw_dict, MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS)
+    return {column.name: column.extract(line) for column in columns}
 
 
 def parse_multiline_row(line1, line2, columns):
@@ -189,9 +192,10 @@ def build_net_use_table_from_parts(columns, body_lines):
     for this_row, next_row in zip(body_lines, body_lines[1:] + ['']):
         if not this_row.startswith(' '):
             if next_row.startswith(' '):
-                table.add_row(parse_multiline_row(this_row, next_row, columns))
+                row_dict = parse_multiline_row(this_row, next_row, columns)
             else:
-                table.add_row(parse_singleline_row(this_row, columns))
+                row_dict = parse_singleline_row(this_row, columns)
+            table.add_row(row_dict)
 
     return table
 

@@ -33,5 +33,4 @@ class TestUncDirectoryConnection(TestCase):
 
     def localhost_connected(self):
         net_use = get_current_net_use_table()
-        paths = [path.lower() for path in net_use.get_connected_paths()]
-        return LOCALHOST_UNC.lower() in paths
+        return UncDirectory(LOCALHOST_UNC) in net_use.get_connected_paths()
