@@ -15,8 +15,15 @@ To install::
     $ pip install win_unc
 
 
-Basic Usage
-===========
+Documentation
+=============
+
+Full documentation is available at `covenanteyes.github.com/py_win_unc`_.
+
+.. _covenanteyes.github.com/py_win_unc: http://covenanteyes.github.com/py_win_unc/
+
+Basic Examples
+--------------
 
 Below is a simple example::
 
