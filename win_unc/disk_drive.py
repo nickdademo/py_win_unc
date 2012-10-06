@@ -41,7 +41,7 @@ class DiskDrive(object):
         return self.drive_letter + ':'
 
     def __eq__(self, other):
-        if isinstance(other, self.__class__)
+        if isinstance(other, self.__class__):
             return self.get_drive == other.get_drive()
         else:
             return False
