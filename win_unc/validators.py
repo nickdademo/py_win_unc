@@ -1,3 +1,7 @@
+"""
+Functions for sanitizing various strings to be used in a shell command.
+"""
+
 from win_unc.internal.utils import take_while
 from win_unc.sanitizors import sanitize_username, sanitize_unc_path
 

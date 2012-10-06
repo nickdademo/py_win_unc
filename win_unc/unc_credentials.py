@@ -1,11 +1,40 @@
+"""
+Class and functions for dealing with credentials in UNC connections on Windows.
+"""
+
 from win_unc.errors import InvalidUsernameError
 from win_unc.cleaners import clean_username
 from win_unc.validators import is_valid_username
 
 
 class UncCredentials(object):
+    """
+    Represents a set of credentials to be used with a UNC connection. Credentials include a
+    username and a password.
+    """
+
     def __init__(self, username=None, password=None):
-        if password is None and isinstance(username, UncCredentials):
+        """
+        Returns a new `UncCredentials` class. Both `username` and `password` are optional.
+        If neither are provided, the new class will mean that credentials are unnecessary.
+        `username` must be a string representing a Windows username (logon). Windows usernames
+                   may include a domain prefix (i.e. "domain\username"). If `username` cannot be
+                   construed as a valid Windows username, then this will raise an
+                   `InvalidUsernameError`.
+                   Note: UNC connections that require authentication will use the username of the
+                         currently logged in Windows user unless specifically provided another
+                         username.
+                   Note: Providing `None` and `''` (the empty string) have very different meanings.
+                         Usernames cannot be empty.
+        `password` must be a string representing a password.
+                   Note: Providing `None` and `''` (the empty string) have very different meanings.
+                   The empty string is a meaningful, legitimate password.
+
+        If only the first positional argument is provided and it is already an instance of the
+        `UncCredentials` class (either directly or by inheritance), this constructor will clone
+        it and create a new `UncCredentials` object with the same properties.
+        """
+        if password is None and isinstance(username, self.__class__):
             new_username = username.username
             new_password = username.password
         else:
@@ -21,6 +50,10 @@ class UncCredentials(object):
             raise InvalidUsernameError(new_username)
 
     def get_auth_string(self):
+        """
+        Returns a standard representation of these credentials as a string. The string mimics
+        the HTTP Basic Authentication scheme.
+        """
         if self.password is not None:
             return '{0}:{1}'.format(self.username or '', self.password)
         elif self.username:
@@ -45,6 +78,11 @@ class UncCredentials(object):
 
 
 def get_creds_from_string(string):
+    """
+    Parses a standardized string from `UncCredentials`'s `get_auth_string` method into a new
+    `UncCredentials` object and returns it. Whatever errors can be raised by `UncCredentials`'s
+    constructor can also be raised by this function.
+    """
     username, password = None, None
 
     if ':' in string:

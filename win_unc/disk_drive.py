@@ -1,3 +1,7 @@
+"""
+Class for representing a Windows disk drive.
+"""
+
 import os
 import string
 
@@ -7,6 +11,11 @@ from win_unc.validators import is_valid_drive_letter
 
 
 class DiskDrive(object):
+    """
+    Represents a Windows disk drive. Disk drives are always identified by a single alphabet
+    character. They may map to hardware devices, local directories, or remote directories.
+    """
+
     def __init__(self, drive):
         """
         Creates a `DiskDrive` from a `drive`.
@@ -25,14 +34,18 @@ class DiskDrive(object):
             raise InvalidDiskDriveError(new_letter)
 
     def get_drive(self):
+        """
+        Returns this `DiskDrive`'s path. The path will always be an upper-case letter followed by
+        a colon (`:`). For example, if the drive letter is "G", then this will return "G:".
+        """
         return self.drive_letter + ':'
 
     def __eq__(self, other):
-        if hasattr(other, '__str__'):
-            return str(self) == str(other)
+        if isinstance(other, self.__class__)
+            return self.get_drive == other.get_drive()
         else:
             return False
-    
+
     def __ne__(self, other):
         return not self.__eq__(other)
 

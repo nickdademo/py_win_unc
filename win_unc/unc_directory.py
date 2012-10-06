@@ -1,6 +1,6 @@
-from win_unc.errors import UncDirectoryError, InvalidUncPathError
+from win_unc.errors import InvalidUncPathError
 from win_unc.cleaners import clean_unc_path
-from win_unc.unc_credentials import UncCredentials, get_creds_from_string
+from win_unc.unc_credentials import get_creds_from_string
 from win_unc.validators import is_valid_unc_path
 
 
