@@ -19,11 +19,11 @@ class DiskDrive(object):
     def __init__(self, drive):
         """
         Creates a `DiskDrive` from a `drive`.
-        `drive` may be a string or a `DiskDrive`:
-            * If it is a string, then it must be the path to a Windows disk drive
-              (from 'A:' to 'Z:', case-insensitive).
-            * If it is a `DiskDrive`, then this will clone it by returning a new `DiskDrive` with
-              the same path.
+        `drive` must be the path to a Windows disk drive (from 'A:' to 'Z:', case-insensitive).
+
+        If only the first positional argument is provided and it is already an instance of the
+        `DiskDrive` class (either directly or by inheritance), this constructor will clone
+        it and create a new `DiskDrive` object with the same properties.
         """
         new_letter = drive.drive_letter if isinstance(drive, self.__class__) else drive
         cleaned_letter = clean_drive_letter(new_letter)

@@ -4,10 +4,16 @@ Contains exception classes that can be raised by this library.
 
 
 class WinUncError(Exception):
+    """
+    Generic error class for all errors raised by the win_unc library.
+    """
     pass
 
 
 class UncDirectoryError(WinUncError):
+    """
+    Generic error class for all errors raised by `UncDirectory`.
+    """
     pass
 
 
@@ -59,7 +65,17 @@ class NoDrivesAvailableError(WinUncError):
 
 
 class ShellCommandError(WinUncError):
+    """
+    Error for the case when a shell command returns an error code.
+    """
+
     def __init__(self, command=None, error_code=None):
+        """
+        Both `command` and `error_code` are optional. The more information that is provided here,
+        the more descriptive the error message will be.
+        `command` is a string representing the command that was executed in the shell.
+        `error_code` is the numeric error code returned by executing `command`.
+        """
         self.command = command
         self.error_code = error_code
 
