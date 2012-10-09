@@ -89,10 +89,10 @@ UncDirectoryConnection(
 
 This will construct a new `UncDirectoryConnection` object.
 
-  * `unc_directory` must be a [`UncDirectory`](#UncDirectory) object.
+  * `unc_directory` must be a [`UncDirectory`][] object.
 
 
-UncDirectory
+<a id="UncDirectory">UncDirectory</a>
 ------------
 
 The `UncDirectory` class describes the path to a UNC directory and (optionally) and credentials
@@ -101,3 +101,6 @@ that are needed to authorize the connection to the path.
 License
 =======
 This package is released under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
+
+
+  [UncDirectory]: #UncDirectory
