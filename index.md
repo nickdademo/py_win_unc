@@ -92,7 +92,7 @@ This will construct a new `UncDirectoryConnection` object.
   * `unc_directory` must be a [`UncDirectory`][] object.
 
 
-<a id="UncDirectory">UncDirectory</a>
+UncDirectory
 ------------
 
 The `UncDirectory` class describes the path to a UNC directory and (optionally) and credentials
@@ -103,4 +103,4 @@ License
 This package is released under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
 
 
-  [UncDirectory]: #UncDirectory
+  [UncDirectory]: #uncdirectory
