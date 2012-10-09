@@ -89,7 +89,7 @@ UncDirectoryConnection(
 
 This will construct a new `UncDirectoryConnection` object.
 
-  * `unc_directory` must be a [`UncDirectory`](#uncdirectory) object.
+  * `unc_directory` must be a [UncDirectory](#uncdirectory) object.
 
 
 UncDirectory
