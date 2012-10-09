@@ -89,7 +89,7 @@ UncDirectoryConnection(
 
 This will construct a new `UncDirectoryConnection` object.
 
-  * `unc_directory` must be a [`UncDirectory`][] object.
+  * `unc_directory` must be a [`UncDirectory`](#uncdirectory) object.
 
 
 UncDirectory
@@ -101,6 +101,3 @@ that are needed to authorize the connection to the path.
 License
 =======
 This package is released under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
-
-
-  [UncDirectory]: #uncdirectory
