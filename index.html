@@ -1,84 +1,51 @@
 ---
-title: win_unc
+layout: main
 ---
 
+<h1>Why win_unc?</h1>
+<p>
+  This library is for anyone who has tried to connect to or mount UNC paths in a Python
+  script on Windows. Understanding how to wield the <code>NET USE</code> command is a feat
+  in itself. Parsing its output programatically to know if your command worked is much
+  harder.
 
-<!DOCTYPE html>
-<html>
+  Fortunately, this library should make your life a lot easier.
+</p>
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="win_unc : Python library for handling UNC connections on Windows" />
+<h1>Installation</h1>
+<p>To install:</p>
+<pre><code>$ pip install win_unc</code></pre>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+<h2>Getting pip on Windows</h2>
+<p>
+  Of course, installing <code>pip</code> packages on Windows is not always straightforward.
+  Here's how:
+</p>
+<p>
+  Download the
+  <a href="http://pypi.python.org/pypi/setuptools" target="_blank">setuptools installer</a>
+  for your platform and run it.
+  <strong>
+    Note that for 64-bit Windows, you need to download the <code>ez_setup.py</code> script
+    instead of the <code>.exe</code> installer.
+  </strong>
+</p>
+<p>
+  Once you've installed <code>setuptools</code>, you need to add some paths to your
+  system's <code>Path</code> environment variable. You'll probably want to add paths like
+  these:
+  <ul>
+    <li><code>C:\Python27</code></li>
+    <li><code>C:\Python27\Scripts</code></li>
+  </ul>
 
-    <title>{{ page.title }}</title>
-  </head>
+  Then, in Windows command-line (<code>cmd.exe</code>), you can run the following to
+  get <code>pip</code> installed:
+</p>
+<pre><code>&gt; easy_install pip</code></pre>
 
-  <body>
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/CovenantEyes/py_win_unc">View on GitHub</a>
-
-          <h1 id="project_title">win_unc</h1>
-          <h2 id="project_tagline">Python library for handling UNC connections on Windows</h2>
-
-          <section id="downloads">
-            <a class="zip_download_link" href="https://github.com/CovenantEyes/py_win_unc/zipball/master">Download this project as a .zip file</a>
-            <a class="tar_download_link" href="https://github.com/CovenantEyes/py_win_unc/tarball/master">Download this project as a tar.gz file</a>
-          </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>Why win_unc?</h1>
-        <p>
-          This library is for anyone who has tried to connect to or mount UNC paths in a Python
-          script on Windows. Understanding how to wield the <code>NET USE</code> command is a feat
-          in itself. Parsing its output programatically to know if your command worked is much
-          harder.
-
-          Fortunately, this library should make your life a lot easier.
-        </p>
-
-        <h1>Installation</h1>
-        <p>To install:</p>
-        <pre><code>$ pip install win_unc</code></pre>
-
-        <h2>Getting pip on Windows</h2>
-        <p>
-          Of course, installing <code>pip</code> packages on Windows is not always straightforward.
-          Here's how:
-        </p>
-        <p>
-          Download the
-          <a href="http://pypi.python.org/pypi/setuptools" target="_blank">setuptools installer</a>
-          for your platform and run it.
-          <strong>
-            Note that for 64-bit Windows, you need to download the <code>ez_setup.py</code> script
-            instead of the <code>.exe</code> installer.
-          </strong>
-        </p>
-        <p>
-          Once you've installed <code>setuptools</code>, you need to add some paths to your
-          system's <code>Path</code> environment variable. You'll probably want to add paths like
-          these:
-          <ul>
-            <li><code>C:\Python27</code></li>
-            <li><code>C:\Python27\Scripts</code></li>
-          </ul>
-
-          Then, in Windows command-line (<code>cmd.exe</code>), you can run the following to
-          get <code>pip</code> installed:
-        </p>
-        <pre><code>&gt; easy_install pip</code></pre>
-
-        <h1>Basic Usage</h1>
-        <p>Below is a simple example:</p>
+<h1>Basic Usage</h1>
+<p>Below is a simple example:</p>
 
 {% highlight python %}
 from win_unc import UncDirectoryMount, UncDirectory, DiskDrive
@@ -89,9 +56,9 @@ print 'Drive connected:', conn.is_connected()
 conn.disconnect()
 {% endhighlight %}
 
-        <p>
-          You can also provide credentials like this
-        </p>
+<p>
+  You can also provide credentials like this
+</p>
 
 {% highlight python %}
 from win_unc import UncCredentials
@@ -100,37 +67,25 @@ unc = UncDirectory(r'\\home\shared', UncCredentials('user', 'pwd'))
 conn = UncDirectoryMount(unc, DiskDrive('Z:'))</code></pre>
 {% endhighlight %}
 
-        <h1>Documentation</h1>
-        <h2>UncDirectoryConnection</h2>
-        <p>
-          The <code>UncDirectoryConnection</code> class describes how a UNC directory relates to
-          the current Windows sesssion. Use this class when you want to connect or disconnect a UNC
-          directory. You can also use it to determine if a UNC directory is connected or not.
-        </p>
+<h1>Documentation</h1>
+<h2>UncDirectoryConnection</h2>
+<p>
+  The <code>UncDirectoryConnection</code> class describes how a UNC directory relates to
+  the current Windows sesssion. Use this class when you want to connect or disconnect a UNC
+  directory. You can also use it to determine if a UNC directory is connected or not.
+</p>
 
-        <h3>__init__</h3>
+<h3>__init__</h3>
 
 {% highlight python %}
 UncDirectoryConnection(
-  <em>unc_directory</em>,
-  <em>disk_drive</em>=None,
-  <em>persistent</em>=False,
-  <em>logger</em>=no_logging)
+<em>unc_directory</em>,
+<em>disk_drive</em>=None,
+<em>persistent</em>=False,
+<em>logger</em>=no_logging)
 {% endhighlight %}
 
-        <h1>License</h1>
-        <p>
-          This package is released under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.
-        </p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">win_unc maintained by <a href="https://github.com/CovenantEyes">CovenantEyes</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-  </body>
-</html>
+<h1>License</h1>
+<p>
+  This package is released under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.
+</p>
