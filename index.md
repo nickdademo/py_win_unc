@@ -20,6 +20,7 @@ To install:
 
     $ pip install win_unc
 
+
 Getting pip on Windows
 ----------------------
 
@@ -30,7 +31,7 @@ Download the [setuptools installer](http://pypi.python.org/pypi/setuptools) for 
 run it. **Note that for 64-bit Windows, you need to download the `ez_setup.py` script instead of
 the `.exe` installer.
 
-Once you've installed <code>setuptools</code>, you need to add some paths to your system's `Path`
+Once you've installed `setuptools`, you need to add some paths to your system's `Path`
 environment variable. You'll probably want to add paths like these:
   * `C:\Python27`
   * `C:\Python27\Scripts`
@@ -61,7 +62,7 @@ You can also provide credentials like this
 from win_unc import UncCredentials
 
 unc = UncDirectory(r'\\home\shared', UncCredentials('user', 'pwd'))
-conn = UncDirectoryMount(unc, DiskDrive('Z:'))</code></pre>
+conn = UncDirectoryMount(unc, DiskDrive('Z:'))
 {% endhighlight %}
 
 
@@ -76,7 +77,7 @@ Windows sesssion. Use this class when you want to connect or disconnect a UNC di
 also use it to determine if a UNC directory is connected or not.
 
 
-### __init__
+### UncDirectoryConnection::\_\_init\_\_
 
 {% highlight python %}
 UncDirectoryConnection(
@@ -86,6 +87,9 @@ UncDirectoryConnection(
     logger=no_logging)
 {% endhighlight %}
 
+This will construct a new `UncDirectoryConnection` object.
+
+  * `unc_directory` must be a `UncDirectory` object.
 
 License
 =======
