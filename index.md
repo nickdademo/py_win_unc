@@ -77,7 +77,7 @@ Windows sesssion. Use this class when you want to connect or disconnect a UNC di
 also use it to determine if a UNC directory is connected or not.
 
 
-### UncDirectoryConnection::\_\_init\_\_
+### \_\_init\_\_ <a id="UncDirectoryConnection-construct"/>
 
 {% highlight python %}
 UncDirectoryConnection(
@@ -89,7 +89,14 @@ UncDirectoryConnection(
 
 This will construct a new `UncDirectoryConnection` object.
 
-  * `unc_directory` must be a `UncDirectory` object.
+  * `unc_directory` must be a [`UncDirectory`](#UncDirectory) object.
+
+
+UncDirectory
+------------
+
+The `UncDirectory` class describes the path to a UNC directory and (optionally) and credentials
+that are needed to authorize the connection to the path.
 
 License
 =======
