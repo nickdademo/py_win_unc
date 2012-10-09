@@ -89,7 +89,14 @@ UncDirectoryConnection(
 
 This will construct a new `UncDirectoryConnection` object.
 
-  * `unc_directory` must be a [UncDirectory](#uncdirectory) object.
+  * `unc_directory` must be a [UncDirectory](#uncdirectory) object which provides a UNC path and
+    any credentials necessary to authorize the connection.
+  * `disk_drive` must be a `None` or a [DiskDrive](#diskdrive) object.
+    - If `None`, connecting this UNC directory will not create a local mount point.
+    - If a `DiskDrive`, connecting this UNC directory will create a local mount point at the drive
+      letter specified by `disk_drive`.
+  * `persistent` must be `True` if you want the UNC directory connection to persist across multiple
+    Windows sessions. Otherwise, set this to `False` (the default).
 
 
 UncDirectory
