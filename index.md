@@ -77,7 +77,7 @@ Windows sesssion. Use this class when you want to connect or disconnect a UNC di
 also use it to determine if a UNC directory is connected or not.
 
 
-### \_\_init\_\_ <a id="UncDirectoryConnection-construct"/>
+### \_\_init\_\_
 
 {% highlight python %}
 UncDirectoryConnection(
