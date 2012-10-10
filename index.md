@@ -33,6 +33,7 @@ the `.exe` installer.
 
 Once you've installed `setuptools`, you need to add some paths to your system's `Path`
 environment variable. You'll probably want to add paths like these:
+
   * `C:\Python27`
   * `C:\Python27\Scripts`
 
