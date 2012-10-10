@@ -80,7 +80,7 @@ Documentation
 UncDirectoryConnection {#UncDirectoryConnection}
 ----------------------
 
-The `UncDirectoryConnection` class describes how a UNC directory relates to the current
+The [`UncDirectoryConnection`][] class describes how a UNC directory relates to the current
 Windows sesssion. Use this class when you want to connect or disconnect a UNC directory. You can
 also use it to determine if a UNC directory is connected or not.
 
@@ -95,27 +95,18 @@ UncDirectoryConnection(
     logger=no_logging)
 {% endhighlight %}
 
-Constructs a new `UncDirectoryConnection` object.
+Constructs a new [`UncDirectoryConnection`][] object.
 
----
-
-`unc_directory` must be a [UncDirectory][] object which provides a UNC path and any credentials
+`unc_directory` must be a [`UncDirectory`][] object which provides a UNC path and any credentials
 necessary to authorize the connection.
 
----
-
-`disk_drive` must be `None` or a [DiskDrive][] object.
-
+`disk_drive` must be `None` or a [`DiskDrive`][] object.
 * If `None`, connecting this UNC directory will not create a local mount point.
 * If a `DiskDrive`, connecting this UNC directory will create a local mount point at the drive
   letter specified by `disk_drive`.
 
----
-
 `persistent` must be `True` if you want the UNC directory connection to persist across multiple
 Windows sessions. Otherwise, set this to `False` (the default).
-
----
 
 `logger` must be a function that takes a single string argument. The function will be called
 whenever the object does something worthy of being logged.
