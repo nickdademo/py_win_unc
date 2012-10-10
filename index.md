@@ -80,7 +80,7 @@ Documentation
 UncDirectoryConnection {#UncDirectoryConnection}
 ----------------------
 
-The [`UncDirectoryConnection`][] class describes how a UNC directory relates to the current
+The [UncDirectoryConnection][] class describes how a UNC directory relates to the current
 Windows sesssion. Use this class when you want to connect or disconnect a UNC directory. You can
 also use it to determine if a UNC directory is connected or not.
 
@@ -95,12 +95,12 @@ UncDirectoryConnection(
     logger=no_logging)
 {% endhighlight %}
 
-Constructs a new [`UncDirectoryConnection`][] object.
+Constructs a new [UncDirectoryConnection][] object.
 
-`unc_directory` must be a [`UncDirectory`][] object which provides a UNC path and any credentials
+`unc_directory` must be a [UncDirectory][] object which provides a UNC path and any credentials
 necessary to authorize the connection.
 
-`disk_drive` must be `None` or a [`DiskDrive`][] object.
+`disk_drive` must be `None` or a [DiskDrive][] object.
 * If `None`, connecting this UNC directory will not create a local mount point.
 * If a `DiskDrive`, connecting this UNC directory will create a local mount point at the drive
   letter specified by `disk_drive`.
@@ -145,7 +145,7 @@ otherwise. A UNC path is considered connected when the system reports its status
 **Note: This method does not rely on any internal state management of the object. It is entirely
 possible to construct a new [UncDirectoryConnection][] that is *already* connected by the system.
 In this case, the result of [is_connected](#UncDirectoryConnection_is_connected) will be `True` even
-if no calls to [`connect`](#UncDirectoryConnection_connect) have yet been made.**
+if no calls to [connect](#UncDirectoryConnection_connect) have yet been made.**
 
 #### Why "Disconnected" Is Considered Connected {#why_disconnected_is_connected}
 
