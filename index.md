@@ -16,8 +16,8 @@ Fortunately, this library should make your life a lot easier.
 Contents
 ========
 
+* This list will contain the toc (it doesn't matter what you write here)
 {:toc}
-
 
 Installation
 ============
@@ -96,20 +96,20 @@ UncDirectoryConnection(
 
 This will construct a new `UncDirectoryConnection` object.
 
-1.	`unc_directory` must be a [UncDirectory](#uncdirectory) object which provides a UNC path and
+*	`unc_directory` must be a [UncDirectory](#UncDirectory) object which provides a UNC path and
 	any credentials necessary to authorize the connection.
 
-2.	`disk_drive` must be `None` or a [DiskDrive](#DiskDrive) object.
+*	`disk_drive` must be `None` or a [DiskDrive](#DiskDrive) object.
 
 	*	If `None`, connecting this UNC directory will not create a local mount point.
 
 	*	If a `DiskDrive`, connecting this UNC directory will create a local mount point at the
 		drive letter specified by `disk_drive`.
 
-3.	`persistent` must be `True` if you want the UNC directory connection to persist across
+*	`persistent` must be `True` if you want the UNC directory connection to persist across
 	multiple Windows sessions. Otherwise, set this to `False` (the default).
 
-4.	`logger` must be a function that takes a single string argument. The function will be called
+*	`logger` must be a function that takes a single string argument. The function will be called
 	whenever the object does something worthy of being logged.
 
 
