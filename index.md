@@ -170,7 +170,7 @@ cause the system to reconnect it.
 get_username()
 {% endhighlight %}
 
-Returns the username of the credentials being used by this `UncDirectoryConnection` or `None` if
+Returns the username of the credentials being used by this [UncDirectoryConnection][] or `None` if
 no username was provided.
 
 
@@ -180,7 +180,7 @@ no username was provided.
 get_password()
 {% endhighlight %}
 
-Returns the password of the credentials being used by this `UncDirectoryConnection` or `None` if
+Returns the password of the credentials being used by this [UncDirectoryConnection][] or `None` if
 no password was provided.
 
 
