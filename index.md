@@ -97,10 +97,10 @@ UncDirectoryConnection(
 
 Constructs a new `UncDirectoryConnection` object.
 
-*	`unc_directory` must be a [UncDirectory](#UncDirectory) object which provides a UNC path and
+*	`unc_directory` must be a [UncDirectory][] object which provides a UNC path and
 	any credentials necessary to authorize the connection.
 
-*	`disk_drive` must be `None` or a [DiskDrive](#DiskDrive) object.
+*	`disk_drive` must be `None` or a [DiskDrive][] object.
 	*	If `None`, connecting this UNC directory will not create a local mount point.
 	*	If a `DiskDrive`, connecting this UNC directory will create a local mount point at the
 		drive letter specified by `disk_drive`.
@@ -111,18 +111,45 @@ Constructs a new `UncDirectoryConnection` object.
 *	`logger` must be a function that takes a single string argument. The function will be called
 	whenever the object does something worthy of being logged.
 
------
+
+### connect
 
 {% highlight python %}
-UncDirectoryConnection(
-    unc_directory_connection)
+connect()
 {% endhighlight %}
 
-Constructs a new `UncDirectoryConnection` object as a clone of `unc_directory_connection`.
-The clone will be a "shallow" copy, so the underlying [UncDirectory][] and [DiskDrive][] objects
-used by the clone will have the same `id` as the original.
+Connects the UNC directory. This will make at most three connection attempts with different
+credential configurations in case the credentials provided are not necessary (which is likely
+when the credentials are saved by Windows from a previous connection). If the command fails, a
+`ShellCommandError` will be raised.
 
-*	`unc_directory_connection` must be a [UncDirectoryConnection][] object to clone.
+### disconnect
+
+{% highlight python %}
+disconnect()
+{% endhighlight %}
+
+Disconnects the UNC path. If the command fails, this will raise a `ShellCommandError`.
+
+
+### is_connected
+
+{% highlight python %}
+is_connected()
+{% endhighlight %}
+
+Returns `True` if the system registers this `UncDirectoryConnection` as connected. A UNC path is
+considered connected if the system reports its status as either `OK` or `Disconnected`.
+
+In the context of the system, a status of `Disconnected` means that the UNC path's connection has
+been authorized and connected, but it is temporarily disconnected.
+
+To refresh the connection of a `Disconnected` UNC path, you can usually just perform some trivial
+task with the directory. For example, you could query its contents like this:
+
+    > dir \\unc\path
+
+This commonly refreshes the UNC connection and restores its status to `OK`.
 
 
 UncDirectory {#UncDirectory}
@@ -131,14 +158,40 @@ UncDirectory {#UncDirectory}
 The `UncDirectory` class describes the path to a UNC directory and (optionally) any credentials
 that are needed to authorize the connection to the path.
 
+### \_\_init\_\_
+
+{% highlight python %}
+UncDirectory(
+    path,
+    unc_credentials)
+{% endhighlight %}
+
+-----
+
+{% highlight python %}
+UncDirectory(
+    unc_directory)
+{% endhighlight %}
+
+Constructs a new `UncDirectory` object as a clone of `unc_directory`. The clone will be a "shallow"
+copy, so the underlying [UncCredentials][] object used by the clone will have the same `id` as the
+original.
+
+*	`unc_directory` must be a [UncDirectory][] object to clone.
+
+
+UncCredentials {#UncCredentials}
+--------------
+
 
 DiskDrive {#DiskDrive}
 ---------
 
 
-[UncDirectoryConnection]: #UncDirectoryConnection
-[UncDirectory]: #UncDirectory
 [DiskDrive]: #DiskDrive
+[UncCredentials]: #UncCredentials
+[UncDirectory]: #UncDirectory
+[UncDirectoryConnection]: #UncDirectoryConnection
 
 
 License
