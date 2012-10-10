@@ -129,7 +129,7 @@ when the credentials are saved by Windows from a previous connection). If the co
 disconnect()
 {% endhighlight %}
 
-Disconnects the UNC path. If the command fails, this will raise a `ShellCommandError`.
+Disconnects the UNC path. If the command fails, a `ShellCommandError` will be raised.
 
 
 ### is_connected {#UncDirectoryConnection_is_connected}
@@ -156,7 +156,7 @@ This commonly refreshes the UNC connection and restores its status to `OK`.
 However, these steps are not usually necessary since merely accessing the UNC path in any way will
 cause the system to reconnect it.
 
-**Note: This method does not rely on any internal state management of the class. It is entirely
+**Note: This method does not rely on any internal state management of the object. It is entirely
 possible to construct a new `UncDirectoryConnection` that is *already* connected by the system.
 In this case, the result of `is_connected` will be `True` even if no calls to
 [connect](#UncDirectoryConnection_connect) have yet been made.**
@@ -166,7 +166,7 @@ UncDirectory {#UncDirectory}
 ------------
 
 The `UncDirectory` class describes the path to a UNC directory and (optionally) any credentials
-that are needed to authorize the connection to the path.
+that are needed to authorize a connection to the path.
 
 ### \_\_init\_\_
 
@@ -182,8 +182,10 @@ Constructs a new `UncDirectory` object.
 	path, an `InvalidUncPathError` will be raised.
 
 *	`unc_credentials` may be either `None` or a `UncCredentials` object.
+
 	*	If `None`, the `UncDirectory` object will not specify any credentials to use for
 		authorizing a connection.
+
 	*	If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
 		authorizing a connection.
 
