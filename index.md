@@ -13,6 +13,12 @@ harder.
 Fortunately, this library should make your life a lot easier.
 
 
+Contents
+========
+
+{:toc}
+
+
 Installation
 ============
 
@@ -34,8 +40,8 @@ the `.exe` installer.
 Once you've installed `setuptools`, you need to add some paths to your system's `Path`
 environment variable. You'll probably want to add paths like these:
 
-* `C:\Python27`
-* `C:\Python27\Scripts`
+*	`C:\Python27`
+*	`C:\Python27\Scripts`
 
 Then, in Windows command-line (`cmd.exe`), you can run the following to get `pip`
 installed:
@@ -70,7 +76,7 @@ conn = UncDirectoryMount(unc, DiskDrive('Z:'))
 Documentation
 =============
 
-UncDirectoryConnection
+UncDirectoryConnection {#UncDirectoryConnection}
 ----------------------
 
 The `UncDirectoryConnection` class describes how a UNC directory relates to the current
@@ -90,22 +96,33 @@ UncDirectoryConnection(
 
 This will construct a new `UncDirectoryConnection` object.
 
-1. `unc_directory` must be a [UncDirectory](#uncdirectory) object which provides a UNC path and
-   any credentials necessary to authorize the connection.
+1.	`unc_directory` must be a [UncDirectory](#uncdirectory) object which provides a UNC path and
+	any credentials necessary to authorize the connection.
 
-2. `disk_drive` must be `None` or a [DiskDrive](#diskdrive) object. If `None`, connecting this UNC
-   directory will not create a local mount point. If a `DiskDrive`, connecting this UNC directory
-   will create a local mount point at the drive letter specified by `disk_drive`.
+2.	`disk_drive` must be `None` or a [DiskDrive](#DiskDrive) object.
 
-3. `persistent` must be `True` if you want the UNC directory connection to persist across multiple
-   Windows sessions. Otherwise, set this to `False` (the default).
+	*	If `None`, connecting this UNC directory will not create a local mount point.
+
+	*	If a `DiskDrive`, connecting this UNC directory will create a local mount point at the
+		drive letter specified by `disk_drive`.
+
+3.	`persistent` must be `True` if you want the UNC directory connection to persist across
+	multiple Windows sessions. Otherwise, set this to `False` (the default).
+
+4.	`logger` must be a function that takes a single string argument. The function will be called
+	whenever the object does something worthy of being logged.
 
 
-UncDirectory
+UncDirectory {#UncDirectory}
 ------------
 
 The `UncDirectory` class describes the path to a UNC directory and (optionally) any credentials
 that are needed to authorize the connection to the path.
+
+
+DiskDrive {#DiskDrive}
+---------
+
 
 License
 =======
