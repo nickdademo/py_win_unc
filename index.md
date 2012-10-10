@@ -121,7 +121,7 @@ connect()
 Connects the UNC directory. This will make at most three connection attempts with different
 credential configurations in case the credentials provided are not necessary (which is likely
 when the credentials are saved by Windows from a previous connection). If the command fails, a
-`ShellCommandError` will be raised.
+[ShellCommandError][] will be raised.
 
 ### disconnect {#UncDirectoryConnection_disconnect}
 
@@ -129,7 +129,7 @@ when the credentials are saved by Windows from a previous connection). If the co
 disconnect()
 {% endhighlight %}
 
-Disconnects the UNC path. If the command fails, a `ShellCommandError` will be raised.
+Disconnects the UNC path. If the command fails, a [ShellCommandError][] will be raised.
 
 
 ### is_connected {#UncDirectoryConnection_is_connected}
@@ -138,16 +138,16 @@ Disconnects the UNC path. If the command fails, a `ShellCommandError` will be ra
 is_connected()
 {% endhighlight %}
 
-Returns `True` if the system registers this [`UncDirectoryConnection`][] as connected or `False`
+Returns `True` if the system registers this [UncDirectoryConnection][] as connected or `False`
 otherwise. A UNC path is considered connected when the system reports its status as either `OK` or
 `Disconnected`.
 
 **Note: This method does not rely on any internal state management of the object. It is entirely
-possible to construct a new `UncDirectoryConnection` that is *already* connected by the system.
-In this case, the result of `is_connected` will be `True` even if no calls to
-[`connect`](#UncDirectoryConnection_connect) have yet been made.**
+possible to construct a new [UncDirectoryConnection][] that is *already* connected by the system.
+In this case, the result of [is_connected](#UncDirectoryConnection_is_connected) will be `True` even
+if no calls to [`connect`](#UncDirectoryConnection_connect) have yet been made.**
 
-#### Why "Disconnected" Is Considered Connected
+#### Why "Disconnected" Is Considered Connected {#why_disconnected_is_connected}
 
 In the context of the system, a status of `Disconnected` means that the UNC path's connection has
 been authorized and established but it is temporarily disconnected (probably because it has been
@@ -164,7 +164,7 @@ However, these steps are not usually necessary since merely accessing the UNC pa
 cause the system to reconnect it.
 
 
-### get_username
+### get_username {#UncDirectoryConnection_get_username}
 
 {% highlight python %}
 get_username()
@@ -174,7 +174,7 @@ Returns the username of the credentials being used by this `UncDirectoryConnecti
 no username was provided.
 
 
-### get_password
+### get_password {#UncDirectoryConnection_get_password}
 
 {% highlight python %}
 get_password()
@@ -190,7 +190,7 @@ UncDirectory {#UncDirectory}
 The `UncDirectory` class describes the path to a UNC directory and (optionally) any credentials
 that are needed to authorize a connection to the path.
 
-### \_\_init\_\_
+### \_\_init\_\_ {#UncDirectory_init}
 
 {% highlight python %}
 UncDirectory(
@@ -200,26 +200,15 @@ UncDirectory(
 
 Constructs a new `UncDirectory` object.
 
-<ul>
-    <li>
-        `path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
-        path, an `InvalidUncPathError` will be raised.
-    </li>
-    <li>
-        `unc_credentials` may be either `None` or a `UncCredentials` object.
+`path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
+path, an `InvalidUncPathError` will be raised.
 
-        <ul>
-            <li>
-                If `None`, the `UncDirectory` object will not specify any credentials to use for
-                authorizing a connection.
-            </li>
-            <li>
-                If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
-                authorizing a connection.
-            </li>
-        </ul>
-    </li>
-</ul>
+`unc_credentials` may be either `None` or a `UncCredentials` object.
+
+* If `None`, the `UncDirectory` object will not specify any credentials to use for authorizing a
+  connection.
+* If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
+  authorizing a connection.
 
 -----
 
@@ -232,7 +221,7 @@ Constructs a new `UncDirectory` object as a clone of `unc_directory`. The clone 
 copy, so the underlying [UncCredentials][] object used by the clone will have the same `id` as the
 original.
 
-*   `unc_directory` must be a [UncDirectory][] object to clone.
+`unc_directory` must be a [UncDirectory][] object to clone.
 
 
 UncCredentials {#UncCredentials}
@@ -243,10 +232,32 @@ DiskDrive {#DiskDrive}
 ---------
 
 
+Exception Classes {#exception_classes}
+-----------------
+
+`win_unc` uses a set of exception classes to describe errors that could arise when using the
+library. They can be imported from the `win_unc.errors` module and they each inherit from
+[WinUncError][].
+
+
+### WinUncError {#WinUncError}
+
+The [WinUncError][] class inherits from `Exception` and acts as an umbrella for all exception
+classes that can be raised by the `win_unc` package. This class does not have its own interface
+other than what is provided by `Exception`. It is not meant to be raised or instantiated.
+
+
+### ShellCommandError {#ShellCommandError}
+
+Represents the error that occurs when a shell command has been executed and returns an error code.
+
+
 [DiskDrive]: #DiskDrive
 [UncCredentials]: #UncCredentials
 [UncDirectory]: #UncDirectory
 [UncDirectoryConnection]: #UncDirectoryConnection
+[ShellCommandError]: #ShellCommandError
+[WinUncError]: #WinUncError
 
 
 License
