@@ -95,7 +95,7 @@ UncDirectoryConnection(
     logger=no_logging)
 {% endhighlight %}
 
-This will construct a new `UncDirectoryConnection` object.
+Constructs a new `UncDirectoryConnection` object.
 
 *	`unc_directory` must be a [UncDirectory](#UncDirectory) object which provides a UNC path and
 	any credentials necessary to authorize the connection.
@@ -111,13 +111,14 @@ This will construct a new `UncDirectoryConnection` object.
 *	`logger` must be a function that takes a single string argument. The function will be called
 	whenever the object does something worthy of being logged.
 
+-----
 
 {% highlight python %}
 UncDirectoryConnection(
     unc_directory_connection)
 {% endhighlight %}
 
-This will construct a new `UncDirectoryConnection` object as a clone of `unc_directory_connection`.
+Constructs a new `UncDirectoryConnection` object as a clone of `unc_directory_connection`.
 The clone will be a "shallow" copy, so the underlying [UncDirectory][] and [DiskDrive][] objects
 used by the clone will have the same `id` as the original.
 
