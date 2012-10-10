@@ -34,8 +34,8 @@ the `.exe` installer.
 Once you've installed `setuptools`, you need to add some paths to your system's `Path`
 environment variable. You'll probably want to add paths like these:
 
-  * C:\Python27
-  * C:\Python27\Scripts
+* `C:\Python27`
+* `C:\Python27\Scripts`
 
 Then, in Windows command-line (`cmd.exe`), you can run the following to get `pip`
 installed:
