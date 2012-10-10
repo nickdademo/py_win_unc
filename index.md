@@ -178,16 +178,26 @@ UncDirectory(
 
 Constructs a new `UncDirectory` object.
 
-*	`path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
-	path, an `InvalidUncPathError` will be raised.
+<ul>
+	<li>
+		`path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
+		path, an `InvalidUncPathError` will be raised.
+	</li>
+	<li>
+		`unc_credentials` may be either `None` or a `UncCredentials` object.
 
-*	`unc_credentials` may be either `None` or a `UncCredentials` object.
-
-	*	If `None`, the `UncDirectory` object will not specify any credentials to use for
-		authorizing a connection.
-
-	*	If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
-		authorizing a connection.
+		<ul>
+			<li>
+				If `None`, the `UncDirectory` object will not specify any credentials to use for
+				authorizing a connection.
+			</li>
+			<li>
+				If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
+				authorizing a connection.
+			</li>
+		</ul>
+	</li>
+</ul>
 
 -----
 
