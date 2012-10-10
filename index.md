@@ -85,7 +85,7 @@ Windows sesssion. Use this class when you want to connect or disconnect a UNC di
 also use it to determine if a UNC directory is connected or not.
 
 
-### \_\_init\_\_
+### \_\_init\_\_ {#UncDirectoryConnection_init}
 
 {% highlight python %}
 UncDirectoryConnection(
@@ -112,7 +112,7 @@ Constructs a new `UncDirectoryConnection` object.
 	whenever the object does something worthy of being logged.
 
 
-### connect
+### connect {#UncDirectoryConnection_connect}
 
 {% highlight python %}
 connect()
@@ -123,7 +123,7 @@ credential configurations in case the credentials provided are not necessary (wh
 when the credentials are saved by Windows from a previous connection). If the command fails, a
 `ShellCommandError` will be raised.
 
-### disconnect
+### disconnect {#UncDirectoryConnection_disconnect}
 
 {% highlight python %}
 disconnect()
@@ -132,17 +132,19 @@ disconnect()
 Disconnects the UNC path. If the command fails, this will raise a `ShellCommandError`.
 
 
-### is_connected
+### is_connected {#UncDirectoryConnection_is_connected}
 
 {% highlight python %}
 is_connected()
 {% endhighlight %}
 
-Returns `True` if the system registers this `UncDirectoryConnection` as connected. A UNC path is
-considered connected if the system reports its status as either `OK` or `Disconnected`.
+Returns `True` if the system registers this `UncDirectoryConnection` as connected or `False`
+otherwise. A UNC path is considered connected when the system reports its status as either `OK` or
+`Disconnected`.
 
 In the context of the system, a status of `Disconnected` means that the UNC path's connection has
-been authorized and connected, but it is temporarily disconnected.
+been authorized and established but it is temporarily disconnected (probably because it has been
+idle for some period of time).
 
 To refresh the connection of a `Disconnected` UNC path, you can usually just perform some trivial
 task with the directory. For example, you could query its contents like this:
@@ -150,6 +152,14 @@ task with the directory. For example, you could query its contents like this:
     > dir \\unc\path
 
 This commonly refreshes the UNC connection and restores its status to `OK`.
+
+However, these steps are not usually necessary since merely accessing the UNC path in any way will
+cause the system to reconnect it.
+
+**Note: This method does not rely on any internal state management of the class. It is entirely
+possible to construct a new `UncDirectoryConnection` that is *already* connected by the system.
+In this case, the result of `is_connected` will be `True` even if no calls to
+[connect](#UncDirectoryConnection_connect) have yet been made.**
 
 
 UncDirectory {#UncDirectory}
@@ -163,8 +173,19 @@ that are needed to authorize the connection to the path.
 {% highlight python %}
 UncDirectory(
     path,
-    unc_credentials)
+    unc_credentials=None)
 {% endhighlight %}
+
+Constructs a new `UncDirectory` object.
+
+*	`path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
+	path, an `InvalidUncPathError` will be raised.
+
+*	`unc_credentials` may be either `None` or a `UncCredentials` object.
+	*	If `None`, the `UncDirectory` object will not specify any credentials to use for
+		authorizing a connection.
+	*	If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
+		authorizing a connection.
 
 -----
 
