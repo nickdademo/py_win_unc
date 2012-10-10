@@ -187,7 +187,7 @@ no password was provided.
 UncDirectory {#UncDirectory}
 ------------
 
-The `UncDirectory` class describes the path to a UNC directory and (optionally) any credentials
+The [UncDirectory][] class describes the path to a UNC directory and (optionally) any credentials
 that are needed to authorize a connection to the path.
 
 ### \_\_init\_\_ {#UncDirectory_init}
@@ -198,16 +198,16 @@ UncDirectory(
     unc_credentials=None)
 {% endhighlight %}
 
-Constructs a new `UncDirectory` object.
+Constructs a new [UncDirectory][] object.
 
 `path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
-path, an `InvalidUncPathError` will be raised.
+path, an [InvalidUncPathError][] will be raised.
 
-`unc_credentials` may be either `None` or a `UncCredentials` object.
+`unc_credentials` may be either `None` or a [UncCredentials][] object.
 
-* If `None`, the `UncDirectory` object will not specify any credentials to use for authorizing a
+* If `None`, the [UncDirectory][] object will not specify any credentials to use for authorizing a
   connection.
-* If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
+* If a [UncCredentials][] object, the [UncDirectory][] will attempt to use `unc_credentials` for
   authorizing a connection.
 
 -----
@@ -217,9 +217,9 @@ UncDirectory(
     unc_directory)
 {% endhighlight %}
 
-Constructs a new `UncDirectory` object as a clone of `unc_directory`. The clone will be a "shallow"
-copy, so the underlying [UncCredentials][] object used by the clone will have the same `id` as the
-original.
+Constructs a new [UncDirectory][] object as a clone of `unc_directory`. The clone will be a
+"shallow" copy, so the underlying [UncCredentials][] object used by the clone will have the same
+`id` as the original.
 
 `unc_directory` must be a [UncDirectory][] object to clone.
 
@@ -239,12 +239,20 @@ Exception Classes {#exception_classes}
 library. They can be imported from the `win_unc.errors` module and they each inherit from
 [WinUncError][].
 
+For each exception class, the magic `__str__` method returns a description of the error.
+
 
 ### WinUncError {#WinUncError}
 
 The [WinUncError][] class inherits from `Exception` and acts as an umbrella for all exception
 classes that can be raised by the `win_unc` package. This class does not have its own interface
 other than what is provided by `Exception`. It is not meant to be raised or instantiated.
+
+
+### InvalidUncPathError {#InvalidUncPathError}
+
+Represents the error that occurs when an invalid UNC path is provided to [UncDirectory][]'s
+constructor.
 
 
 ### ShellCommandError {#ShellCommandError}
