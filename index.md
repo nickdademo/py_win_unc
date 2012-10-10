@@ -261,6 +261,7 @@ Represents the error that occurs when a shell command has been executed and retu
 
 
 [DiskDrive]: #DiskDrive
+[InvalidUncPathError]: #InvalidUncPathError
 [UncCredentials]: #UncCredentials
 [UncDirectory]: #UncDirectory
 [UncDirectoryConnection]: #UncDirectoryConnection
