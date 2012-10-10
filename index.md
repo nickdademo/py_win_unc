@@ -19,6 +19,7 @@ Contents
 * This list will contain the toc (it doesn't matter what you write here)
 {:toc}
 
+
 Installation
 ============
 
@@ -100,9 +101,7 @@ This will construct a new `UncDirectoryConnection` object.
 	any credentials necessary to authorize the connection.
 
 *	`disk_drive` must be `None` or a [DiskDrive](#DiskDrive) object.
-
 	*	If `None`, connecting this UNC directory will not create a local mount point.
-
 	*	If a `DiskDrive`, connecting this UNC directory will create a local mount point at the
 		drive letter specified by `disk_drive`.
 
