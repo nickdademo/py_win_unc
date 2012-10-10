@@ -41,8 +41,8 @@ the `.exe` installer.
 Once you've installed `setuptools`, you need to add some paths to your system's `Path`
 environment variable. You'll probably want to add paths like these:
 
-*	`C:\Python27`
-*	`C:\Python27\Scripts`
+*   `C:\Python27`
+*   `C:\Python27\Scripts`
 
 Then, in Windows command-line (`cmd.exe`), you can run the following to get `pip`
 installed:
@@ -97,19 +97,21 @@ UncDirectoryConnection(
 
 Constructs a new `UncDirectoryConnection` object.
 
-*	`unc_directory` must be a [UncDirectory][] object which provides a UNC path and
-	any credentials necessary to authorize the connection.
+-----
+`unc_directory` must be a [UncDirectory][] object which provides a UNC path and any credentials
+necessary to authorize the connection.
+-----
+`disk_drive` must be `None` or a [DiskDrive][] object.
 
-*	`disk_drive` must be `None` or a [DiskDrive][] object.
-	*	If `None`, connecting this UNC directory will not create a local mount point.
-	*	If a `DiskDrive`, connecting this UNC directory will create a local mount point at the
-		drive letter specified by `disk_drive`.
-
-*	`persistent` must be `True` if you want the UNC directory connection to persist across
-	multiple Windows sessions. Otherwise, set this to `False` (the default).
-
-*	`logger` must be a function that takes a single string argument. The function will be called
-	whenever the object does something worthy of being logged.
+* If `None`, connecting this UNC directory will not create a local mount point.
+* If a `DiskDrive`, connecting this UNC directory will create a local mount point at the drive
+  letter specified by `disk_drive`.
+-----
+`persistent` must be `True` if you want the UNC directory connection to persist across multiple
+Windows sessions. Otherwise, set this to `False` (the default).
+-----
+`logger` must be a function that takes a single string argument. The function will be called
+whenever the object does something worthy of being logged.
 
 
 ### connect {#UncDirectoryConnection_connect}
@@ -138,9 +140,16 @@ Disconnects the UNC path. If the command fails, a `ShellCommandError` will be ra
 is_connected()
 {% endhighlight %}
 
-Returns `True` if the system registers this `UncDirectoryConnection` as connected or `False`
+Returns `True` if the system registers this [`UncDirectoryConnection`][] as connected or `False`
 otherwise. A UNC path is considered connected when the system reports its status as either `OK` or
 `Disconnected`.
+
+**Note: This method does not rely on any internal state management of the object. It is entirely
+possible to construct a new `UncDirectoryConnection` that is *already* connected by the system.
+In this case, the result of `is_connected` will be `True` even if no calls to
+[`connect`](#UncDirectoryConnection_connect) have yet been made.**
+
+#### Why "Disconnected" Is Considered Connected
 
 In the context of the system, a status of `Disconnected` means that the UNC path's connection has
 been authorized and established but it is temporarily disconnected (probably because it has been
@@ -156,10 +165,25 @@ This commonly refreshes the UNC connection and restores its status to `OK`.
 However, these steps are not usually necessary since merely accessing the UNC path in any way will
 cause the system to reconnect it.
 
-**Note: This method does not rely on any internal state management of the object. It is entirely
-possible to construct a new `UncDirectoryConnection` that is *already* connected by the system.
-In this case, the result of `is_connected` will be `True` even if no calls to
-[connect](#UncDirectoryConnection_connect) have yet been made.**
+
+### get_username
+
+{% highlight python %}
+get_username()
+{% endhighlight %}
+
+Returns the username of the credentials being used by this `UncDirectoryConnection` or `None` if
+no username was provided.
+
+
+### get_password
+
+{% highlight python %}
+get_password()
+{% endhighlight %}
+
+Returns the password of the credentials being used by this `UncDirectoryConnection` or `None` if
+no password was provided.
 
 
 UncDirectory {#UncDirectory}
@@ -179,24 +203,24 @@ UncDirectory(
 Constructs a new `UncDirectory` object.
 
 <ul>
-	<li>
-		`path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
-		path, an `InvalidUncPathError` will be raised.
-	</li>
-	<li>
-		`unc_credentials` may be either `None` or a `UncCredentials` object.
+    <li>
+        `path` must be a string representing a UNC path. If `path` cannot be construed as a valid UNC
+        path, an `InvalidUncPathError` will be raised.
+    </li>
+    <li>
+        `unc_credentials` may be either `None` or a `UncCredentials` object.
 
-		<ul>
-			<li>
-				If `None`, the `UncDirectory` object will not specify any credentials to use for
-				authorizing a connection.
-			</li>
-			<li>
-				If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
-				authorizing a connection.
-			</li>
-		</ul>
-	</li>
+        <ul>
+            <li>
+                If `None`, the `UncDirectory` object will not specify any credentials to use for
+                authorizing a connection.
+            </li>
+            <li>
+                If a `UncCredentials` object, the `UncDirectory` will attempt to use `unc_credentials` for
+                authorizing a connection.
+            </li>
+        </ul>
+    </li>
 </ul>
 
 -----
@@ -210,7 +234,7 @@ Constructs a new `UncDirectory` object as a clone of `unc_directory`. The clone 
 copy, so the underlying [UncCredentials][] object used by the clone will have the same `id` as the
 original.
 
-*	`unc_directory` must be a [UncDirectory][] object to clone.
+*   `unc_directory` must be a [UncDirectory][] object to clone.
 
 
 UncCredentials {#UncCredentials}
