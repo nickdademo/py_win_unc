@@ -15,8 +15,8 @@ class UncCredentials(object):
 
     def __init__(self, username=None, password=None):
         """
-        Returns a new `UncCredentials` class. Both `username` and `password` are optional.
-        If neither are provided, the new class will mean that credentials are unnecessary.
+        Returns a new `UncCredentials` object. Both `username` and `password` are optional.
+        If neither are provided, the new object will mean that credentials are unnecessary.
         `username` must be a string representing a Windows username (logon). Windows usernames
                    may include a domain prefix (i.e. "domain\username"). If `username` cannot be
                    construed as a valid Windows username, then this will raise an
