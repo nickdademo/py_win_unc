@@ -258,6 +258,7 @@ Windows usernames cannot be empty.**
 password) and `''` (the empty string) have very different meanings. The empty string is a
 meaningful, legitimate password.**
 
+-----
 
 {% highlight python %}
 UncCredentials(
