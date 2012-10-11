@@ -227,6 +227,46 @@ Constructs a new [UncDirectory][] object as a clone of `unc_directory`. The clon
 UncCredentials {#UncCredentials}
 --------------
 
+The [UncCredentials][] class represents a set of credentials (username and password) to be used with
+a UNC connection.
+
+
+### \_\_init\_\_ {#UncCredentials_init}
+
+{% highlight python %}
+UncCredentials(
+    username=None,
+    password=None)
+{% endhighlight %}
+
+Constructs a new [UncCredentials][] object.
+
+`username` must be `None` or a string representing a Windows username (logon).
+* If `None`, the this object will not specify a username when being used for a UNC connection. This
+  means that Windows will use the username of the current Windows session when authorization is
+  required.
+* If a Windows username, then `username` will be used if authorization is required for accompanying
+  UNC connection.
+
+Usernames may include a domain prefix (i.e. "domain\username"), but if `username` cannot be
+construed as a valid Windows username, then an [InvalidUsernameError][] will be raised. Realize that
+**providing `None` and `''` (the empty string) for `username` have very different meanings.
+Windows usernames cannot be empty.**
+
+`password` must be `None` or a string representing a password. Realize that **providing `None` (no
+password) and `''` (the empty string) have very different meanings. The empty string is a
+meaningful, legitimate password.**
+
+
+{% highlight python %}
+UncCredentials(
+    unc_credentials)
+{% endhighlight %}
+
+Constructs a new [UncCredentials][] object as a clone of `unc_credentials`.
+
+`unc_credentials` must be a [UncCredentials][] object to clone.
+
 
 DiskDrive {#DiskDrive}
 ---------
@@ -255,13 +295,21 @@ Represents the error that occurs when an invalid UNC path is provided to [UncDir
 constructor.
 
 
+### InvalidUsernameError {#InvalidUsernameError}
+
+Represents the error that occurs when an invalid Windows username (logon) is provided to
+[UncCredentials][]' constructor.
+
+
 ### ShellCommandError {#ShellCommandError}
 
 Represents the error that occurs when a shell command has been executed and returns an error code.
 
 
+
 [DiskDrive]: #DiskDrive
 [InvalidUncPathError]: #InvalidUncPathError
+[InvalidUsernameError]: #InvalidUsernameError
 [UncCredentials]: #UncCredentials
 [UncDirectory]: #UncDirectory
 [UncDirectoryConnection]: #UncDirectoryConnection
