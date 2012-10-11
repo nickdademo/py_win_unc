@@ -243,7 +243,7 @@ Constructs a new [UncCredentials][] object.
 
 `username` must be `None` or a string representing a Windows username (logon).
 
-* If `None`, the this object will not specify a username when being used for a UNC connection. This
+* If `None`, then this object will not specify a username when being used for a UNC connection. This
   means that Windows will use the username of the current Windows session when authorization is
   required.
 * If a Windows username, then `username` will be used if authorization is required for accompanying
