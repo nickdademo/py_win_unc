@@ -101,6 +101,7 @@ Constructs a new [UncDirectoryConnection][] object.
 necessary to authorize the connection.
 
 `disk_drive` must be `None` or a [DiskDrive][] object.
+
 * If `None`, connecting this UNC directory will not create a local mount point.
 * If a `DiskDrive`, connecting this UNC directory will create a local mount point at the drive
   letter specified by `disk_drive`.
@@ -146,6 +147,7 @@ otherwise. A UNC path is considered connected when the system reports its status
 possible to construct a new [UncDirectoryConnection][] that is *already* connected by the system.
 In this case, the result of [is_connected](#UncDirectoryConnection_is_connected) will be `True` even
 if no calls to [connect](#UncDirectoryConnection_connect) have yet been made.**
+
 
 #### Why "Disconnected" Is Considered Connected {#why_disconnected_is_connected}
 
@@ -246,8 +248,8 @@ Constructs a new [UncCredentials][] object.
 * If `None`, then this object will not specify a username when being used for a UNC connection. This
   means that Windows will use the username of the current Windows session when authorization is
   required.
-* If a Windows username, then `username` will be used if authorization is required for accompanying
-  UNC connection.
+* If a Windows username, then `username` will be used if authorization is required for the
+  accompanying UNC connection.
 
 Usernames may include a domain prefix (i.e. "domain\username"), but if `username` cannot be
 construed as a valid Windows username, then an [InvalidUsernameError][] will be raised. Realize that
