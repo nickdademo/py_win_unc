@@ -36,7 +36,7 @@ class UncDirectory(object):
         cleaned_path = clean_unc_path(new_path)
         if is_valid_unc_path(cleaned_path):
             self._path = cleaned_path
-            self._creds = None if new_creds.is_empty() else new_creds
+            self._creds = new_creds if new_creds and not new_creds.is_empty() else None
         else:
             raise InvalidUncPathError(new_path)
 
