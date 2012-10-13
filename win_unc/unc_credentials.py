@@ -35,8 +35,8 @@ class UncCredentials(object):
         it and create a new `UncCredentials` object with the same properties.
         """
         if password is None and isinstance(username, self.__class__):
-            new_username = username.username
-            new_password = username.password
+            new_username = username._username
+            new_password = username._password
         else:
             new_username = username
             new_password = password
@@ -60,6 +60,12 @@ class UncCredentials(object):
         Returns the password of this `UncCredentials` object or `None` if no password was provided.
         """
         return self._password
+
+    def is_empty(self):
+        """
+        Returns `True` if this `UncCredentials` object does not contain any meaningful credentials.
+        """
+        return self._username is None and self._password is None
 
     def get_auth_string(self):
         """

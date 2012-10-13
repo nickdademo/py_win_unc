@@ -27,8 +27,8 @@ class UncDirectory(object):
         """
 
         if creds is None and isinstance(path, UncDirectory):
-            new_path = path.path
-            new_creds = path.creds
+            new_path = path._path
+            new_creds = path._creds
         else:
             new_path = path
             new_creds = creds
@@ -36,12 +36,9 @@ class UncDirectory(object):
         cleaned_path = clean_unc_path(new_path)
         if is_valid_unc_path(cleaned_path):
             self._path = cleaned_path
-            self._creds = new_creds
+            self._creds = None if new_creds.is_empty() else new_creds
         else:
             raise InvalidUncPathError(new_path)
-
-        if self.get_username() is None and self.get_password() is None:
-            self._creds = None
 
     def get_normalized_path(self):
         """
@@ -62,20 +59,20 @@ class UncDirectory(object):
         Returns the username associated with the credentials of this `UncDirectory` or `None`
         if no username was provided.
         """
-        return self.creds.get_username() if self.creds else None
+        return self._creds.get_username() if self._creds else None
 
     def get_password(self):
         """
         Returns the password associated with the credentials of this `UncDirectory` or `None`
         if no password was provided.
         """
-        return self.creds.get_password() if self.creds else None
+        return self._creds.get_password() if self._creds else None
 
     def get_auth_string(self):
         """
         Returns the authorization string associated with the credentials of this `UncDirectory`.
         """
-        return self.creds.get_auth_string() if self.creds else ''
+        return self._creds.get_auth_string() if self._creds else ''
 
     def get_auth_path(self):
         """

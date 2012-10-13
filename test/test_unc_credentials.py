@@ -7,20 +7,20 @@ from win_unc.unc_credentials import UncCredentials, get_creds_from_string
 class TestUncCredentials(TestCase):
     def test_cloning(self):
         creds = UncCredentials(UncCredentials())
-        self.assertIsNone(creds.username)
-        self.assertIsNone(creds.password)
+        self.assertIsNone(creds.get_username())
+        self.assertIsNone(creds.get_password())
 
         creds = UncCredentials(UncCredentials('user', None))
-        self.assertEqual(creds.username, 'user')
-        self.assertIsNone(creds.password)
+        self.assertEqual(creds.get_username(), 'user')
+        self.assertIsNone(creds.get_password())
 
         creds = UncCredentials(UncCredentials(None, 'pass'))
-        self.assertIsNone(creds.username)
-        self.assertEqual(creds.password, 'pass')
+        self.assertIsNone(creds.get_username())
+        self.assertEqual(creds.get_password(), 'pass')
 
         creds = UncCredentials(UncCredentials('user', 'pass'))
-        self.assertEqual(creds.username, 'user')
-        self.assertEqual(creds.password, 'pass')
+        self.assertEqual(creds.get_username(), 'user')
+        self.assertEqual(creds.get_password(), 'pass')
 
     def test_invalid(self):
         self.assertRaises(InvalidUsernameError, UncCredentials, '"user"')

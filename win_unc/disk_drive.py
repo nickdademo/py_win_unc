@@ -25,7 +25,7 @@ class DiskDrive(object):
         `DiskDrive` class (either directly or by inheritance), this constructor will clone
         it and create a new `DiskDrive` object with the same properties.
         """
-        new_letter = drive.drive_letter if isinstance(drive, self.__class__) else drive
+        new_letter = drive._drive_letter if isinstance(drive, self.__class__) else drive
         cleaned_letter = clean_drive_letter(new_letter)
 
         if is_valid_drive_letter(cleaned_letter):

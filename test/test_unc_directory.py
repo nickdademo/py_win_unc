@@ -15,25 +15,25 @@ class TestUncDirectory(TestCase):
 
     def test_init_with_cloning(self):
         unc = UncDirectory(UncDirectory(r'\\path'))
-        self.assertEqual(unc.path, r'\\path')
+        self.assertEqual(unc.get_path(), r'\\path')
         self.assertIsNone(unc.get_username())
         self.assertIsNone(unc.get_password())
 
         creds = UncCredentials('user')
         unc = UncDirectory(UncDirectory(r'\\path', creds))
-        self.assertEqual(unc.path, r'\\path')
+        self.assertEqual(unc.get_path(), r'\\path')
         self.assertEqual(unc.get_username(), 'user')
         self.assertIsNone(unc.get_password())
 
         creds = UncCredentials(None, 'pass')
         unc = UncDirectory(UncDirectory(r'\\path', creds))
-        self.assertEqual(unc.path, r'\\path')
+        self.assertEqual(unc.get_path(), r'\\path')
         self.assertIsNone(unc.get_username())
         self.assertEqual(unc.get_password(), 'pass')
 
         creds = UncCredentials('user', 'pass')
         unc = UncDirectory(UncDirectory(r'\\path', creds))
-        self.assertEqual(unc.path, r'\\path')
+        self.assertEqual(unc.get_path(), r'\\path')
         self.assertEqual(unc.get_username(), 'user')
         self.assertEqual(unc.get_password(), 'pass')
 

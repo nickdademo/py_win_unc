@@ -61,7 +61,7 @@ class UncDirectoryConnection(object):
         likely when the credentials are saved by Windows from a previous connection). If the
         comand fails, this will raise a `ShellCommandError`.
         """
-        self.logger('Connecting the network UNC path "{path}".'.format(path=self.unc.path))
+        self.logger('Connecting the network UNC path "{path}".'.format(path=self.get_path()))
 
         username = self.get_username()
         password = self.get_password()
@@ -80,7 +80,7 @@ class UncDirectoryConnection(object):
         """
         identifier = (self.disk_drive.get_drive() if self.disk_drive
                       else S.sanitize_path(self.unc.get_normalized_path()))
-        self.logger('Disconnecting the network UNC path "{path}".'.format(path=self.unc.path))
+        self.logger('Disconnecting the network UNC path "{path}".'.format(path=self.get_path()))
         run('NET USE "{id}" /DELETE /YES'.format(id=identifier), self.logger)
 
     def is_connected(self):
@@ -106,7 +106,7 @@ class UncDirectoryConnection(object):
 
         return 'NET USE{device} "{path}"{password}{user} /PERSISTENT:{persistent}'.format(
             device=device_str,
-            path=S.sanitize_unc_path(self.unc.path),
+            path=S.sanitize_unc_path(self.get_path()),
             password=password_str,
             user=user_str,
             persistent='YES' if self.disk_drive and self.persistent else 'NO')
