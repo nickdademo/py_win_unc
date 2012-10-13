@@ -29,7 +29,7 @@ class DiskDrive(object):
         cleaned_letter = clean_drive_letter(new_letter)
 
         if is_valid_drive_letter(cleaned_letter):
-            self.drive_letter = cleaned_letter
+            self._drive_letter = cleaned_letter
         else:
             raise InvalidDiskDriveError(new_letter)
 
@@ -38,7 +38,7 @@ class DiskDrive(object):
         Returns this `DiskDrive`'s path. The path will always be an upper-case letter followed by
         a colon (`:`). For example, if the drive letter is "G", then this will return "G:".
         """
-        return self.drive_letter + ':'
+        return self._drive_letter + ':'
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

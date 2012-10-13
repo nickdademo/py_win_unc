@@ -35,35 +35,41 @@ class UncDirectory(object):
 
         cleaned_path = clean_unc_path(new_path)
         if is_valid_unc_path(cleaned_path):
-            self.path = cleaned_path
-            self.creds = new_creds
+            self._path = cleaned_path
+            self._creds = new_creds
         else:
             raise InvalidUncPathError(new_path)
 
         if self.get_username() is None and self.get_password() is None:
-            self.creds = None
+            self._creds = None
 
     def get_normalized_path(self):
         """
         Returns the normalized path for this `UncDirectory`. Differing UNC paths that all point to
         the same network location will have the same normalized path.
         """
-        path = self.path.lower()
+        path = self._path.lower()
         return path[:-5] if path.endswith(r'\ipc$') else path.rstrip('\\')
+
+    def get_path(self):
+        """
+        Returns the UNC path for this `UncDirectory`.
+        """
+        return self._path
 
     def get_username(self):
         """
         Returns the username associated with the credentials of this `UncDirectory` or `None`
         if no username was provided.
         """
-        return self.creds.username if self.creds else None
+        return self.creds.get_username() if self.creds else None
 
     def get_password(self):
         """
         Returns the password associated with the credentials of this `UncDirectory` or `None`
         if no password was provided.
         """
-        return self.creds.password if self.creds else None
+        return self.creds.get_password() if self.creds else None
 
     def get_auth_string(self):
         """
@@ -82,12 +88,12 @@ class UncDirectory(object):
         return '{creds}{at}{path}'.format(
             creds=creds,
             at='@' if creds else '',
-            path=self.path)
+            path=self._path)
 
     def __eq__(self, other):
         if isinstance(other, UncDirectory):
             return (self.get_normalized_path() == other.get_normalized_path()
-                    and self.creds == other.creds)
+                    and self._creds == other._creds)
         else:
             return False
 

@@ -44,26 +44,38 @@ class UncCredentials(object):
         cleaned_username = clean_username(new_username) if new_username is not None else None
 
         if cleaned_username is None or is_valid_username(cleaned_username):
-            self.username = cleaned_username
-            self.password = new_password
+            self._username = cleaned_username
+            self._password = new_password
         else:
             raise InvalidUsernameError(new_username)
+
+    def get_username(self):
+        """
+        Returns the username of this `UncCredentials` object or `None` if no username was provided.
+        """
+        return self._username
+
+    def get_password(self):
+        """
+        Returns the password of this `UncCredentials` object or `None` if no password was provided.
+        """
+        return self._password
 
     def get_auth_string(self):
         """
         Returns a standard representation of these credentials as a string. The string mimics
         the HTTP Basic Authentication scheme.
         """
-        if self.password is not None:
-            return '{0}:{1}'.format(self.username or '', self.password)
-        elif self.username:
-            return self.username
+        if self._password is not None:
+            return '{0}:{1}'.format(self._username or '', self._password)
+        elif self._username:
+            return self._username
         else:
             return ''
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.username == other.username and self.password == other.password
+            return (self._username == other._username and self._password == other._password)
         else:
             return False
 
