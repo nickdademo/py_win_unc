@@ -2,12 +2,6 @@ from distutils.core import setup
 
 from win_unc import __version__
 
-def get_desc():
-    try:
-        return open('README.rst').read()
-    except IOError:
-        return ''
-
 
 setup(
     name='win_unc',
@@ -30,5 +24,53 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
-    long_description=get_desc(),
+    long_description="""
+win_unc
+=======
+
+A Python library for handling UNC paths on Windows.
+
+With this library you can
+
+  * Connect UNC directories to your Windows session
+  * Connect UNC directories requiring authorization
+    by providing credentials
+  * Mount UNC directories (with or without credentials)
+    to a local mount point
+  * Disconnect/unmount UNC connections
+  * Query existing UNC connections known by the
+    Windows session
+
+Full documentation is at http://covenanteyes.github.com/py_win_unc
+
+Report any issues on the package's GitHub page: http://github.com/CovenantEyes/py_win_unc
+
+Installation
+============
+
+To install::
+
+    $ pip install win_unc
+
+
+Sneak Preview
+=============
+
+Below is a simple example::
+
+    from win_unc import UncDirectoryMount, UncDirectory, DiskDrive
+
+    conn = UncDirectoryMount(UncDirectory(r'\\home\shared'), DiskDrive('Z:'))
+    conn.connect()
+    print 'Drive connected:', conn.is_connected()
+    conn.disconnect()
+
+You can also provide credentials like this::
+
+    from win_unc import UncCredentials
+
+    unc = UncDirectory(r'\\home\shared', UncCredentials('user', 'pwd'))
+    conn = UncDirectoryMount(unc, DiskDrive('Z:'))
+
+""",
 )
