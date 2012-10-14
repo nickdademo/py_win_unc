@@ -25,6 +25,7 @@ OK           C:        \\localhost\has    spaces Microsoft Windows Network
 Unavailable  D:        \\a
             Microsoft Windows Network
 OK                     \\localhost\IPC$          Microsoft Windows Network
+OK           LPT1:     \\some\remote\printer     Printer
 The command completed successfully.
 
 '''

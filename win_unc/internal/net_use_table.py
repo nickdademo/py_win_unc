@@ -6,6 +6,7 @@ Windows. This table describes what the mounted UNC paths.
 from copy import deepcopy
 
 from win_unc.disk_drive import DiskDrive
+from win_unc.errors import InvalidDiskDriveError
 from win_unc.internal.utils import drop_while, take_while, first, rfirst, not_, rekey_dict, dict_map, subdict_matches, filter_dict
 from win_unc.unc_directory import UncDirectory
 
@@ -195,7 +196,12 @@ def build_net_use_table_from_parts(columns, body_lines):
                 row_dict = parse_multiline_row(this_row, next_row, columns)
             else:
                 row_dict = parse_singleline_row(this_row, columns)
-            table.add_row(row_dict)
+
+            # Ignore invalid disk drives as they are probably printer mappings.
+            try:
+                table.add_row(row_dict)
+            except InvalidDiskDriveError:
+                pass
 
     return table
 
