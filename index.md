@@ -618,6 +618,7 @@ Represents the error that occurs when a shell command has been executed and retu
 [InvalidUsernameError]: #InvalidUsernameError
 [UncCredentials]: #UncCredentials
 [UncDirectory]: #UncDirectory
+[UncDirectoryMount]: #UncDirectoryMount
 [UncDirectoryConnection]: #UncDirectoryConnection
 [ShellCommandError]: #ShellCommandError
 [WinUncError]: #WinUncError
