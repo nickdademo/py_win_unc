@@ -56,21 +56,33 @@ Basic Usage
 Below is a simple example:
 
 {% highlight python %}
-from win_unc import UncDirectoryMount, UncDirectory, DiskDrive
+from win_unc import DiskDrive, UncDirectory, UncDirectoryConnection, UncDirectoryMount
 
-conn = UncDirectoryMount(UncDirectory(r'\\home\shared'), DiskDrive('Z:'))
+# Connect a shared directory without authorization.
+unc = UncDirectory(r'\\home\shared')
+conn = UncDirectoryConnection(unc, persistent=True)
+
 conn.connect()
-print 'Drive connected:', conn.is_connected()
+print 'Connected?', conn.is_connected()
 conn.disconnect()
-{% endhighlight %}
 
-You can also provide credentials like this
 
-{% highlight python %}
-from win_unc import UncCredentials
+# Mount another directory with authorization to the Z: drive.
+creds = UncCredentials('user', 'pwd')
+authz_unc = UncDirectory(r'\\remote\shared', creds)
 
-unc = UncDirectory(r'\\home\shared', UncCredentials('user', 'pwd'))
-conn = UncDirectoryMount(unc, DiskDrive('Z:'))
+mnt = UncDirectoryMount(authz_unc, DiskDrive('Z:'))
+
+mnt.mount()
+print 'Mounted?', mnt.is_mounted()
+mnt.unmount()
+
+
+# Mount a directory to any available local drive.
+mnt2 = UncDirectoryMount(UncDirectory(r'\\neighbor\shared'))
+mnt2.mount()
+print 'Mounted at:', mnt2.disk_drive
+mnt2.unmount()
 {% endhighlight %}
 
 
@@ -207,6 +219,29 @@ no password was provided.
 
 (This is a pass-through method for the underlying [UncDirectory][].
 See [UncDirectory's `get_password` method](#UncDirectory_get_password).)
+
+
+### unc (member) {#UncDirectoryConnection_unc}
+
+The [UncDirectory][] for this [UncDirectoryConnection][].
+
+
+### disk_drive (member) {#UncDirectoryConnection_disk_drive}
+
+The [DiskDrive][] of the mount point for this [UncDirectoryConnection][] or `None` if no mount point
+is provided.
+
+
+### persistent (member) {#UncDirectoryConnection_persistent}
+
+`True` if the Windows system should remember this connection for future sessions of the current
+user or `False` otherwise.
+
+
+### logger (member) {#UncDirectoryConnection_logger}
+
+The logging function to use for logging purposes. This must point to a function that takes exactly
+one string argument containing the message of a log.
 
 
 UncDirectory {#UncDirectory}
