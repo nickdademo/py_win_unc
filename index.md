@@ -177,9 +177,10 @@ cause the system to reconnect it.
 get_path()
 {% endhighlight %}
 
-Returns the UNC path being used by this [UncDirectoryConnection][]. The UNC path may differ
-slightly from the one provided at construction of the object since the constructor does some
-normalization of the path before it can be used.
+Returns the UNC path being used by this [UncDirectoryConnection][].
+
+(This is a pass-through method for the underlying [UncDirectory][].
+See [UncDirectory's `get_path` method](#UncDirectory_get_path).)
 
 
 ### get_username {#UncDirectoryConnection_get_username}
@@ -191,6 +192,9 @@ get_username()
 Returns the username of the credentials being used by this [UncDirectoryConnection][] or `None` if
 no username was provided.
 
+(This is a pass-through method for the underlying [UncDirectory][].
+See [UncDirectory's `get_username` method](#UncDirectory_get_username).)
+
 
 ### get_password {#UncDirectoryConnection_get_password}
 
@@ -200,6 +204,9 @@ get_password()
 
 Returns the password of the credentials being used by this [UncDirectoryConnection][] or `None` if
 no password was provided.
+
+(This is a pass-through method for the underlying [UncDirectory][].
+See [UncDirectory's `get_password` method](#UncDirectory_get_password).)
 
 
 UncDirectory {#UncDirectory}
@@ -240,6 +247,83 @@ Constructs a new [UncDirectory][] object as a clone of `unc_directory`. The clon
 `id` as the original.
 
 `unc_directory` must be a [UncDirectory][] object to clone.
+
+
+### get_path {#UncDirectory_get_path}
+
+{% highlight python %}
+get_path()
+{% endhighlight %}
+
+Returns the UNC path for this [UncDirectory][]. The UNC path may differ slightly from the one
+provided at the construction of the object since the constructor does some cleaning of the path
+before it is used.
+
+
+### get_normalized_path {#UncDirectory_get_normalized_path}
+
+{% highlight python %}
+get_normalized_path()
+{% endhighlight %}
+
+Returns the normalized path for this [UncDirectory][]. Differing UNC paths that all point to the
+same network location will have the same normalized path.
+
+For example, the following UNC paths all have a normalized path of `\\remote`:
+
+* `\\REMOTE`
+* `\\remote\`
+* `\\remote\IPC$`
+
+
+### get_username {#UncDirectory_get_username}
+
+{% highlight python %}
+get_username()
+{% endhighlight %}
+
+Returns the username of the credentials being used by this [UncDirectory][] or `None` if
+no username was provided.
+
+(This is a pass-through method for the underlying [UncCredentials][] object.
+See [UncCredentials' `get_username` method](#UncDirectory_get_username).)
+
+
+### get_password {#UncDirectory_get_password}
+
+{% highlight python %}
+get_password()
+{% endhighlight %}
+
+Returns the password of the credentials being used by this [UncDirectory][] or `None` if
+no password was provided.
+
+(This is a pass-through method for the underlying [UncCredentials][] object.
+See [UncCredentials' `get_password` method](#UncDirectory_get_password).)
+
+
+### get_auth_string {#UncDirectory_get_auth_string}
+
+{% highlight python %}
+get_auth_string()
+{% endhighlight %}
+
+Returns the authorization string associated with the credentials of this [UncDirectory][].
+
+(This is a pass-through method for the underlying [UncCredentials][] object.
+See [UncCredentials' `get_auth_string` method](#UncDirectory_get_auth_string).)
+
+
+### get_auth_path {#UncDirectory_get_auth_path}
+
+{% highlight python %}
+get_auth_path()
+{% endhighlight %}
+
+Returns the path of this [UncDirectory][] with the authorization string prepended
+(see [get_auth_string](#UncDirectory_get_auth_string). If this
+[UncDirectory][] has no associated credentials, the returned path will be the same as
+[get_path](#UncDirectory_get_path).
 
 
 UncCredentials {#UncCredentials}
@@ -288,8 +372,102 @@ Constructs a new [UncCredentials][] object as a clone of `unc_credentials`.
 `unc_credentials` must be a [UncCredentials][] object to clone.
 
 
+### get_username {#UncCredentials_get_username}
+
+{% highlight python %}
+get_username()
+{% endhighlight %}
+
+Returns the username of this [UncCredentials][] object or `None` if no username was provided.
+
+
+### get_password {#UncCredentials_get_password}
+
+{% highlight python %}
+get_password()
+{% endhighlight %}
+
+Returns the password of this [UncCredentials][] object or `None` if no password was provided.
+
+
+### is_empty {#UncCredentials_is_empty}
+
+{% highlight python %}
+is_empty()
+{% endhighlight %}
+
+Returns `True` if this [UncCredentials][] object does not contain any meaningful credentials and
+`False` otherwise.
+
+
+### get_auth_string {#UncCredentials_get_auth_string}
+
+{% highlight python %}
+get_auth_string()
+{% endhighlight %}
+
+Returns a standard representation of these credentials as a string which can be parsed into a new
+[UncCredentials][] object by [get_creds_from_string][#get_creds_from_string].
+
+The following table shows some examples of how this authorization string is formatted:
+
+Username | Password | Authorization String
+---------|----------|---------------------
+`None`   | `None`   | `''`
+`'user'` | `None`   | `'user'`
+`'user'` | `'pwd'`  | `'user:pwd'`
+`None`   | `'pwd'`  | `:pwd`
+`'user'` | `''`     | `user:`
+
+
+
 DiskDrive {#DiskDrive}
 ---------
+
+The [DiskDrive][] class represents a Windows disk drive. Disk drives are always identified by a
+single alphabet character. They may map to hardware devices, local directories, or remote
+directories.
+
+
+### \_\_init\_\_ {#DiskDrive_init}
+
+{% highlight python %}
+DiskDrive(
+    drive_letter)
+{% endhighlight %}
+
+Constructs a new [DiskDrive][].
+
+`drive_letter` must be a single letter from `A` to `Z` for representing a drive letter. There is
+some leniency as to what strings are recognized.
+
+The following are all interpreted as the drive letter `G`:
+
+* `' G '`
+* `'G:'`
+* `'g'`
+* `'g:'`
+
+-----
+
+{% highlight python %}
+DiskDrive(
+    disk_drive)
+{% endhighlight %}
+
+Constructs a new [DiskDrive][] object as a clone of `disk_drive`.
+
+`disk_drive` must be a [DiskDrive][] object to clone.
+
+
+### get_drive {#DiskDrive_get_drive}
+
+{% highlight python %}
+get_drive()
+{% endhighlight %}
+
+Returns this path for this [DiskDrive][]. The path will always be an upper-case letter followed by
+a colon (`:`). For example, if the drive letter is `'G'` then this will return `'G:'`.
 
 
 Exception Classes {#exception_classes}
