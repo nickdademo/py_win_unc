@@ -244,6 +244,54 @@ The logging function to use for logging purposes. This must point to a function 
 one string argument containing the message of a log.
 
 
+UncDirectoryMount {#UncDirectoryMount}
+-----------------
+
+The [UncDirectoryMount][] class is a [UncDirectoryConnection][] that specifically represents a
+connection with a mount point. Unless noted here, this class is identical to
+[UncDirectoryConnection][].
+
+
+### \_\_init\_\_ {#UncDirectoryMount_init}
+
+{% highlight python %}
+UncDirectoryConnection(
+    unc_directory,
+    disk_drive=None,
+    persistent=False,
+    logger=no_logging)
+{% endhighlight %}
+
+Constructs a new [UncDirectoryMount][].
+
+For `unc_directory`, `persistent`, and `logger` see
+[UncDirectoryConnection's constructor][#UncDirectoryConnection_init].
+
+`disk_drive` must be `None` or a `DiskDrive`.
+
+* If `None`, an available disk drive will be chosen automatically and used as the mount point for
+  this [UncDirectoryMount][]. If no drives are available a [NoAvailableDrivesError][] will be
+  raised.
+* If a `DiskDrive`, mounting this UNC directory will create a local mount point at the drive
+  letter specified by `disk_drive`.
+
+
+### mount {#UncDirectoryMount_mount}
+
+An alias for [UncDirectoryConnection's `connect` method](UncDirectoryConnection_connect).
+
+
+### mount {#UncDirectoryMount_unmount}
+
+An alias for [UncDirectoryConnection's `disconnect` method](UncDirectoryConnection_disconnect).
+
+
+### is_mounted {#UncDirectoryMount_is_mounted}
+
+An alias for [UncDirectoryConnection's `is_connected` method](UncDirectoryConnection_is_connected).
+
+
+
 UncDirectory {#UncDirectory}
 ------------
 
