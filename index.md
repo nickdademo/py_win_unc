@@ -112,6 +112,11 @@ Windows sessions. Otherwise, set this to `False` (the default).
 `logger` must be a function that takes a single string argument. The function will be called
 whenever the object does something worthy of being logged.
 
+For example, `logger` could look like this:
+
+    def my_logger(message):
+        print message
+
 
 ### connect {#UncDirectoryConnection_connect}
 
@@ -164,6 +169,17 @@ This commonly refreshes the UNC connection and restores its status to `OK`.
 
 However, these steps are not usually necessary since merely accessing the UNC path in any way will
 cause the system to reconnect it.
+
+
+### get_path {#UncDirectoryConnection_get_path}
+
+{% highlight python %}
+get_path()
+{% endhighlight %}
+
+Returns the UNC path being used by this [UncDirectoryConnection][]. The UNC path may differ
+slightly from the one provided at construction of the object since the constructor does some
+normalization of the path before it can be used.
 
 
 ### get_username {#UncDirectoryConnection_get_username}
