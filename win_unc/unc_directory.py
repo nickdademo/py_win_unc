@@ -109,7 +109,7 @@ class UncDirectory(object):
 
 def get_unc_directory_from_string(string):
     """
-    Parses a string from `UncDirectory`'s `get_auth_string` method and returns a new `UncDirectory`
+    Parses a string from `UncDirectory`'s `get_auth_path` method and returns a new `UncDirectory`
     object based on it. This may raise any errors that can be raised by `UncDirectory`'s
     constructor.
     """
