@@ -270,7 +270,7 @@ For `unc_directory`, `persistent`, and `logger` see
 `disk_drive` must be `None` or a [DiskDrive][].
 
 * If `None`, an available disk drive will be chosen automatically and used as the mount point for
-  this [UncDirectoryMount][]. If no drives are available a [NoAvailableDrivesError][] will be
+  this [UncDirectoryMount][]. If no drives are available a [NoDrivesAvailableError][] will be
   raised.
 * If a [DiskDrive][], mounting this UNC directory will create a local mount point at the drive
   letter specified by `disk_drive`.
@@ -607,6 +607,11 @@ Represents the error that occurs when an invalid Windows username (logon) is pro
 [UncCredentials][]' constructor.
 
 
+### NoDrivesAvailableError {#NoDrivesAvailableError}
+
+Represents the error that occurs when an available disk drive is needed but cannot be found.
+
+
 ### ShellCommandError {#ShellCommandError}
 
 Represents the error that occurs when a shell command has been executed and returns an error code.
@@ -616,6 +621,7 @@ Represents the error that occurs when a shell command has been executed and retu
 [DiskDrive]: #DiskDrive
 [InvalidUncPathError]: #InvalidUncPathError
 [InvalidUsernameError]: #InvalidUsernameError
+[NoDrivesAvailableError]: #NoDrivesAvailableError
 [UncCredentials]: #UncCredentials
 [UncDirectory]: #UncDirectory
 [UncDirectoryMount]: #UncDirectoryMount
