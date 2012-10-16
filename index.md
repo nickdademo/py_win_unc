@@ -321,9 +321,12 @@ get_auth_path()
 {% endhighlight %}
 
 Returns the path of this [UncDirectory][] with the authorization string prepended
-(see [get_auth_string](#UncDirectory_get_auth_string). If this
+(see [get_auth_string](#UncDirectory_get_auth_string)). If this
 [UncDirectory][] has no associated credentials, the returned path will be the same as
 [get_path](#UncDirectory_get_path).
+
+The result of this method can be parsed by
+[get_unc_directory_from_string](#get_unc_directory_from_string) to get a new [UncDirectory][].
 
 
 UncCredentials {#UncCredentials}
@@ -406,8 +409,8 @@ Returns `True` if this [UncCredentials][] object does not contain any meaningful
 get_auth_string()
 {% endhighlight %}
 
-Returns a standard representation of these credentials as a string which can be parsed into a new
-[UncCredentials][] object by [get_creds_from_string][#get_creds_from_string].
+Returns a standard representation of this [UncCredentials][] object as a string that can be parsed
+into a new [UncCredentials][] object by [get_creds_from_string][#get_creds_from_string].
 
 The following table shows some examples of how this authorization string is formatted:
 
@@ -455,7 +458,7 @@ DiskDrive(
     disk_drive)
 {% endhighlight %}
 
-Constructs a new [DiskDrive][] object as a clone of `disk_drive`.
+Constructs a new [DiskDrive][] as a clone of `disk_drive`.
 
 `disk_drive` must be a [DiskDrive][] object to clone.
 
@@ -468,6 +471,28 @@ get_drive()
 
 Returns this path for this [DiskDrive][]. The path will always be an upper-case letter followed by
 a colon (`:`). For example, if the drive letter is `'G'` then this will return `'G:'`.
+
+
+Parsing Functions {#parsing_functions}
+-----------------
+
+These parsing functions can be used to deserialize (often called "unpickling" in the Python
+community) various objects in the `win_unc` library.
+
+### get_unc_directory_from_string {#get_unc_directory_from_string}
+
+Parses a standardized string from
+[UncDirectory's `get_auth_path` method](#UncDirectory_get_auth_path) and returns a new
+[UncDirectory][] based on it. This may raise any errors that can be raised by
+[UncDirectory's constructor](#UncDirectory_init).
+
+
+### get_creds_from_string {#get_creds_from_string}
+
+Parses a standardized string from
+[UncCredentials' `get_auth_string` method](#UncCredentials_get_auth_string) and returns a new
+[UncCredentials][] object based on it. This may raise any errors than can be raised by
+[UncCredentials' constructor](#UncCredentials_init).
 
 
 Exception Classes {#exception_classes}
