@@ -115,7 +115,7 @@ necessary to authorize the connection.
 `disk_drive` must be `None` or a [DiskDrive][] object.
 
 * If `None`, connecting this UNC directory will not create a local mount point.
-* If a `DiskDrive`, connecting this UNC directory will create a local mount point at the drive
+* If a [DiskDrive][], connecting this UNC directory will create a local mount point at the drive
   letter specified by `disk_drive`.
 
 `persistent` must be `True` if you want the UNC directory connection to persist across multiple
@@ -265,14 +265,14 @@ UncDirectoryConnection(
 Constructs a new [UncDirectoryMount][].
 
 For `unc_directory`, `persistent`, and `logger` see
-[UncDirectoryConnection's constructor][#UncDirectoryConnection_init].
+[UncDirectoryConnection's constructor](#UncDirectoryConnection_init).
 
-`disk_drive` must be `None` or a `DiskDrive`.
+`disk_drive` must be `None` or a [DiskDrive][].
 
 * If `None`, an available disk drive will be chosen automatically and used as the mount point for
   this [UncDirectoryMount][]. If no drives are available a [NoAvailableDrivesError][] will be
   raised.
-* If a `DiskDrive`, mounting this UNC directory will create a local mount point at the drive
+* If a [DiskDrive][], mounting this UNC directory will create a local mount point at the drive
   letter specified by `disk_drive`.
 
 
