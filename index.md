@@ -56,7 +56,9 @@ Basic Usage
 Below is a simple example:
 
 {% highlight python %}
-from win_unc import DiskDrive, UncDirectory, UncDirectoryConnection, UncDirectoryMount
+from win_unc import (DiskDrive, UncDirectory,
+                     UncDirectoryConnection, UncDirectoryMount)
+
 
 # Connect a shared directory without authorization.
 unc = UncDirectory(r'\\home\shared')
@@ -140,6 +142,7 @@ Connects the UNC directory. This will make at most three connection attempts wit
 credential configurations in case the credentials provided are not necessary (which is likely
 when the credentials are saved by Windows from a previous connection). If the command fails, a
 [ShellCommandError][] will be raised.
+
 
 ### disconnect {#UncDirectoryConnection_disconnect}
 
@@ -411,6 +414,16 @@ Returns the path of this [UncDirectory][] with the authorization string prepende
 The result of this method can be parsed by
 [get_unc_directory_from_string](#get_unc_directory_from_string) to get a new [UncDirectory][].
 
+The following table shows some examples of how this authorized path string is formatted:
+
+Username | Password | Path               | Authorized Path String
+---------|----------|--------------------|-----------------------------
+`None`   | `None`   | `r'\\remote\path'` | `r'\\remote\path'`
+`'user'` | `None`   | `r'\\remote\path'` | `r'user@\\remote\path'`
+`'user'` | `'pwd'`  | `r'\\remote\path'` | `r'user:pwd@\\remote\path'`
+`None`   | `'pwd'`  | `r'\\remote\path'` | `r':pwd@\\remote\path'`
+`'user'` | `''`     | `r'\\remote\path'` | `r'user:@\\remote\path'`
+
 
 UncCredentials {#UncCredentials}
 --------------
@@ -564,7 +577,13 @@ community) various objects in the `win_unc` library.
 
 ### get_unc_directory_from_string {#get_unc_directory_from_string}
 
-Parses a standardized string from
+{% highlight python %}
+from win_unc.unc_directory import get_unc_directory_from_string
+
+unc = get_unc_directory_from_string(string)
+{% endhighlight %}
+
+Parses a standardized `string` from
 [UncDirectory's `get_auth_path` method](#UncDirectory_get_auth_path) and returns a new
 [UncDirectory][] based on it. This may raise any errors that can be raised by
 [UncDirectory's constructor](#UncDirectory_init).
@@ -572,7 +591,13 @@ Parses a standardized string from
 
 ### get_creds_from_string {#get_creds_from_string}
 
-Parses a standardized string from
+{% highlight python %}
+from win_unc.unc_credentials import get_creds_from_string
+
+creds = get_creds_from_string(string)
+{% endhighlight %}
+
+Parses a standardized `string` from
 [UncCredentials' `get_auth_string` method](#UncCredentials_get_auth_string) and returns a new
 [UncCredentials][] object based on it. This may raise any errors than can be raised by
 [UncCredentials' constructor](#UncCredentials_init).
