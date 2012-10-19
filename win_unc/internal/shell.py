@@ -2,7 +2,7 @@
 Contains functions for interacting with the shell easily.
 """
 
-import subprocess
+from subprocess import Popen, PIPE
 
 from win_unc.errors import ShellCommandError
 from win_unc.internal.loggers import no_logging
@@ -18,9 +18,15 @@ def run(command, logger=no_logging):
     `logger` may be a function that takes a string for custom logging purposes. It defaults to a
     no-op.
     """
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
+    process = Popen(command, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    while process.poll() is None:
+        try:
+            # Write new lines in case the command prompts the us for some input.
+            process.stdin.write('\n')
+        except IOError:
+            pass
 
+    stdout, stderr = process.stdout.read(), process.stderr.read()
     if process.returncode == RETURN_CODE_SUCCESS:
         return stdout, stderr
     else:
