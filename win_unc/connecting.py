@@ -56,23 +56,10 @@ class UncDirectoryConnection(object):
 
     def connect(self):
         """
-        Connects the UNC directory. This will make at most three connection attempts with different
-        credential configurations in case the credentials provided are not necessary (which is
-        likely when the credentials are saved by Windows from a previous connection). If the
-        comand fails, this will raise a `ShellCommandError`.
+        Connects the UNC directory. If the comand fails, this will raise a `ShellCommandError`.
         """
         self.logger('Connecting the network UNC path "{path}".'.format(path=self.get_path()))
-
-        username = self.get_username()
-        password = self.get_password()
-
-        error = catch(self._connect_with_creds)
-        if error and username:
-            error = catch(self._connect_with_creds, username)
-        if error and username and password:
-            error = catch(self._connect_with_creds, username, password)
-        if error:
-            raise error
+        self._connect_with_creds(self.get_username(), self.get_password())
 
     def disconnect(self):
         """
