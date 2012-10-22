@@ -138,10 +138,7 @@ For example, `logger` could look like this:
 connect()
 {% endhighlight %}
 
-Connects the UNC directory. This will make at most three connection attempts with different
-credential configurations in case the credentials provided are not necessary (which is likely
-when the credentials are saved by Windows from a previous connection). If the command fails, a
-[ShellCommandError][] will be raised.
+Connects the UNC directory. If the command fails, a [ShellCommandError][] will be raised.
 
 
 ### disconnect {#UncDirectoryConnection_disconnect}
