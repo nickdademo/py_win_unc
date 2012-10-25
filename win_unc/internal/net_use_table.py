@@ -79,12 +79,7 @@ class NetUseTable(object):
         test_row = filter_dict(filter_pred, {'local': local, 'remote': remote, 'status': status})
         test_row = construct_row_values(test_row)
 
-        result = []
-        for row in self.rows:
-            if subdict_matches(row, test_row):
-                result.append(row)
-
-        return result
+        return [row for row in self.rows if subdict_matches(row, test_row)]
 
 
 
