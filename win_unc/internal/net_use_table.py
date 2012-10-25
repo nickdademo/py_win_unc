@@ -172,8 +172,8 @@ def parse_multiline_row(line1, line2, columns):
     Parses a row from a "net use" table that is represented by two lines instead of just one.
     `line1` is the first line for the row.
     `line2` is the second line for the row.
-    `columns` is the unmodified `NetUseColumn` that will correctly parse a single line but not a
-              multi-line row.
+    `columns` is the list of `NetUseColumn`s the would parse a single-line row, but not a
+              multiline row.
     """
     singleline_row = line1 + ' ' + line2.strip()
     custom_columns = deepcopy(columns)
