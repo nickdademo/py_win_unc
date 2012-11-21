@@ -97,24 +97,6 @@ class TestHigherOrderNot(TestCase):
         self.assertEqual(U.not_(id_)(True), False)
 
 
-def raiseSomething(exception):
-    raise exception()
-
-
-class TestCatch(TestCase):
-    def assertIsType(self, typeId, b):
-        self.assertEqual(typeId, type(b))
-
-    def test_catch(self):
-        self.assertIsType(Exception, U.catch(raiseSomething, Exception))
-        self.assertIsType(ValueError, U.catch(raiseSomething, ValueError))
-        self.assertIsType(Exception, U.catch(self.raiseSomething, Exception))
-        self.assertIsType(ValueError, U.catch(self.raiseSomething, ValueError))
-
-    def raiseSomething(self, exception):
-        raise exception()
-
-
 class TestRekeyDict(TestCase):
     def test_rekey_dict(self):
         self.assertEqual(U.rekey_dict({}, {}), {})

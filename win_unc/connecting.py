@@ -7,7 +7,7 @@ from win_unc.disk_drive import get_available_disk_drive
 from win_unc.internal.loggers import no_logging
 from win_unc.internal.net_use_table import parse_net_use_table
 from win_unc.internal.shell import run, ShellCommandError
-from win_unc.internal.utils import catch
+from win_unc.query import _get_current_net_use_table
 
 
 class UncDirectoryConnection(object):
@@ -74,7 +74,7 @@ class UncDirectoryConnection(object):
         """
         Returns `True` if the system registers this `UncDirectoryConnection` as connected.
         """
-        net_use = get_current_net_use_table()
+        net_use = _get_current_net_use_table()
         matching_rows = net_use.get_matching_rows(local=self.disk_drive, remote=self.unc)
         if matching_rows:
             status = matching_rows[0]['status']
@@ -154,12 +154,3 @@ class UncDirectoryMount(UncDirectoryConnection):
         An alias for `UncDirectoryConnection`'s `is_connected` method.
         """
         return self.is_connected()
-
-
-def get_current_net_use_table(logger=no_logging):
-    """
-    Returns a `NetUseTable` that describes the current Windows session's status regarding
-    all UNC paths.
-    """
-    stdout, _ = run('NET USE', logger)
-    return parse_net_use_table(stdout)

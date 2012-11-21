@@ -1,8 +1,9 @@
 from unittest import TestCase
 
-from win_unc.connecting import get_current_net_use_table, UncDirectoryConnection
-from win_unc.unc_directory import UncDirectory
+from win_unc.connecting import UncDirectoryConnection
 from win_unc.internal.shell import run
+from win_unc.unc_directory import UncDirectory
+from win_unc.query import _get_current_net_use_table
 
 
 LOCALHOST_UNC = r'\\localhost\IPC$'
@@ -32,5 +33,5 @@ class TestUncDirectoryConnection(TestCase):
         self.assertFalse(conn.is_connected())
 
     def localhost_connected(self):
-        net_use = get_current_net_use_table()
+        net_use = _get_current_net_use_table()
         return UncDirectory(LOCALHOST_UNC) in net_use.get_connected_paths()
