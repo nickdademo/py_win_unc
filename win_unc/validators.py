@@ -1,3 +1,4 @@
+from win_unc.internal.utils import take_while
 from win_unc.sanitizors import sanitize_username, sanitize_unc_path
 
 
@@ -11,11 +12,12 @@ def is_valid_drive_letter(string):
 
 def is_valid_unc_path(string):
     """
-    Valid UNC paths are at least three characters long, begin with "\\", do not start or end with
-    whitepsace, and do not contain certain invalid characters (see `sanitize_unc_path`).
+    Valid UNC paths are at least three characters long, begin with exactly two backslashes, not
+    start or end with whitepsace, and do not contain certain invalid characters
+    (see `sanitize_unc_path`).
     """
     return (len(string) > 2
-            and string.startswith('\\\\')
+            and len(take_while(lambda c: c == '\\', string)) == 2
             and string == string.strip()
             and string == sanitize_unc_path(string))
 
