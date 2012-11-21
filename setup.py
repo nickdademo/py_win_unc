@@ -11,7 +11,7 @@ setup(
     author='Elliot Cameron',
     author_email='elliot.cameron@covenanteyes.com',
     url='https://github.com/CovenantEyes/py_win_unc',
-    download_url='https://github.com/CovenantEyes/py_win_unc/tarball/v' + __version__,
+    download_url='https://github.com/CovenantEyes/py_win_unc/zipball/v' + __version__,
     keywords=['directory', 'folder', 'unc', 'local', 'remote', 'path'],
     classifiers=[
         'Programming Language :: Python',
@@ -61,9 +61,9 @@ Below is a simple example::
     from win_unc import UncDirectoryMount, UncDirectory, DiskDrive
 
     conn = UncDirectoryMount(UncDirectory(r'\\home\shared'), DiskDrive('Z:'))
-    conn.connect()
-    print 'Drive connected:', conn.is_connected()
-    conn.disconnect()
+    conn.mount()
+    print 'Drive connected:', conn.is_mounted()
+    conn.unmount()
 
 You can also provide credentials like this::
 
@@ -71,6 +71,13 @@ You can also provide credentials like this::
 
     unc = UncDirectory(r'\\home\shared', UncCredentials('user', 'pwd'))
     conn = UncDirectoryMount(unc, DiskDrive('Z:'))
+
+Or just connect the drive without mounting it:
+
+    from win_unc import UncDirectoryConnection
+
+    conn = UncDirectoryConnection(r'\\home\shared')
+    conn.connect()
 
 """,
 )
