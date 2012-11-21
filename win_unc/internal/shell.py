@@ -1,7 +1,3 @@
-"""
-Contains functions for interacting with the shell easily.
-"""
-
 from subprocess import Popen, PIPE
 
 from win_unc.errors import ShellCommandError

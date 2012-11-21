@@ -1,8 +1,3 @@
-"""
-Contains exception classes that can be raised by this library.
-"""
-
-
 class WinUncError(Exception):
     """
     Generic error class for all errors raised by the win_unc library.
@@ -66,7 +61,7 @@ class NoDrivesAvailableError(WinUncError):
 
 class ShellCommandError(WinUncError):
     """
-    Error for the case when a shell command returns an error code.
+    Error for the case when a Windows shell command returns an error code.
     """
 
     def __init__(self, command=None, error_code=None):

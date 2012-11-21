@@ -1,7 +1,3 @@
-"""
-Contains generic helper funcitons to aid in parsing.
-"""
-
 import itertools
 
 
