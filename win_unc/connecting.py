@@ -7,7 +7,7 @@ from win_unc.disk_drive import get_available_disk_drive
 from win_unc.internal.loggers import no_logging
 from win_unc.internal.net_use_table import parse_net_use_table
 from win_unc.internal.shell import run, ShellCommandError
-from win_unc.query import _get_current_net_use_table
+from win_unc.internal.current_state import get_current_net_use_table
 
 
 class UncDirectoryConnection(object):
@@ -74,13 +74,20 @@ class UncDirectoryConnection(object):
         """
         Returns `True` if the system registers this `UncDirectoryConnection` as connected.
         """
-        net_use = _get_current_net_use_table()
-        matching_rows = net_use.get_matching_rows(local=self.disk_drive, remote=self.unc)
-        if matching_rows:
-            status = matching_rows[0]['status']
-            return status in ['ok', 'disconnected']
-        else:
-            return False
+        return self.get_connection_status() in ['ok', 'disconnected']
+
+    def get_connection_status(self):
+        """
+        Returns one of the following based on this `UncDirectoryConnection`'s status according to
+        the system:
+            `'ok'`           - connected
+            `'disconnected'` - recognized but inactive
+            `'unavailable'`  - a previous connection attempt failed
+            `None`           - not connected
+        """
+        net_use = get_current_net_use_table()
+        matching = net_use.get_matching_rows(local=self.disk_drive, remote=self.unc)
+        return matching[0]['status'] if matching else None
 
     def _get_connection_command(self, username=None, password=None):
         """

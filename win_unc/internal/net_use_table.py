@@ -75,8 +75,8 @@ class NetUseTable(object):
         Returns a list of rows that match a `search_dict`.
         `search_dict` is a dictionary with a subset of the keys in a row.
         """
-        filter_pred = lambda x: x is not None
-        test_row = filter_dict(filter_pred, {'local': local, 'remote': remote, 'status': status})
+        test_row = {'local': local, 'remote': remote, 'status': status}
+        test_row = filter_dict(lambda x: x is not None, test_row)
         test_row = construct_row_values(test_row)
 
         return [row for row in self.rows if subdict_matches(row, test_row)]
@@ -99,7 +99,7 @@ MAP_RAW_COLUMNS_TO_STANDARD_COLUMNS = {
 COLUMN_CONSTRUCTORS = {
     'local':  lambda x: DiskDrive(x) if x else None,
     'remote': lambda x: UncDirectory(x) if x else None,
-    'status': lambda x: str(x).lower() if x else None
+    'status': lambda x: str(x).lower() if x else None,
 }
 
 
