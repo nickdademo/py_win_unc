@@ -9,12 +9,12 @@ LOCALHOST_UNC = r'\\localhost\IPC$'
 
 
 class LocalHostConnectionTest(TestCase):
-    def setUp(self):
+    def connect_localhost(self):
         self.localhost_was_connected = self.localhost_connected()
         if self.localhost_was_connected:
             run('NET USE ' + LOCALHOST_UNC + ' /DELETE')
 
-    def tearDown(self):
+    def disconnect_localhost(self):
         if self.localhost_was_connected:
             run('NET USE ' + LOCALHOST_UNC)
 
