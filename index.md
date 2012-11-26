@@ -140,6 +140,8 @@ connect()
 
 Connects the UNC directory. If the command fails, a [ShellCommandError][] will be raised.
 
+Connecting can also be achieved using
+[UncDirectoryConnection's context manager](#UncDirectoryConnection_context_manager).
 
 ### disconnect {#UncDirectoryConnection_disconnect}
 
@@ -149,6 +151,8 @@ disconnect()
 
 Disconnects the UNC path. If the command fails, a [ShellCommandError][] will be raised.
 
+Disconnecting can also be achieved using
+[UncDirectoryConnection's context manager](#UncDirectoryConnection_context_manager).
 
 ### is_connected {#UncDirectoryConnection_is_connected}
 
@@ -261,6 +265,34 @@ The logging function to use for logging purposes. This must point to a function 
 one string argument containing the message of a log.
 
 
+### Context Management {#UncDirectoryConnection_context_manager}
+
+The [UncDirectoryConnection][] class supports context management via the "`with` syntax".
+
+For example,
+
+{% highlight python %}
+conn = UncDirectoryConnection(UncDirectory(r'\\localhost'))
+conn.connect()
+# do stuff...
+#conn.disconnect()
+{% endhighlight %}
+
+is equivalent to
+
+{% highlight python %}
+with UncDirectoryConnection(UncDirectory(r'\\localhost')) as conn:
+    # do stuff...
+{% endhighlight %}
+
+When entering [UncDirectoryConnection][]'s context manager, the UNC path is connected and, when
+exiting, the UNC path is disconnected. However, the context manager tries to maintain the state of
+the system: if the UNC path was already connected when entering the context manager, it will not be
+disconnected when exiting. Of course, calling [`connect`](#UncDirectoryConnection_connect) or
+[`disconnect`](#UncDirectoryConnection_disconnect) directly from within the `with`-block will
+affect the system's state after the context manager exits.
+
+
 UncDirectoryMount {#UncDirectoryMount}
 -----------------
 
@@ -307,6 +339,10 @@ An alias for [UncDirectoryConnection's `disconnect` method](UncDirectoryConnecti
 
 An alias for [UncDirectoryConnection's `is_connected` method](UncDirectoryConnection_is_connected).
 
+
+### Context Management {#UncDirectoryMount_context_manager}
+
+See [UncDirectoryConnection's context manager](#UncDirectoryConnection_context_manager).
 
 
 UncDirectory {#UncDirectory}
