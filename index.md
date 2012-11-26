@@ -600,6 +600,53 @@ Parses a standardized `string` from
 [UncCredentials' constructor](#UncCredentials_init).
 
 
+System Querying Functions {#system_querying_functions}
+-------------------------
+
+These functions query the system for the current state of UNC connections and mounts.
+
+
+### get_current_connections {#get_current_connections}
+
+{% highlight python %}
+from win_unc.query import get_current_connections
+
+conns = get_current_connections()
+{% endhighlight %}
+
+Returns a list of [UncDirectoryConnection][] or [UncDirectoryMount][] objects. Each object
+represents a connection or mount currently recognized by the system.
+
+
+### get_connection_for_unc_directory {#get_connection_for_unc_directory}
+
+{% highlight python %}
+from win_unc.query import get_connection_for_unc_directory
+
+conn = get_connection_for_unc_directory()
+{% endhighlight %}
+
+Returns a [UncDirectoryConnection][] or [UncDirectoryMount][] representing a connected or mounted
+UNC directory that matches a given UNC directory (`unc`) or `None` if no system connections or
+mounts match `unc`.
+
+`unc` must be a [UncDirectory][].
+
+
+### get_connection_for_disk_drive {#get_connection_for_disk_drive}
+
+{% highlight python %}
+from win_unc.query import get_connection_for_disk_drive
+
+conn = get_connection_for_disk_drive()
+{% endhighlight %}
+
+Returns a [UncDirectoryMount][] representing a mounted UNC directory that matches a disk drive
+(`disk_drive`) or `None` if no system mounts match `disk_drive`.
+
+`disk_drive` must be is a [DiskDrive][].
+
+
 Exception Classes {#exception_classes}
 -----------------
 
