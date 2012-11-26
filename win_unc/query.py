@@ -16,5 +16,11 @@ def get_connection_for_unc_directory(unc):
     return _get_connection_or_mount(matching[0]['remote'], matching[0]['local']) if matching else None
 
 
+def get_connection_for_disk_drive(disk_drive):
+    net_use = get_current_net_use_table()
+    matching = net_use.get_matching_rows(local=disk_drive)
+    return UncDirectoryMount(matching[0]['remote'], matching[0]['local']) if matching else None
+
+
 def _get_connection_or_mount(unc, disk_drive=None):
     return UncDirectoryMount(unc, disk_drive) if disk_drive else UncDirectoryConnection(unc)
