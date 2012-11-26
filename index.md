@@ -589,6 +589,18 @@ Parsing Functions {#parsing_functions}
 These parsing functions can be used to deserialize (often called "unpickling" in the Python
 community) various objects in the `win_unc` library.
 
+### is_unc_directory_string {#is_unc_directory_string}
+
+{% highlight python %}
+from win_unc.unc_directory import is_unc_directory_string
+
+is_unc_directory_string(string)
+{% endhighlight %}
+
+Returns `True` when `string` represents a [UncDirectory][] as defined by
+[UncDirectory's `get_auth_path` method](#UncDirectory_get_auth_path) or `False` otherwise.
+
+
 ### get_unc_directory_from_string {#get_unc_directory_from_string}
 
 {% highlight python %}
