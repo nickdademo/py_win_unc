@@ -8,7 +8,7 @@ from win_unc.unc_credentials import UncCredentials
 from win_unc.unc_directory import UncDirectory
 
 
-__version__ = '0.4.1'
+__version__ = '0.5.0'
 VERSION = tuple(map(int, __version__.split('.')))
 
 __all__ = ['UncDirectoryConnection',
