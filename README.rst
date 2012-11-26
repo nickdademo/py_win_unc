@@ -30,9 +30,9 @@ Below is a simple example::
     from win_unc import UncDirectoryMount, UncDirectory, DiskDrive
 
     conn = UncDirectoryMount(UncDirectory(r'\\home\shared'), DiskDrive('Z:'))
-    conn.connect()
-    print 'Drive connected:', conn.is_connected()
-    conn.disconnect()
+    conn.mount()
+    print 'Drive connected:', conn.is_mounted()
+    conn.unmount()
 
 You can also provide credentials like this::
 
@@ -40,6 +40,13 @@ You can also provide credentials like this::
 
     unc = UncDirectory(r'\\home\shared', UncCredentials('user', 'pwd'))
     conn = UncDirectoryMount(unc, DiskDrive('Z:'))
+
+Or just connect the path without mounting it::
+
+    from win_unc import UncDirectoryConnection
+
+    conn = UncDirectoryConnection(r'\\home\shared')
+    conn.connect()
 
 
 Unit Testing
