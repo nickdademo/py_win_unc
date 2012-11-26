@@ -12,7 +12,7 @@ def is_valid_drive_letter(string):
 
 def is_valid_unc_path(string):
     """
-    Valid UNC paths are at least three characters long, begin with exactly two backslashes, not
+    Valid UNC paths are at least three characters long, begin with exactly two backslashes, do not
     start or end with whitepsace, and do not contain certain invalid characters
     (see `sanitize_unc_path`).
     """

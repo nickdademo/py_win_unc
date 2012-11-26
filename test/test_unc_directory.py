@@ -1,8 +1,7 @@
 from unittest import TestCase
 
-from win_unc import unc_directory as U
 from win_unc.errors import InvalidUncPathError
-from win_unc.unc_directory import UncDirectory, get_unc_directory_from_string
+from win_unc.unc_directory import UncDirectory, get_unc_directory_from_string, is_unc_directory_string
 from win_unc.unc_credentials import UncCredentials
 
 
@@ -80,6 +79,22 @@ class TestUncDirectory(TestCase):
 
 
 class TestParsing(TestCase):
+    def test_is_unc_directory_string(self):
+        self.assertFalse(is_unc_directory_string(''))
+        self.assertFalse(is_unc_directory_string('abc'))
+        self.assertFalse(is_unc_directory_string('\\'))
+        self.assertFalse(is_unc_directory_string('\\\\'))
+        self.assertFalse(is_unc_directory_string('@\\'))
+        self.assertFalse(is_unc_directory_string('@\\\\'))
+        self.assertFalse(is_unc_directory_string('abc@\\\\'))
+
+        self.assertTrue(is_unc_directory_string(r'\\abc'))
+        self.assertTrue(is_unc_directory_string(r'\\abc\def'))
+        self.assertTrue(is_unc_directory_string(r'@\\abc\def'))
+        self.assertTrue(is_unc_directory_string(r'user@\\abc\def'))
+        self.assertTrue(is_unc_directory_string(r'user:pass@\\abc\def'))
+        self.assertTrue(is_unc_directory_string(r':pass@\\abc\def'))
+
     def test_get_unc_directory_from_string(self):
         self.assertEqual(get_unc_directory_from_string(r'\\path'), UncDirectory(r'\\path'))
         self.assertEqual(get_unc_directory_from_string(r'\\path\sub'),

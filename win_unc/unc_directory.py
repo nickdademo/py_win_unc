@@ -107,6 +107,17 @@ class UncDirectory(object):
         return '<{cls}: "{str}">'.format(cls=self.__class__.__name__, str=self.get_auth_path())
 
 
+def is_unc_directory_string(string):
+    """
+    Returns `True` when `string` represents a `UncDirectory` as defined by `UncDirectory`'s
+    `get_auth_path` method or `False` otherwise.
+    """
+    cleaned_string = clean_unc_path(string)
+    return (is_valid_unc_path(cleaned_string)
+            or ('@\\\\' in cleaned_string
+               and len(cleaned_string.partition('@\\\\')[2]) > 0))
+
+
 def get_unc_directory_from_string(string):
     """
     Parses a string from `UncDirectory`'s `get_auth_path` method and returns a new `UncDirectory`
@@ -116,7 +127,7 @@ def get_unc_directory_from_string(string):
     creds = None
     path = string
 
-    if r'@\\' in string:
+    if '@\\\\' in string:
         creds_part, path_part = string.rsplit(r'@\\', 1)  # Always split on the last `@\\` in case
                                                           # the password contains it.
         path = r'\\' + path_part
