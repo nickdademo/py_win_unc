@@ -183,6 +183,23 @@ However, these steps are not usually necessary since merely accessing the UNC pa
 cause the system to reconnect it.
 
 
+### get_connection_status {#UncDirectoryConnection_get_connection_status}
+
+{% highlight python %}
+get_connection_status()
+{% endhighlight %}
+
+Returns one of the following based on this [UncDirectoryConnection][]'s status according to the
+system:
+
+Status           | Meaning
+-----------------|--------------------------------------
+`'ok'`           | connected
+`'disconnected'` | recognized but inactive
+`'unavailable'`  | a previous connection attempt failed
+`None`           | not connected
+
+
 ### get_path {#UncDirectoryConnection_get_path}
 
 {% highlight python %}
