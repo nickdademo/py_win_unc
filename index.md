@@ -644,7 +644,7 @@ conn = get_connection_for_disk_drive()
 Returns a [UncDirectoryMount][] representing a mounted UNC directory that matches a disk drive
 (`disk_drive`) or `None` if no system mounts match `disk_drive`.
 
-`disk_drive` must be is a [DiskDrive][].
+`disk_drive` must be a [DiskDrive][].
 
 
 Exception Classes {#exception_classes}
