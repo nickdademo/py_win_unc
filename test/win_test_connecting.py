@@ -5,12 +5,6 @@ from connection_test_utils import LocalHostConnectionTest
 
 
 class TestUncDirectoryConnection(LocalHostConnectionTest):
-    def setUp(self):
-        self.connect_localhost()
-
-    def tearDown(self):
-        self.disconnect_localhost()
-
     def test_connect(self):
         unc = UncDirectory(r'\\localhost')
         conn = UncDirectoryConnection(unc)
