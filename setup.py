@@ -72,7 +72,7 @@ You can also provide credentials like this::
     unc = UncDirectory(r'\\home\shared', UncCredentials('user', 'pwd'))
     conn = UncDirectoryMount(unc, DiskDrive('Z:'))
 
-Or just connect the drive without mounting it:
+Or just connect the drive without mounting it::
 
     from win_unc import UncDirectoryConnection
 
