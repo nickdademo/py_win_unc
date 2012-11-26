@@ -33,6 +33,7 @@ class UncDirectoryConnection(object):
         self.disk_drive = disk_drive
         self.persistent = persistent
         self.logger = logger
+        self._was_connected_before_enter = None  # Flag to handle context manager
 
     def get_path(self):
         """
@@ -115,6 +116,17 @@ class UncDirectoryConnection(object):
         command = self._get_connection_command(username, password)
         self.logger(self._get_connection_command(username, '-----') if password else command)
         run(command)
+
+    def __enter__(self):
+        self._was_connected_before_enter = self.is_connected()
+        if not self._was_connected_before_enter:
+            self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if not self._was_connected_before_enter and self.is_connected():
+            self.disconnect()
+        self._was_connected_before_enter = None
 
     def __str__(self):
         return str(self.unc)
