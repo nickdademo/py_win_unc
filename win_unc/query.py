@@ -2,7 +2,7 @@ from win_unc.connecting import UncDirectoryConnection, UncDirectoryMount
 from win_unc.internal.current_state import get_current_net_use_table
 
 
-__all__ = ['get_current_connections', 'get_connection_for_unc_directory']
+__all__ = ['get_current_connections', 'get_connection_for_unc_directory', 'get_connection_for_disk_drive']
 
 
 def get_current_connections():
