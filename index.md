@@ -36,7 +36,7 @@ Here's how:
 
 Download the [setuptools installer](http://pypi.python.org/pypi/setuptools) for your platform and
 run it. **Note that for 64-bit Windows, you need to download the `ez_setup.py` script instead of
-the `.exe` installer.
+the `.exe` installer.**
 
 Once you've installed `setuptools`, you need to add some paths to your system's `Path`
 environment variable. You'll probably want to add paths like these:
