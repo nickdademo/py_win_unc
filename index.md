@@ -275,7 +275,7 @@ For example,
 conn = UncDirectoryConnection(UncDirectory(r'\\localhost'))
 conn.connect()
 # do stuff...
-#conn.disconnect()
+conn.disconnect()
 {% endhighlight %}
 
 is equivalent to
