@@ -4,6 +4,11 @@ Class for representing a Windows disk drive.
 
 import os
 import string
+try:
+    import win32api
+    win32api_available = True
+except ImportError:
+    win32api_available = False
 
 from win_unc.cleaners import clean_drive_letter
 from win_unc.errors import NoDrivesAvailableError, InvalidDiskDriveError
@@ -65,8 +70,16 @@ def get_available_disk_drive():
     letters are not as commonly mapped. If the system does not have any drive letters available
     this will raise a `NoDrivesAvailableError`.
     """
-    for letter in reversed(string.ascii_uppercase):
-        if not os.path.isdir(letter + ':\\'):
-            return DiskDrive(letter)
+    if win32api_available:
+        drivesused = filter( None, win32api.GetLogicalDriveStrings().split("\000") )
+        for letter in reversed(string.ascii_uppercase):
+            if not letter + ':\\' in drivesused:
+                return DiskDrive(letter)
+        else:
+            raise NoDrivesAvailableError()
     else:
-        raise NoDrivesAvailableError()
+        for letter in reversed(string.ascii_uppercase):
+            if not os.path.isdir(letter + ':\\'):
+                return DiskDrive(letter)
+        else:
+            raise NoDrivesAvailableError()
