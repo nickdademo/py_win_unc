@@ -25,16 +25,16 @@ class TestUncDirectoryConnectionWithCredentials(LocalHostConnectionTest):
          > The is_connected() method checks the state listed by "NET USE"
          > By using the mock connection, we can "fake" the return value of "NET USE" to be exactly what it would be if the actual connection had been connected successfully.  
         """
-        mock_unc = UncDirectory(r'\\localhost')
+        mock_unc = UncDirectory(self.LOCALHOST_UNC)
         self.mock_conn = UncDirectoryConnection(mock_unc)
         self.mock_conn.connect()
-    
+
     def mock_disconnect(self):
         self.mock_conn.disconnect()
-    
+
     def test_connect(self):
         creds = UncCredentials('user', 'pass')
-        unc = UncDirectory(r'\\localhost', creds)
+        unc = UncDirectory(self.LOCALHOST_UNC, creds)
         conn = UncDirectoryConnection(unc)
         self.mock_connect()
 

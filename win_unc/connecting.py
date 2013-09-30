@@ -87,7 +87,7 @@ class UncDirectoryConnection(object):
             `None`           - not connected
         """
         net_use = get_current_net_use_table()
-        matching = net_use.get_matching_rows(local=self.disk_drive, remote=self.unc.get_path())
+        matching = net_use.get_matching_rows(local=self.disk_drive, remote=self.unc)
         return matching[0]['status'] if matching else None
 
     def _get_connection_command(self, username=None, password=None):

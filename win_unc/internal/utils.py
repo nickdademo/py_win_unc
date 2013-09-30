@@ -61,3 +61,7 @@ def subdict_matches(d, sub):
 
 def filter_dict(predicate, d):
     return {key: value for key, value in d.iteritems() if predicate(value)}
+
+
+def remove_nones_in_dict(d):
+    return filter_dict(lambda x: x is not None, d)

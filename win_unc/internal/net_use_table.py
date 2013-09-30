@@ -7,7 +7,9 @@ from copy import deepcopy
 
 from win_unc.disk_drive import DiskDrive
 from win_unc.errors import InvalidDiskDriveError
-from win_unc.internal.utils import drop_while, take_while, first, rfirst, not_, rekey_dict, dict_map, subdict_matches, filter_dict
+from win_unc.internal.utils import (
+    dict_map, drop_while, take_while, first, rfirst, not_,
+    rekey_dict, remove_nones_in_dict, subdict_matches)
 from win_unc.unc_directory import UncDirectory
 
 
@@ -75,9 +77,10 @@ class NetUseTable(object):
         Returns a list of rows that match a `search_dict`.
         `search_dict` is a dictionary with a subset of the keys in a row.
         """
-        test_row = {'local': local, 'remote': remote, 'status': status}
-        test_row = filter_dict(lambda x: x is not None, test_row)
-        test_row = construct_row_values(test_row)
+        credless_remote = UncDirectory(remote.get_path()) if isinstance(remote, UncDirectory) else remote
+        test_row = construct_row_values(
+            remove_nones_in_dict(
+                {'local': local, 'remote': credless_remote, 'status': status}))
 
         return [row for row in self.rows if subdict_matches(row, test_row)]
 
