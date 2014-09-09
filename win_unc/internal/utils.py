@@ -37,7 +37,7 @@ def rekey_dict(d, key_map):
     """
     # Create a new dictionary containing only the remapped key names.
     new_dict = {new_key: d[old_key]
-                for old_key, new_key in key_map.iteritems()
+                for old_key, new_key in list(key_map.items())
                 if old_key in d}
 
     # Copy whatever key/value pairs were left after the remapping into the new dictionary.
@@ -49,18 +49,18 @@ def rekey_dict(d, key_map):
 
 
 def dict_map(d, func_dict):
-    return {key: func(d[key]) for key, func in func_dict.iteritems() if key in d}
+    return {key: func(d[key]) for key, func in list(func_dict.items()) if key in d}
 
 
 def subdict_matches(d, sub):
-    for key, value in sub.iteritems():
+    for key, value in list(sub.items()):
         if key not in d or d[key] != value:
             return False
     return True
 
 
 def filter_dict(predicate, d):
-    return {key: value for key, value in d.iteritems() if predicate(value)}
+    return {key: value for key, value in list(d.items()) if predicate(value)}
 
 
 def remove_nones_in_dict(d):

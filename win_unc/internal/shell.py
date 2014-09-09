@@ -18,11 +18,11 @@ def run(command, logger=no_logging):
     while process.poll() is None:
         try:
             # Write new lines in case the command prompts the us for some input.
-            process.stdin.write('\n')
+            process.stdin.write('\n'.encode('utf-8'))
         except IOError:
             pass
 
-    stdout, stderr = process.stdout.read(), process.stderr.read()
+    stdout, stderr = process.stdout.read().decode('utf-8'), process.stderr.read().decode('utf-8')
     if process.returncode == RETURN_CODE_SUCCESS:
         return stdout, stderr
     else:

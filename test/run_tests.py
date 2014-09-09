@@ -12,14 +12,14 @@ from test_validators import *
 
 
 if platform.system() == 'Windows':
-    print 'Including Windows-specific tests'
+    print('Including Windows-specific tests')
     from win_test_connecting import *
     from win_test_connecting_with_credentials import *
     from win_test_disk_drive import *
     from win_test_query import *
     from win_test_shell import *
 else:
-    print 'WARNING: Excluding Windows-specific tests because host is not Windows'
+    print('WARNING: Excluding Windows-specific tests because host is not Windows')
 
 
 if __name__ == '__main__':
